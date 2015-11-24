@@ -1,0 +1,18 @@
+apply plugin: 'maven-publish'
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+
+    }
+}
+
+dependencies {
+
+    compile project(":ametiste-routine-core")
+    compile("org.slf4j:slf4j-api:${slf4jVersion}")
+
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+}

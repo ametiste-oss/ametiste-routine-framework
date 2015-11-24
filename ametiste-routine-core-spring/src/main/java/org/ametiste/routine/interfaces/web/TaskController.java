@@ -1,0 +1,38 @@
+package org.ametiste.routine.interfaces.web;
+
+import org.ametiste.routine.application.service.issue.TaskIssueService;
+import org.ametiste.routine.domain.scheme.TaskSchemeRepository;
+import org.ametiste.routine.interfaces.web.data.IssueTaskData;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+/**
+ *
+ * @since
+ */
+@RestController
+@RequestMapping("/task")
+public class TaskController {
+
+    @Autowired
+    private TaskIssueService taskIssueService;
+
+    @Autowired
+    private TaskSchemeRepository taskSchemeRepository;
+
+    @RequestMapping(method = RequestMethod.POST)
+    public void issueTask(@RequestBody IssueTaskData issueTaskData) {
+        taskIssueService.issueTask(
+                issueTaskData.taskSchemeName(),
+                issueTaskData.schemeParams()
+        );
+    }
+
+    @RequestMapping(method = RequestMethod.GET)
+    public @ResponseBody List<String> listTaskSchemas() {
+        return taskSchemeRepository.loadSchemeNames();
+    }
+
+}

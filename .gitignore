@@ -1,0 +1,17 @@
+.*
+!.gitignore
+!.travis.yml
+*.class
+*.war
+bin/
+classes/
+target/
+target/*
+build/*
+build/
+hsql/
+/build
+*.ipr
+*.iml
+*.log
+*.db

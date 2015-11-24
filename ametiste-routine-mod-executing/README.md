@@ -1,0 +1,1 @@
+Executing module provides action implementation to organize operations execution.

@@ -1,0 +1,25 @@
+package org.ametiste.routine.printer.operation;
+
+import org.ametiste.routine.sdk.application.service.execution.OperationExecutor;
+import org.ametiste.routine.sdk.application.service.execution.OperationFeedback;
+
+import java.util.Map;
+import java.util.UUID;
+
+public final class PrintOperation implements OperationExecutor {
+
+    public static final String NAME = "print-operation";
+
+    @Override
+    public void execOperation(UUID operationId, Map<String, String> properties, OperationFeedback feedback) {
+        feedback.operationStarted("Printer launched.");
+        try {
+            Thread.sleep(1000l);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("YAYAYYA " + properties.get("out"));
+        feedback.operationSucceed();
+    }
+
+}

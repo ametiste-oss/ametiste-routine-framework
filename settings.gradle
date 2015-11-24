@@ -1,0 +1,17 @@
+rootProject.name = 'ametiste-routine'
+
+include 'ametiste-routine-sdk'
+include 'ametiste-routine-mod-tasklog'
+include 'ametiste-routine-mod-tasklog-starter'
+include 'ametiste-routine-mod-dispenser'
+include 'ametiste-routine-mod-dispenser-starter'
+include 'ametiste-routine-mod-executing'
+include 'ametiste-routine-mod-executing-starter'
+include 'ametiste-routine-eg-printer'
+include 'ametiste-routine-core'
+include 'ametiste-routine-core-spring'
+include 'ametiste-routine-core-starter'
+include 'ametiste-routine-runner'
+include 'ametiste-routine-eg-printer-bundle'
+include 'ametiste-routine-bundle-starter'
+
