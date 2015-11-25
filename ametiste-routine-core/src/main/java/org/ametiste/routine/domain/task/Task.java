@@ -187,7 +187,9 @@ public class Task implements DomainStateReflector<TaskReflection> {
 
         @Override
         public void flareOperation(OperationFlare operationFlare) {
-            operations.put(operationFlare.flashId(), Operation.createByFlare(operationFlare));
+            final Operation flared = Operation.createByFlare(operationFlare);
+            operationsOrder.add(flared);
+            operations.put(operationFlare.flashId(), flared);
         }
 
         @Override
@@ -220,7 +222,7 @@ public class Task implements DomainStateReflector<TaskReflection> {
 
             notices.forEach(reflection::flareNotice);
 
-            operations.values().forEach((x) -> {
+            operationsOrder.forEach((x) -> {
                 reflection.flareOperation(
                     new OperationFlare(x.id, x.operationLabel, x.properties, x.state.name(), x.notices));
             });
