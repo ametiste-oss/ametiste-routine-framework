@@ -172,7 +172,7 @@ public class Task implements DomainStateReflector<TaskReflection> {
     private class ReflectedTask implements TaskReflection {
 
         // TODO: если тут сделать проверку, что каждый из методов был вызван, то можно контролировать
-        // реализацию отрожения и быть уверенным, что не забы ни чего отобразить
+        // реализацию отрожения и быть уверенным, что не забыли ни чего отобразить
         // но выглядеть это будет как гавно, нужен какой-то мета-код :)
 
         @Override
@@ -247,6 +247,11 @@ public class Task implements DomainStateReflector<TaskReflection> {
 
     private final Map<UUID, Operation> operations = new HashMap<>();
 
+    /*
+        Hijack solution to save operation order, don't want to use ordered map yet.
+     */
+    private final ArrayList<Operation> operationsOrder = new ArrayList<>();
+
     private final Map<String, TaskProperty> properties = new HashMap<>();
 
     private final TaskReflection reflection = this. new ReflectedTask();
@@ -273,6 +278,7 @@ public class Task implements DomainStateReflector<TaskReflection> {
         final Operation operation = new Operation(operationLabel, properties);
 
         operations.put(operation.id, operation);
+        operationsOrder.add(operation);
     }
 
     public void addProperty(TaskProperty property) {
@@ -291,12 +297,11 @@ public class Task implements DomainStateReflector<TaskReflection> {
 
         prepareTaskExecution();
 
-        List<ExecutionLine> orderLines = new ArrayList<>();
-        operations.values().forEach((o) -> {
-            orderLines.add(o.prepareExecution());
-        });
+        final List<ExecutionLine> orderLines = operationsOrder.stream()
+                .map(Operation::prepareExecution)
+                .collect(Collectors.toList());
 
-        return new ExecutionOrder(orderLines);
+        return new ExecutionOrder(id, orderLines);
 
     }
 
