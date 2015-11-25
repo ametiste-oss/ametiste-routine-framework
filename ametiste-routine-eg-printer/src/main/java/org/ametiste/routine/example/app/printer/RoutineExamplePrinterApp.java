@@ -1,9 +1,7 @@
 package org.ametiste.routine.example.app.printer;
 
-import org.ametiste.routine.configuration.AmetisteRoutineStarterConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.Import;
 
 /**
  *

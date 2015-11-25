@@ -296,7 +296,7 @@ public class Task implements DomainStateReflector<TaskReflection> {
             orderLines.add(o.prepareExecution());
         });
 
-        return new ExecutionOrder(orderLines);
+        return new ExecutionOrder(id, orderLines);
 
     }
 

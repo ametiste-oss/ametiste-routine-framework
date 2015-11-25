@@ -1,5 +1,6 @@
 package org.ametiste.routine.domain.task;
 
+import java.io.Serializable;
 import java.util.Map;
 import java.util.UUID;
 
@@ -7,7 +8,7 @@ import java.util.UUID;
  *
  * @since
  */
-public class ExecutionLine {
+public class ExecutionLine implements Serializable {
 
     private final UUID operationId;
     private final String line;

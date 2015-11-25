@@ -4,12 +4,12 @@ import org.ametiste.gte.Action;
 import org.ametiste.gte.ActionActuatorDelegate;
 import org.ametiste.gte.ActionFactory;
 import org.ametiste.routine.application.service.execution.DefaultTaskExecutionService;
-import org.ametiste.routine.application.service.execution.ExecutorManager;
+import org.ametiste.routine.infrastructure.execution.DefaultOperationExecutionGateway;
 import org.ametiste.routine.application.service.execution.TaskExecutionService;
 import org.ametiste.routine.domain.log.TaskLogRepository;
 import org.ametiste.routine.domain.task.TaskRepository;
 import org.ametiste.routine.mod.executing.application.ExecuteTaskAction;
-import org.ametiste.routine.sdk.application.service.execution.ExecutionManager;
+import org.ametiste.routine.sdk.application.service.execution.OperationExecutionGateway;
 import org.ametiste.routine.sdk.application.service.execution.OperationExecutorFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -35,17 +35,8 @@ public class ExecuteTaskActionConfiguration {
     @Autowired
     private Map<String, OperationExecutorFactory> operationExecutors;
 
-    @Bean
-    // TODO: part of core module, move it to core configuration
-    public ExecutionManager executionManager() {
-        return new ExecutorManager(operationExecutors);
-    }
-
-    @Bean
-    // TODO: part of core module, move it to core configuration
-    public TaskExecutionService taskExecutionService() {
-        return new DefaultTaskExecutionService(taskRepository, executionManager());
-    }
+    @Autowired
+    private TaskExecutionService taskExecutionService;
 
     @Bean
     public ActionFactory executeTaskAction() {
@@ -56,7 +47,7 @@ public class ExecuteTaskActionConfiguration {
 
                 // TODO: property for appendCount
                 ExecuteTaskAction action =
-                        new ExecuteTaskAction(taskExecutionService(), taskLogRepository, 10);
+                        new ExecuteTaskAction(taskExecutionService, taskLogRepository, 10);
 
                 return action::executeAction;
             }

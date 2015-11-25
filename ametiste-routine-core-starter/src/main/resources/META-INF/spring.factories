@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-	org.ametiste.routine.configuration.AmetisteRoutineStarterConfiguration
+	org.ametiste.routine.configuration.AmetisteRoutineCoreConfiguration

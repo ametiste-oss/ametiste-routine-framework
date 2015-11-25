@@ -1,11 +1,11 @@
 package org.ametiste.routine.application.service.execution;
 
-import org.ametiste.routine.domain.task.ExecutionLine;
 import org.ametiste.routine.domain.task.ExecutionOrder;
 import org.ametiste.routine.domain.task.Task;
 import org.ametiste.routine.domain.task.TaskRepository;
 import org.ametiste.routine.sdk.application.service.execution.ExecutionFeedback;
-import org.ametiste.routine.sdk.application.service.execution.ExecutionManager;
+import org.ametiste.routine.sdk.application.service.execution.OperationExecutionGateway;
+import org.ametiste.routine.application.service.TaskAppEvenets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,37 +21,26 @@ public class DefaultTaskExecutionService implements TaskExecutionService, Execut
 
     private TaskRepository taskRepository;
 
-    private ExecutionManager executionManager;
+    private final TaskAppEvenets taskAppEvenets;
+    private OperationExecutionGateway operationExecutionGateway;
 
-    public DefaultTaskExecutionService(TaskRepository taskRepository, ExecutionManager executionManager) {
+    public DefaultTaskExecutionService(TaskRepository taskRepository,
+                                       TaskAppEvenets taskAppEvenets,
+                                       OperationExecutionGateway operationExecutionGateway) {
         this.taskRepository = taskRepository;
-        this.executionManager = executionManager;
+        this.taskAppEvenets = taskAppEvenets;
+        this.operationExecutionGateway = operationExecutionGateway;
     }
 
     @Override
     public void executeTask(UUID taskId) {
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Executing task : " + taskId);
-        }
+        logger.debug("Executing task : {} ", taskId);
 
         final ExecutionOrder executionOrder = issueExecutionOrder(taskId);
+        taskAppEvenets.taskPended(executionOrder);
 
-        if (logger.isDebugEnabled()) {
-            logger.debug("Pass execution order to operations service: {}", executionOrder.executionLines());
-        }
-
-        for (ExecutionLine line : executionOrder.executionLines()) {
-
-            if (logger.isDebugEnabled()) {
-                logger.debug("Pass execution line to operations service: {}", line.line());
-            }
-
-            // TODO: timeouts?
-            executionManager.executeOperation(
-                line.operationId(), line.line(), line.properties(), this
-            );
-        }
+        logger.debug("Pass execution order to operations service: {}", executionOrder.executionLines());
     }
 
     @Override
@@ -84,6 +73,7 @@ public class DefaultTaskExecutionService implements TaskExecutionService, Execut
 
         final Task task = taskRepository.findTask(taskId);
         final ExecutionOrder executionOrder = task.prepareExecution();
+
         taskRepository.saveTask(task);
 
         return executionOrder;
