@@ -3,8 +3,6 @@ package org.ametiste.routine.application.service.execution;
 import org.ametiste.routine.domain.task.ExecutionOrder;
 import org.ametiste.routine.domain.task.Task;
 import org.ametiste.routine.domain.task.TaskRepository;
-import org.ametiste.routine.sdk.application.service.execution.ExecutionFeedback;
-import org.ametiste.routine.sdk.application.service.execution.OperationExecutionGateway;
 import org.ametiste.routine.application.service.TaskAppEvenets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

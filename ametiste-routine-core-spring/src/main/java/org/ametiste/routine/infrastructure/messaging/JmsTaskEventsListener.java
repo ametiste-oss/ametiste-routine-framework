@@ -1,12 +1,10 @@
 package org.ametiste.routine.infrastructure.messaging;
 
-import org.ametiste.routine.domain.task.Operation;
-import org.ametiste.routine.infrastructure.execution.DefaultOperationExecutionGateway;
 import org.ametiste.routine.application.service.execution.TaskExecutionService;
 import org.ametiste.routine.domain.task.ExecutionLine;
 import org.ametiste.routine.domain.task.ExecutionOrder;
-import org.ametiste.routine.sdk.application.service.execution.ExecutionFeedback;
-import org.ametiste.routine.sdk.application.service.execution.OperationExecutionGateway;
+import org.ametiste.routine.application.service.execution.ExecutionFeedback;
+import org.ametiste.routine.application.service.execution.OperationExecutionGateway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jms.annotation.JmsListener;

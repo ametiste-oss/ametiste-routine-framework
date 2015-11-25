@@ -2,15 +2,13 @@ package org.ametiste.routine.configuration;
 
 import org.ametiste.routine.application.service.execution.DefaultTaskExecutionService;
 import org.ametiste.routine.infrastructure.execution.DefaultOperationExecutionGateway;
-import org.ametiste.routine.application.service.execution.TaskExecutionService;
 import org.ametiste.routine.application.service.issue.DefaultTaskIssueService;
 import org.ametiste.routine.application.service.issue.TaskIssueService;
 import org.ametiste.routine.domain.scheme.TaskSchemeRepository;
 import org.ametiste.routine.domain.task.TaskRepository;
 import org.ametiste.routine.domain.task.properties.TaskPropertiesRegistry;
 import org.ametiste.routine.domain.task.properties.TaskProperty;
-import org.ametiste.routine.sdk.application.service.execution.ExecutionFeedback;
-import org.ametiste.routine.sdk.application.service.execution.OperationExecutionGateway;
+import org.ametiste.routine.application.service.execution.OperationExecutionGateway;
 import org.ametiste.routine.sdk.application.service.execution.OperationExecutorFactory;
 import org.ametiste.routine.sdk.application.service.issue.constraints.IssueConstraint;
 import org.ametiste.routine.application.service.TaskAppEvenets;

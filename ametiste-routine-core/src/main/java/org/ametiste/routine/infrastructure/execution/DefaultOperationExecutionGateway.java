@@ -1,7 +1,7 @@
 package org.ametiste.routine.infrastructure.execution;
 
-import org.ametiste.routine.sdk.application.service.execution.ExecutionFeedback;
-import org.ametiste.routine.sdk.application.service.execution.OperationExecutionGateway;
+import org.ametiste.routine.application.service.execution.ExecutionFeedback;
+import org.ametiste.routine.application.service.execution.OperationExecutionGateway;
 import org.ametiste.routine.sdk.application.service.execution.OperationExecutorFactory;
 import org.ametiste.routine.sdk.application.service.execution.OperationFeedback;
 
