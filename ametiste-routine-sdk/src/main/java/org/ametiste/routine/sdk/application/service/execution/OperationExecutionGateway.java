@@ -7,7 +7,7 @@ import java.util.UUID;
  *
  * @since
  */
-public interface ExecutionManager {
+public interface OperationExecutionGateway {
 
     void executeOperation(
             UUID operationId,

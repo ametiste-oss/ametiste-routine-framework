@@ -1,6 +1,7 @@
 package org.ametiste.routine.infrastructure.messaging;
 
-import org.ametiste.routine.sdk.application.service.task.TaskAppEvenets;
+import org.ametiste.routine.application.service.TaskAppEvenets;
+import org.ametiste.routine.domain.task.ExecutionOrder;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.jms.core.MessageCreator;
 
@@ -23,11 +24,16 @@ public class JmsTaskAppEvents implements TaskAppEvenets {
 
     @Override
     public void taskIssued(final UUID taskId) {
-       jmsTemplate.send("task-issued", new MessageCreator() {
-           @Override
-           public Message createMessage(Session session) throws JMSException {
-               return session.createObjectMessage(taskId);
+       jmsTemplate.send("task-issued", (s) -> {
+               return s.createObjectMessage(taskId);
            }
-       });
+       );
+    }
+
+    @Override
+    public void taskPended(ExecutionOrder executionOrder) {
+        jmsTemplate.send("task-pended", (s) -> {
+            return s.createObjectMessage(executionOrder);
+        });
     }
 }

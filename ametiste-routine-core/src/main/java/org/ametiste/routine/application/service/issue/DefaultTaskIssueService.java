@@ -6,7 +6,7 @@ import org.ametiste.routine.domain.task.Task;
 import org.ametiste.routine.domain.task.TaskRepository;
 import org.ametiste.routine.domain.task.properties.TaskPropertiesRegistry;
 import org.ametiste.routine.sdk.application.service.issue.constraints.IssueConstraint;
-import org.ametiste.routine.sdk.application.service.task.TaskAppEvenets;
+import org.ametiste.routine.application.service.TaskAppEvenets;
 
 import java.util.List;
 import java.util.Map;

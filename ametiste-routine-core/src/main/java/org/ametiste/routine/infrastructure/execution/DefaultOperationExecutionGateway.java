@@ -1,7 +1,7 @@
-package org.ametiste.routine.application.service.execution;
+package org.ametiste.routine.infrastructure.execution;
 
 import org.ametiste.routine.sdk.application.service.execution.ExecutionFeedback;
-import org.ametiste.routine.sdk.application.service.execution.ExecutionManager;
+import org.ametiste.routine.sdk.application.service.execution.OperationExecutionGateway;
 import org.ametiste.routine.sdk.application.service.execution.OperationExecutorFactory;
 import org.ametiste.routine.sdk.application.service.execution.OperationFeedback;
 
@@ -10,15 +10,19 @@ import java.util.UUID;
 
 /**
  *
- * <p><b>WARNING: PoC, PLEASE DONT USE IN PRODUCTION</b></p>
+ * <p>
+ *     Implementation of {@link OperationExecutionGateway} that executes operation local,
+ *     withing the space of current {@code Routine} process.
+ * </p>
  *
- * @since
+ * @since 0.1.0
+ *
  */
-public class ExecutorManager implements ExecutionManager {
+public class DefaultOperationExecutionGateway implements OperationExecutionGateway {
 
     private final Map<String, OperationExecutorFactory> operationExecutors;
 
-    public ExecutorManager(Map<String, OperationExecutorFactory> operationExecutors) {
+    public DefaultOperationExecutionGateway(Map<String, OperationExecutorFactory> operationExecutors) {
         this.operationExecutors = operationExecutors;
     }
 
