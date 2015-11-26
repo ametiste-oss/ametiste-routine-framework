@@ -1,9 +1,9 @@
 package org.ametiste.routine.mod.tasklog.infrastructure.persistency.jdbc;
 
-import org.ametiste.routine.domain.log.NoticeEntry;
-import org.ametiste.routine.domain.log.OperationLog;
-import org.ametiste.routine.domain.log.TaskLogEntry;
-import org.ametiste.routine.domain.log.TaskLogRepository;
+import org.ametiste.routine.mod.tasklog.domain.NoticeEntry;
+import org.ametiste.routine.mod.tasklog.domain.OperationLog;
+import org.ametiste.routine.mod.tasklog.domain.TaskLogEntry;
+import org.ametiste.routine.mod.tasklog.domain.TaskLogRepository;
 import org.ametiste.routine.domain.task.notices.Notice;
 import org.ametiste.routine.infrastructure.persistency.ClosedTaskReflection;
 import org.ametiste.routine.infrastructure.persistency.jdbc.reflection.JdbcTaskReflection;

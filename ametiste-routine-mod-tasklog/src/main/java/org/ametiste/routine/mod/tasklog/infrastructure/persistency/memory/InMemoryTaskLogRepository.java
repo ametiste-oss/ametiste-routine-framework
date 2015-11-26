@@ -1,9 +1,9 @@
-package org.ametiste.routine.infrastructure.persistency.memory;
+package org.ametiste.routine.mod.tasklog.infrastructure.persistency.memory;
 
-import org.ametiste.routine.domain.log.TaskLogEntry;
-import org.ametiste.routine.domain.log.TaskLogNotFoundException;
-import org.ametiste.routine.domain.log.TaskLogRepository;
 import org.ametiste.routine.domain.task.Task;
+import org.ametiste.routine.mod.tasklog.domain.TaskLogEntry;
+import org.ametiste.routine.mod.tasklog.domain.TaskLogNotFoundException;
+import org.ametiste.routine.mod.tasklog.domain.TaskLogRepository;
 
 import java.time.Instant;
 import java.util.*;

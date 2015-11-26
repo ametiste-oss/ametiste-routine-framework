@@ -1,4 +1,4 @@
-package org.ametiste.routine.domain.log;
+package org.ametiste.routine.mod.tasklog.domain;
 
 import java.time.Instant;
 import java.util.List;

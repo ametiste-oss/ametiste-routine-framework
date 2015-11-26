@@ -1,4 +1,4 @@
-package org.ametiste.routine.domain.log;
+package org.ametiste.routine.mod.tasklog.domain;
 
 import java.util.List;
 import java.util.UUID;

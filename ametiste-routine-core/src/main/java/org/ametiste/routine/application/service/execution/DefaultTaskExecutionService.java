@@ -45,7 +45,6 @@ public class DefaultTaskExecutionService implements TaskExecutionService, Execut
     public void completeTask(UUID taskId, String withMessage) {
          // TODO: implement, Task need to support complete operation too, this operation
          // required for task timeouts and termination implementation
-
     }
 
     /**

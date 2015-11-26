@@ -1,9 +1,5 @@
 package org.ametiste.routine.infrastructure.persistency.memory;
 
-import org.ametiste.routine.domain.log.NoticeEntry;
-import org.ametiste.routine.domain.log.OperationLog;
-import org.ametiste.routine.domain.log.TaskLogEntry;
-import org.ametiste.routine.domain.log.TaskLogRepository;
 import org.ametiste.routine.domain.task.Task;
 import org.ametiste.routine.domain.task.TaskRepository;
 import org.ametiste.routine.domain.task.notices.Notice;
@@ -110,15 +106,15 @@ public class InMemoryTaskRepository implements TaskRepository {
 
     private Map<UUID, InMemoryTaskReflection> reflections = new HashMap<>();
 
-    private TaskLogRepository logRepository;
+    // private TaskLogRepository logRepository;
 
     // private final ActionActuatorDelegate actuatorDelegate;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    public InMemoryTaskRepository(TaskLogRepository logRepository) {
-        this.logRepository = logRepository;
-    }
+    // public InMemoryTaskRepository(TaskLogRepository logRepository) {
+    //    this.logRepository = logRepository;
+    // }
 
     @Override
     public Task findTask(UUID taskId) {
@@ -184,7 +180,7 @@ public class InMemoryTaskRepository implements TaskRepository {
             reflections.put(taskReflection.flashTaskId(), taskReflection);
 
             // TODO: need to move it, I want to implement sane logging subsystem, but don't have idea how to do it
-
+            /* TODO: I guess I could implement it using modular repositories
             logRepository.saveTaskLog(new TaskLogEntry(
                     taskReflection.taskId,
                     taskReflection.creationTime,
@@ -206,6 +202,7 @@ public class InMemoryTaskRepository implements TaskRepository {
                             })
                             .collect(Collectors.toList())
             ));
+            */
 
             if (taskReflection.flashTaskState().equals(Task.State.NEW)) {
                 // actuatorDelegate.produceEvent("global.taskArrived");
@@ -250,10 +247,6 @@ public class InMemoryTaskRepository implements TaskRepository {
 
         throw new RuntimeException("Task not found.");
 
-    }
-
-    private NoticeEntry createNoticeEntry(Notice notice) {
-        return new NoticeEntry(notice.creationTime(), notice.text());
     }
 
 }

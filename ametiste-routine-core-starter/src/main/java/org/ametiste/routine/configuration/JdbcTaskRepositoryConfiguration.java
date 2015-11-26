@@ -1,6 +1,6 @@
 package org.ametiste.routine.configuration;
 
-import org.ametiste.routine.domain.log.TaskLogRepository;
+import org.ametiste.routine.mod.tasklog.domain.TaskLogRepository;
 import org.ametiste.routine.domain.task.TaskRepository;
 import org.ametiste.routine.mod.tasklog.infrastructure.persistency.jdbc.JdbcTaskLogRepository;
 import org.ametiste.routine.infrastructure.persistency.jdbc.JdbcTaskRepository;

@@ -1,7 +1,6 @@
 package org.ametiste.routine.application.action;
 
 import org.ametiste.routine.application.service.execution.TaskExecutionService;
-import org.ametiste.routine.domain.log.TaskLogRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,7 +17,7 @@ public class TaskTimeoutAction {
 
     private TaskExecutionService taskExecutionService;
 
-    private TaskLogRepository taskLogRepository;
+    // private TaskLogRepository taskLogRepository;
 
     // TODO : need interface to change this parameter at runtime
     private long defaultTimeout;
@@ -26,10 +25,10 @@ public class TaskTimeoutAction {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     public TaskTimeoutAction(TaskExecutionService taskExecutionService,
-                             TaskLogRepository taskLogRepository,
+                             // TaskLogRepository taskLogRepository,
                              long defaultTimeout) {
         this.taskExecutionService = taskExecutionService;
-        this.taskLogRepository = taskLogRepository;
+        // this.taskLogRepository = taskLogRepository;
         this.defaultTimeout = defaultTimeout;
     }
 
@@ -41,8 +40,11 @@ public class TaskTimeoutAction {
             logger.debug("Trying to execute timeouts.");
         }
 
-        final List<UUID> timedOutTasks = taskLogRepository
-                .findActiveTasksAfterDate(Instant.now().minus(defaultTimeout, ChronoUnit.MINUTES));
+        final List<UUID> timedOutTasks = null; /* TBD: task log domain now not a core part, so timeouts need
+              to be extracted as separate module that depends on task log too.
+
+              taskLogRepository
+                .findActiveTasksAfterDate(Instant.now().minus(defaultTimeout, ChronoUnit.MINUTES));*/
 
         timedOutTasks.forEach((taskId) -> {
 

@@ -1,2 +1,0 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-	org.ametiste.routine.mod.executing.spring.boot.configuration.ExecuteTaskActionConfiguration

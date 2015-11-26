@@ -1,9 +1,9 @@
 package org.ametiste.routine.mod.tasklog.interfaces.web;
 
-import org.ametiste.routine.domain.log.NoticeEntry;
-import org.ametiste.routine.domain.log.TaskLogEntry;
-import org.ametiste.routine.domain.log.TaskLogNotFoundException;
-import org.ametiste.routine.domain.log.TaskLogRepository;
+import org.ametiste.routine.mod.tasklog.domain.NoticeEntry;
+import org.ametiste.routine.mod.tasklog.domain.TaskLogEntry;
+import org.ametiste.routine.mod.tasklog.domain.TaskLogNotFoundException;
+import org.ametiste.routine.mod.tasklog.domain.TaskLogRepository;
 import org.ametiste.routine.mod.tasklog.interfaces.web.resources.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
