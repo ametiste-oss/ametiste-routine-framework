@@ -4,6 +4,8 @@ import org.ametiste.routine.application.service.execution.ExecutionFeedback;
 import org.ametiste.routine.application.service.execution.OperationExecutionGateway;
 import org.ametiste.routine.sdk.operation.OperationExecutorFactory;
 import org.ametiste.routine.sdk.operation.OperationFeedback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.UUID;
@@ -19,6 +21,8 @@ import java.util.UUID;
  *
  */
 public class DefaultOperationExecutionGateway implements OperationExecutionGateway {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final Map<String, OperationExecutorFactory> operationExecutors;
 
@@ -61,6 +65,7 @@ public class DefaultOperationExecutionGateway implements OperationExecutionGatew
                         }
                     });
         } catch (Exception e) {
+            logger.error("Error during task operation execution.", e);
             feedback.operationFailed(operationId, "Operation failed on execution.");
         }
     }

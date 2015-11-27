@@ -9,6 +9,8 @@ import org.ametiste.routine.domain.task.TaskRepository;
 import org.ametiste.routine.domain.task.properties.TaskPropertiesRegistry;
 import org.ametiste.routine.domain.task.properties.TaskProperty;
 import org.ametiste.routine.application.service.execution.OperationExecutionGateway;
+import org.ametiste.routine.infrastructure.mod.JdbcModDataRepository;
+import org.ametiste.routine.infrastructure.mod.ModDataRepository;
 import org.ametiste.routine.sdk.operation.OperationExecutor;
 import org.ametiste.routine.sdk.operation.OperationExecutorFactory;
 import org.ametiste.routine.sdk.application.service.issue.constraints.IssueConstraint;
@@ -23,6 +25,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.config.JmsListenerContainerFactory;
 import org.springframework.jms.core.JmsTemplate;
@@ -54,6 +57,9 @@ public class AmetisteRoutineCoreConfiguration {
     @Autowired
     private JmsTemplate jmsTemplate;
 
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
     @Autowired(required = false)
     private Map<String, OperationExecutorFactory> operationExecutorFactories = Collections.emptyMap();
 
@@ -67,6 +73,11 @@ public class AmetisteRoutineCoreConfiguration {
     public TaskIssueService taskIssueService() {
         return new DefaultTaskIssueService(taskRepository, taskPropertiesRegistry,
                 taskSchemeRepository, taskAppEvenets(), issueConstraints);
+    }
+
+    @Bean
+    public ModDataRepository modDataRepository() {
+        return new JdbcModDataRepository(jdbcTemplate);
     }
 
     @Bean

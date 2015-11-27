@@ -16,7 +16,6 @@ import java.util.UUID;
  *
  * @since
  */
-@Component(BacklogRenewOperationExecutor.NAME)
 public class BacklogRenewOperationExecutor implements OperationExecutor {
 
     public static final String NAME = "routine::mod::backlog::renewOperation";
