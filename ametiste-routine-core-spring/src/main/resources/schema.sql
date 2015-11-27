@@ -17,9 +17,14 @@ CREATE TABLE ame_routine.ame_routine_task (
 
 CREATE TABLE ame_routine.ame_routine_task_property (
   task_id CHAR(36) NOT NULL,
-  name VARCHAR(16) NOT NULL,
-  value VARCHAR(16) NOT NULL,
-  PRIMARY KEY (task_id)
+  name VARCHAR(128) NOT NULL,
+  value VARCHAR(128) NOT NULL
+);
+
+CREATE TABLE ame_routine.ame_routine_mod_property (
+  mod_id CHAR(36) NOT NULL,
+  name VARCHAR(128) NOT NULL,
+  value VARCHAR(128) NOT NULL
 );
 
 CREATE TABLE ame_routine.ame_routine_task_operation (

@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-	org.ametiste.routine.mod.tasklog.spring.boot.configuration.RoutineTasklogModConfiguration
+	org.ametiste.routine.mod.tasklog.configuration.RoutineTasklogModConfiguration

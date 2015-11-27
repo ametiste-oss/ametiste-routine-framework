@@ -40,8 +40,6 @@ dependencies {
 
     compile project(":ametiste-routine-core-spring")
 
-    compile project(":ametiste-routine-mod-tasklog-starter")
-
     compile("org.springframework.boot:spring-boot")
     compile("org.springframework.boot:spring-boot-autoconfigure")
 

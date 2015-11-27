@@ -1,0 +1,34 @@
+buildscript {
+    ext {
+        springBootVersion = '1.3.0.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+        maven { url "https://repo.spring.io/snapshot" }
+        maven { url "https://repo.spring.io/milestone" }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+apply plugin: 'maven-publish'
+apply plugin: 'spring-boot'
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+
+    }
+}
+
+dependencies {
+
+    compile project(":ametiste-routine-core-spring")
+    compile project(":ametiste-routine-mod-tasklog")
+
+    compile("org.springframework:spring-webmvc")
+    compile("com.fasterxml.jackson.core:jackson-annotations")
+}

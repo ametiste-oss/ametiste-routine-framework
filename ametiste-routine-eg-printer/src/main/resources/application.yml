@@ -9,3 +9,11 @@ spring:
   datasource:
     driverClassName: org.h2.Driver
     url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_ON_EXIT=FALSE
+
+org:
+  ametiste:
+    routine:
+      mod:
+        backlog:
+          enabled: true
+          renewRate: 5000

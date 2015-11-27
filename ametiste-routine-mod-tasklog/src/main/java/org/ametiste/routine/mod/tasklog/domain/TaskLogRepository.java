@@ -1,5 +1,8 @@
 package org.ametiste.routine.mod.tasklog.domain;
 
+import org.ametiste.routine.domain.task.Task;
+import org.ametiste.routine.domain.task.properties.TaskProperty;
+
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
@@ -30,6 +33,16 @@ public interface TaskLogRepository {
 
     List<TaskLogEntry> findEntries(String byStatus, int offset, int limit);
 
+    /**
+     * @deprecated use {@link #countByTaskState(Task.State...)} instead.
+     * @param byStatus
+     *
+     * @return
+     */
+    @Deprecated
     int countEntriesByStatus(String byStatus);
 
+    int countByTaskState(Task.State[] states, TaskProperty[] properties);
+
+    int countByTaskState(Task.State[] states);
 }

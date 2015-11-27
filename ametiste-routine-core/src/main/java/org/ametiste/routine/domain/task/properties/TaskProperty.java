@@ -4,7 +4,7 @@ package org.ametiste.routine.domain.task.properties;
  *
  * @since
  */
-public abstract class TaskProperty {
+public class TaskProperty {
 
     protected final String name;
 
@@ -24,7 +24,7 @@ public abstract class TaskProperty {
     }
 
     public String value() {
-        return name;
+        return value;
     }
 
     // NOTE: this method must be implemented by subclasses to support concrete matching logic

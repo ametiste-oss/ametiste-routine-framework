@@ -1,6 +1,6 @@
 package org.ametiste.routine;
 
-import org.ametiste.routine.sdk.application.service.execution.OperationExecutorFactory;
+import org.ametiste.routine.sdk.operation.OperationExecutorFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;

@@ -38,6 +38,7 @@ repositories {
 dependencies {
 
     compile project(":ametiste-routine-core-starter")
+    compile project(":ametiste-routine-mod-backlog")
 
     compile("org.springframework.boot:spring-boot")
     compile("org.springframework.boot:spring-boot-starter-web")

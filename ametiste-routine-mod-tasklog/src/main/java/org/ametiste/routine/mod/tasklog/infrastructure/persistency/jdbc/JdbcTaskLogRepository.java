@@ -1,5 +1,7 @@
 package org.ametiste.routine.mod.tasklog.infrastructure.persistency.jdbc;
 
+import org.ametiste.routine.domain.task.Task;
+import org.ametiste.routine.domain.task.properties.TaskProperty;
 import org.ametiste.routine.mod.tasklog.domain.NoticeEntry;
 import org.ametiste.routine.mod.tasklog.domain.OperationLog;
 import org.ametiste.routine.mod.tasklog.domain.TaskLogEntry;
@@ -13,6 +15,8 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -23,6 +27,7 @@ import java.util.stream.Collectors;
  */
 public class JdbcTaskLogRepository implements TaskLogRepository {
 
+    private final String taskPropertiesTable = "ame_routine.ame_routine_task_property";
     private JdbcTemplate jdbcTemplate;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -112,6 +117,31 @@ public class JdbcTaskLogRepository implements TaskLogRepository {
 
     }
 
+    @Override
+    public int countByTaskState(Task.State[] states, TaskProperty[] properties) {
+
+        final String countQuery = String.format("SELECT COUNT(*) " +
+                "FROM " + taskTable + " LEFT JOIN " + taskPropertiesTable +
+                " ON " +
+                "   " + taskTable + ".id = " + taskPropertiesTable + ".task_id " +
+                " WHERE " +
+                "   state in (%s) " +
+                " AND " +
+                "   ( %s )", createStateFilter(states), createPropertiesFilter(properties));
+
+        logger.warn(countQuery);
+
+        return jdbcTemplate.queryForObject(countQuery, Integer.class);
+    }
+
+    @Override
+    public int countByTaskState(Task.State[] states) {
+        final int tasksCount = jdbcTemplate.queryForObject(
+                String.format("SELECT COUNT(id) FROM %s WHERE state in (%s)", taskTable, createStateFilter(states)),
+                Integer.class);
+        return tasksCount;
+    }
+
     private NoticeEntry createNoticeEntry(Notice notice) {
         return new NoticeEntry(notice.creationTime(), notice.text());
     }
@@ -137,6 +167,23 @@ public class JdbcTaskLogRepository implements TaskLogRepository {
                                             .collect(Collectors.toList()));
                         })
                         .collect(Collectors.toList())
+        );
+    }
+
+    private String createPropertiesFilter(TaskProperty[] properties) {
+        return String.join("OR ",
+                Arrays.asList(properties).stream().map(
+                        p -> String.format("(%s.name = '%s' AND %s.value = '%s')",
+                                taskPropertiesTable, p.name(), taskPropertiesTable, p.value()
+                        )).collect(Collectors.toList())
+        );
+    }
+
+    private String createStateFilter(Task.State[] states) {
+        return String.join(",", Arrays.asList(states)
+                .stream()
+                .map(state -> "'" + state.name() + "'")
+                .collect(Collectors.toList())
         );
     }
 

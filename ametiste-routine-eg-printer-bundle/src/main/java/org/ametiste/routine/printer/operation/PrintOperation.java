@@ -1,7 +1,7 @@
 package org.ametiste.routine.printer.operation;
 
-import org.ametiste.routine.sdk.application.service.execution.OperationExecutor;
-import org.ametiste.routine.sdk.application.service.execution.OperationFeedback;
+import org.ametiste.routine.sdk.operation.OperationExecutor;
+import org.ametiste.routine.sdk.operation.OperationFeedback;
 
 import java.util.Map;
 import java.util.UUID;

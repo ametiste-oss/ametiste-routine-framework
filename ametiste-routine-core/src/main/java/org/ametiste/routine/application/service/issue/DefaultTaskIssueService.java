@@ -5,6 +5,7 @@ import org.ametiste.routine.domain.scheme.TaskSchemeRepository;
 import org.ametiste.routine.domain.task.Task;
 import org.ametiste.routine.domain.task.TaskRepository;
 import org.ametiste.routine.domain.task.properties.TaskPropertiesRegistry;
+import org.ametiste.routine.domain.task.properties.TaskProperty;
 import org.ametiste.routine.sdk.application.service.issue.constraints.IssueConstraint;
 import org.ametiste.routine.application.service.TaskAppEvenets;
 
@@ -37,11 +38,17 @@ public class DefaultTaskIssueService implements TaskIssueService {
     }
 
     @Override
-    public UUID issueTask(String taskSchemeName, Map<String, String> params) {
+    public UUID issueTask(String taskSchemeName, Map<String, String> params, String creatorIdenifier) {
+
         final TaskScheme taskScheme = taskSchemeRepository.findTaskScheme(taskSchemeName);
         final Task task = taskScheme.createTask(params);
+
+        task.addProperty(new TaskProperty("task.scheme", taskSchemeName));
+        task.addProperty(new TaskProperty("created.by", creatorIdenifier));
+
         taskRepository.saveTask(task);
         taskAppEvenets.taskIssued(task.entityId());
+
         return task.entityId();
     }
 

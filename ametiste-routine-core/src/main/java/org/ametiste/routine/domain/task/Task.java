@@ -134,6 +134,14 @@ public class Task implements DomainStateReflector<TaskReflection> {
 
         };
 
+        /**
+         * <p>
+         *   Defines 'active' superstate as composition of
+         *   states in which task may be treated as 'active', it means
+         *   that task not done and can be or already executing.
+         * </p>
+         * */
+        public static State[] activeStates = { NEW, PENDING, EXECUTION };
 
         /**
          * Defines can be the task executed in the given state.

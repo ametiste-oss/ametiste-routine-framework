@@ -1,6 +1,7 @@
 package org.ametiste.routine.mod.tasklog.infrastructure.persistency.memory;
 
 import org.ametiste.routine.domain.task.Task;
+import org.ametiste.routine.domain.task.properties.TaskProperty;
 import org.ametiste.routine.mod.tasklog.domain.TaskLogEntry;
 import org.ametiste.routine.mod.tasklog.domain.TaskLogNotFoundException;
 import org.ametiste.routine.mod.tasklog.domain.TaskLogRepository;
@@ -109,6 +110,16 @@ public class InMemoryTaskLogRepository implements TaskLogRepository {
 
     @Override
     public int countEntriesByStatus(String byStatus) {
+        return 0;
+    }
+
+    @Override
+    public int countByTaskState(Task.State[] states, TaskProperty[] properties) {
+        return 0;
+    }
+
+    @Override
+    public int countByTaskState(Task.State[] states) {
         return 0;
     }
 

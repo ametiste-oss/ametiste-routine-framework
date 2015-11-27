@@ -26,7 +26,8 @@ public class TaskController {
     public void issueTask(@RequestBody IssueTaskData issueTaskData) {
         taskIssueService.issueTask(
                 issueTaskData.taskSchemeName(),
-                issueTaskData.schemeParams()
+                issueTaskData.schemeParams(),
+                "web-api"
         );
     }
 

@@ -9,6 +9,8 @@ import java.util.UUID;
  */
 public interface TaskIssueService {
 
-    UUID issueTask(String taskSchemeName, Map<String, String> params);
+    UUID issueTask(String taskSchemeName,
+                   Map<String, String> params,
+                   String creatorIdentifier);
 
 }

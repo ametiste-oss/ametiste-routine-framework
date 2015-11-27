@@ -41,6 +41,7 @@ dependencies {
 
     compile project(":ametiste-routine-core")
 
+    compile("org.springframework.boot:spring-boot-autoconfigure")
     compile("org.springframework:spring-tx")
     compile("org.springframework:spring-jdbc")
     compile("org.springframework:spring-webmvc")

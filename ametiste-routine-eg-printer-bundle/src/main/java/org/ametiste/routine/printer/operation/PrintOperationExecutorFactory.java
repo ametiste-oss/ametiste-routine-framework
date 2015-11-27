@@ -1,7 +1,7 @@
 package org.ametiste.routine.printer.operation;
 
-import org.ametiste.routine.sdk.application.service.execution.OperationExecutor;
-import org.ametiste.routine.sdk.application.service.execution.OperationExecutorFactory;
+import org.ametiste.routine.sdk.operation.OperationExecutor;
+import org.ametiste.routine.sdk.operation.OperationExecutorFactory;
 import org.springframework.stereotype.Component;
 
 @Component(PrintOperation.NAME)
