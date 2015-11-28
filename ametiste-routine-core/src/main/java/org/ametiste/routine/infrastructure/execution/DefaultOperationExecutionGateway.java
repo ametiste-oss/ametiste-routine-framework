@@ -40,30 +40,14 @@ public class DefaultOperationExecutionGateway implements OperationExecutionGatew
             throw new IllegalStateException("Can't find operation executor for: " + operationExecLine);
         }
 
+        final DefaultOperationFeedbackController feedbackController =
+                new DefaultOperationFeedbackController(feedback, operationId);
+
         try {
             operationExecutors.get(operationExecLine)
                     .createExecutor()
-                    .execOperation(operationId, properties, new OperationFeedback() {
-                        @Override
-                        public void operationStarted(String withMessage) {
-                            feedback.operationStarted(operationId, withMessage);
-                        }
-
-                        @Override
-                        public void operationDone(String withMessage) {
-                            feedback.operationDone(operationId, withMessage);
-                        }
-
-                        @Override
-                        public void operationNotice(String noticeMessage) {
-                            feedback.operationNotice(operationId, noticeMessage);
-                        }
-
-                        @Override
-                        public void operationFailed(String withMessage) {
-                            feedback.operationFailed(operationId, withMessage);
-                        }
-                    });
+                    .execOperation(operationId, properties, feedbackController
+            );
         } catch (Exception e) {
             logger.error("Error during task operation execution.", e);
             feedback.operationFailed(operationId, "Operation failed on execution.");
