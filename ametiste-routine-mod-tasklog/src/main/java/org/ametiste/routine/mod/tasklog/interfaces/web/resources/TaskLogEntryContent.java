@@ -3,6 +3,7 @@ package org.ametiste.routine.mod.tasklog.interfaces.web.resources;
 import org.springframework.hateoas.core.Relation;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -17,13 +18,15 @@ public class TaskLogEntryContent {
 
     private String state;
 
+    private final Map<String, String> properties;
     private final List<NoticeDTO> notices;
 
     private final List<OperationLogDTO> operations;
 
-    public TaskLogEntryContent(UUID taskId, String state, List<NoticeDTO> notices, List<OperationLogDTO> operations) {
+    public TaskLogEntryContent(UUID taskId, String state, Map<String, String> properties, List<NoticeDTO> notices, List<OperationLogDTO> operations) {
         this.taskId = taskId;
         this.state = state;
+        this.properties = properties;
         this.notices = notices;
         this.operations = operations;
     }
@@ -38,6 +41,10 @@ public class TaskLogEntryContent {
 
     public String getState() {
         return state;
+    }
+
+    public Map<String, String> getProperties() {
+        return properties;
     }
 
     public List<OperationLogDTO> getOperations() {

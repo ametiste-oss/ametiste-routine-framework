@@ -18,13 +18,13 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @Import(BacklogModConfiguration.class)
 public class RoutineExamplePrinterApp {
 
+    public static void main(String[] args) {
+        SpringApplication.run(RoutineExamplePrinterApp.class, args);
+    }
+
     @Bean
     public Backlog backlog() {
         return new Backlog(PrintTaskScheme.NAME, PrintTaskScheme.NAME + "-population");
-    }
-
-    public static void main(String[] args) {
-        SpringApplication.run(RoutineExamplePrinterApp.class, args);
     }
 
 }

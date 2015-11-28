@@ -18,7 +18,8 @@ CREATE TABLE IF NOT EXISTS ame_routine.ame_routine_task (
 CREATE TABLE IF NOT EXISTS ame_routine.ame_routine_task_property (
   task_id CHAR(36) NOT NULL,
   name VARCHAR(128) NOT NULL,
-  value VARCHAR(128) NOT NULL
+  value VARCHAR(128) NOT NULL,
+  PRIMARY KEY (task_id, name)
 );
 
 CREATE TABLE IF NOT EXISTS ame_routine.ame_routine_mod (
@@ -31,7 +32,7 @@ CREATE TABLE IF NOT EXISTS ame_routine.ame_routine_mod_property (
   mod_id CHAR(36) NOT NULL,
   name VARCHAR(128) NOT NULL,
   value VARCHAR(128) NOT NULL,
-  PRIMARY KEY (mod_id,name)
+  PRIMARY KEY (mod_id, name)
 );
 
 CREATE TABLE IF NOT EXISTS ame_routine.ame_routine_task_operation (

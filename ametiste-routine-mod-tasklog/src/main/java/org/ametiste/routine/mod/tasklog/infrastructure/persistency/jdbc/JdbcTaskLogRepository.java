@@ -156,6 +156,7 @@ public class JdbcTaskLogRepository implements TaskLogRepository {
                         .map(this::createNoticeEntry)
                         .collect(Collectors.toList()),
                 reflectedData.state.name(),
+                reflectedData.properties,
                 reflectedData.operationFlare.stream()
                         .map((x) -> {
                             return new OperationLog(

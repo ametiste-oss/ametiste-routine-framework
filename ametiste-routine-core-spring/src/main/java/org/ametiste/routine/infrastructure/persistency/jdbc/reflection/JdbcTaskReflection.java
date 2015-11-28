@@ -38,7 +38,7 @@ public class JdbcTaskReflection extends ClosedTaskReflection {
 
     private static final String saveTaskPropertiesQuery = "INSERT INTO " +
             "ame_routine.ame_routine_task_property (task_id, name, value) " +
-            "VALUES (?, ?, ?)";
+            "VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE value=VALUES(value)";
 
     private final String taskTable;
 
@@ -159,6 +159,7 @@ public class JdbcTaskReflection extends ClosedTaskReflection {
         // data that required for search queries stored in the separate fields,
         // actual aggregate data stored within the agregate blob object
 
+        // TODO : replcae it be upsert
         if (isRecordExists()) {
 
             if (logger.isDebugEnabled()) {
@@ -182,6 +183,22 @@ public class JdbcTaskReflection extends ClosedTaskReflection {
                             Types.TIMESTAMP,
                             Types.BLOB,
                             Types.VARCHAR,
+                    }
+            );
+
+            reflectedTaskData.properties.forEach(
+                    (k, v) -> {
+                        jdbcTemplate.update(saveTaskPropertiesQuery,
+                                new Object[] {
+                                        reflectedTaskData.taskId.toString(),
+                                        k,
+                                        v
+                                },
+                                new int[] {
+                                        Types.VARCHAR,
+                                        Types.VARCHAR,
+                                        Types.VARCHAR
+                                });
                     }
             );
 

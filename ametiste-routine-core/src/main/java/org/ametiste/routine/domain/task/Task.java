@@ -2,6 +2,7 @@ package org.ametiste.routine.domain.task;
 
 import org.ametiste.domain.DomainStateReflector;
 import org.ametiste.routine.domain.task.notices.Notice;
+import org.ametiste.routine.domain.task.properties.BasicTaskProperty;
 import org.ametiste.routine.domain.task.properties.TaskProperty;
 import org.ametiste.routine.domain.task.reflect.OperationFlare;
 import org.ametiste.routine.domain.task.reflect.TaskLens;
@@ -202,10 +203,7 @@ public class Task implements DomainStateReflector<TaskReflection> {
 
         @Override
         public void flareProperty(String name, String value) {
-
-            // TODO: ATM there is only one possible property, but I neeed some kind of Factory
-            // to construct proper object type by the property name.
-            // properties.put(name, BoundItem.create(value));
+            properties.put(name, new BasicTaskProperty(name, value));
         }
 
         @Override

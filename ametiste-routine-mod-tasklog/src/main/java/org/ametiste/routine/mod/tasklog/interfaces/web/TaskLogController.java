@@ -95,6 +95,7 @@ public class TaskLogController {
         final TaskLogEntryContent content = new TaskLogEntryContent(
                 taskLogEntry.getTaskId(),
                 taskLogEntry.getState(),
+                taskLogEntry.getProperties(),
                 taskLogEntry.getNotices().stream()
                         .map(this::createNoticeDTO)
                         .collect(Collectors.toList()),
