@@ -119,13 +119,13 @@ public class AmetisteRoutineCoreConfiguration {
         return new DefaultTaskExecutionService(taskRepository, taskAppEvenets(), operationExecutionGateway());
     }
 
-    @Bean
-    public JmsListenerContainerFactory<?> issuedTasksListenerContainerFactory(ConnectionFactory connectionFactory) {
-        DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
-        factory.setConnectionFactory(connectionFactory);
-        factory.setConcurrency(Integer.toString(props.getInitialExecutionConcurrency()));
-        return factory;
-    }
+//    @Bean
+//    public JmsListenerContainerFactory<?> issuedTasksListenerContainerFactory(ConnectionFactory connectionFactory) {
+//        DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
+//        factory.setConnectionFactory(connectionFactory);
+//        factory.setConcurrency(Integer.toString(props.getInitialExecutionConcurrency()));
+//        return factory;
+//    }
 
     @Bean
     @ConditionalOnMissingBean
@@ -138,7 +138,8 @@ public class AmetisteRoutineCoreConfiguration {
     public JmsTaskEventsListener issuedTaskEventListener() {
         return new JmsTaskEventsListener(taskExecutionService(),
                 taskExecutionService(),  // NOTE: DefaultTaskExecutionService implements ExecutionFeedback interface
-                operationExecutionGateway()
+                operationExecutionGateway(),
+                props.getInitialExecutionConcurrency()
         );
     }
 

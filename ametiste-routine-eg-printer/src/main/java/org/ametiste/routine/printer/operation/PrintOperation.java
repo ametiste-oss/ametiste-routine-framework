@@ -2,6 +2,8 @@ package org.ametiste.routine.printer.operation;
 
 import org.ametiste.routine.sdk.operation.OperationExecutor;
 import org.ametiste.routine.sdk.operation.OperationFeedback;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -12,6 +14,8 @@ public final class PrintOperation implements OperationExecutor {
 
     public static final String NAME = "print-operation";
 
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
     @Override
     public void execOperation(UUID operationId, Map<String, String> properties, OperationFeedback feedback) {
         feedback.operationStarted("Printer launched.");
@@ -20,7 +24,7 @@ public final class PrintOperation implements OperationExecutor {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("YAYAYYA " + properties.get("out"));
+        logger.warn("YAYAYYA " + properties.get("out"));
         feedback.operationSucceed();
     }
 

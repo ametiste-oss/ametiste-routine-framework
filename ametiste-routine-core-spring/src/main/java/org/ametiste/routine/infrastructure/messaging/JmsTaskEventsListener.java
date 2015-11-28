@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.jms.annotation.JmsListener;
 
 import java.util.UUID;
+import java.util.concurrent.Executors;
 
 /**
  *
@@ -23,40 +24,49 @@ public class JmsTaskEventsListener {
     private final ExecutionFeedback executionFeedback;
     private final OperationExecutionGateway executionManager;
 
+    private final BoundedExecutor boundedExecutor;
+
     public JmsTaskEventsListener(
             TaskExecutionService taskExecutionService,
             ExecutionFeedback executionFeedback,
-            OperationExecutionGateway executionManager) {
+            OperationExecutionGateway executionManager,
+            int concurrencyLevel) {
         this.taskExecutionService = taskExecutionService;
         this.executionFeedback = executionFeedback;
         this.executionManager = executionManager;
+        this.boundedExecutor = new BoundedExecutor(
+                Executors.newFixedThreadPool(concurrencyLevel), concurrencyLevel);
     }
 
-    @JmsListener(destination = "task-issued", containerFactory = "issuedTasksListenerContainerFactory")
-    public void onTaskIssued(UUID taskId) {
-        try {
-            taskExecutionService.executeTask(taskId);
-        } catch (Exception e) {
-            if (logger.isDebugEnabled()) {
-                logger.debug("Error during task execution.", e);
+    @JmsListener(destination = "task-issued")
+    public void onTaskIssued(UUID taskId) throws Exception {
+        boundedExecutor.submitTask(() -> {
+            try {
+                taskExecutionService.executeTask(taskId);
+            } catch (Exception e) {
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Error during task execution.", e);
+                }
+                // TODO : add stacktrace to log somehow, or create report, or both
             }
-            // TODO : add stacktrace to log somehow, or create report, or both
-        }
+        });
     }
 
-    @JmsListener(destination = "task-pended", containerFactory = "issuedTasksListenerContainerFactory")
-    public void onTaskPended(ExecutionOrder executionOrder) {
-        for (ExecutionLine line : executionOrder.executionLines()) {
+    @JmsListener(destination = "task-pended")
+    public void onTaskPended(ExecutionOrder executionOrder) throws Exception {
+        boundedExecutor.submitTask(() -> {
+            for (ExecutionLine line : executionOrder.executionLines()) {
 
-            if (logger.isDebugEnabled()) {
-                logger.debug("Pass execution line to operations service: {}", line.line());
+                if (logger.isDebugEnabled()) {
+                    logger.debug("Pass execution line to operations service: {}", line.line());
+                }
+
+                // TODO: timeouts?
+                executionManager.executeOperation(
+                        line.operationId(), line.line(), line.properties(), executionFeedback
+                );
             }
-
-            // TODO: timeouts?
-            executionManager.executeOperation(
-                    line.operationId(), line.line(), line.properties(), executionFeedback
-            );
-        }
+        });
     }
 
 }
