@@ -11,12 +11,17 @@ import java.util.Map;
 public abstract class AbstractTaskScheme implements TaskScheme {
 
     @Override
-    public final Task createTask(Map<String, String> schemeParams) {
+    public final Task createTask(Map<String, String> schemeParams, String creatorIdenifier) throws TaskCreationRejectedBySchemeException {
         final Task task = new Task();
+
+        verifyCreationRequest(schemeParams, creatorIdenifier);
         fulfillOperations(task, schemeParams);
         fulfillProperties(task, schemeParams);
+
         return task;
     }
+
+    protected void verifyCreationRequest(Map<String, String> schemeParams, String creatorIdentifier) throws TaskCreationRejectedBySchemeException {}
 
     protected void fulfillProperties(Task task, Map<String, String> schemeParams) { }
 

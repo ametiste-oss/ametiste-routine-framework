@@ -17,4 +17,4 @@ org:
       mod:
         backlog:
           enabled: true
-          renewRate: 1115000
+          renewRate: 50000

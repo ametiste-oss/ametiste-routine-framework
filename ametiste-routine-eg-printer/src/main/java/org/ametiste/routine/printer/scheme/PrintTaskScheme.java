@@ -1,6 +1,7 @@
 package org.ametiste.routine.printer.scheme;
 
 import org.ametiste.routine.domain.scheme.AbstractTaskScheme;
+import org.ametiste.routine.domain.scheme.TaskCreationRejectedBySchemeException;
 import org.ametiste.routine.domain.task.Task;
 import org.ametiste.routine.domain.task.properties.TaskProperty;
 import org.ametiste.routine.printer.operation.PrintOperation;
@@ -13,6 +14,16 @@ import java.util.Map;
 public class PrintTaskScheme extends AbstractTaskScheme {
 
     public static final String NAME = "printer-eg-task";
+
+    public static final String ALLOWED_CREATOR = "mod-backlog";
+
+    @Override
+    protected void verifyCreationRequest(Map<String, String> schemeParams, String creatorIdentifier) throws TaskCreationRejectedBySchemeException {
+        if (!creatorIdentifier.equals(ALLOWED_CREATOR)) {
+            throw new TaskCreationRejectedBySchemeException(
+                    "Unexpected creator identifier for task scheme '" + NAME + "' expected '" + ALLOWED_CREATOR + "' but '" + creatorIdentifier + "' given.");
+        }
+    }
 
     @Override
     protected void fulfillOperations(Task task, Map<String, String> schemeParams) {

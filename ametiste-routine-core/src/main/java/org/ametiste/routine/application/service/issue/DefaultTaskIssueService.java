@@ -1,5 +1,6 @@
 package org.ametiste.routine.application.service.issue;
 
+import org.ametiste.routine.domain.scheme.TaskCreationRejectedBySchemeException;
 import org.ametiste.routine.domain.scheme.TaskScheme;
 import org.ametiste.routine.domain.scheme.TaskSchemeRepository;
 import org.ametiste.routine.domain.task.Task;
@@ -41,7 +42,15 @@ public class DefaultTaskIssueService implements TaskIssueService {
     public UUID issueTask(String taskSchemeName, Map<String, String> params, String creatorIdenifier) {
 
         final TaskScheme taskScheme = taskSchemeRepository.findTaskScheme(taskSchemeName);
-        final Task task = taskScheme.createTask(params);
+
+        final Task task;
+
+        try {
+            task = taskScheme.createTask(params, creatorIdenifier);
+        } catch (TaskCreationRejectedBySchemeException e) {
+            // TODO: add specific app exception
+            throw new RuntimeException("Task creation rejected by scheme.", e);
+        }
 
         task.addProperty(new TaskProperty("task.scheme", taskSchemeName));
         task.addProperty(new TaskProperty("created.by", creatorIdenifier));
