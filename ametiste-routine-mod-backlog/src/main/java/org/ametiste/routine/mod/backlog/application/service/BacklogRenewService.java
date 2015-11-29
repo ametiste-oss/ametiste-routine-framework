@@ -33,7 +33,7 @@ public class BacklogRenewService {
         taskIssueService.issueTask(
                 BacklogRenewTaskScheme.NAME,
                 Collections.singletonMap("schemeName", backlog.boundTaskScheme()),
-                "mod-backlog"
+                "mod-backlog:meta"
         );
 
     }

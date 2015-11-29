@@ -24,7 +24,7 @@ public class PrintTaskPopulationStrategy implements BacklogPopulationStrategy {
                 .loadModDataInt("backlog-print-tasks-count")
                 .orElse(0);
 
-        for (int i = 0; i < 100; i++, issuedTasksCount++) {
+        for (int i = 0; i < 10; i++, issuedTasksCount++) {
             taskGateway.issueTask(PrintTaskScheme.NAME,
                     Collections.singletonMap("out", "I am task #" + issuedTasksCount)
             );

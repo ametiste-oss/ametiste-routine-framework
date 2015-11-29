@@ -127,6 +127,15 @@ public class JdbcTaskReflection extends ClosedTaskReflection {
         return processed;
     }
 
+    public <T> List<T> loadMultipleReflectionsAs(String query, Function<ReflectedTaskData, T> taskReflectionConsumer) {
+
+        final List<ReflectedTaskData> reflectedData = jdbcTemplate.query(query, taskDataRowMapper);
+
+        List<T> processed = reflectedData.stream()
+                .map(taskReflectionConsumer::apply).collect(Collectors.toList());
+
+        return processed;
+    }
 
     // TODO: hmm, is it right place for this method?
     // TODO: May be I should split this class on two and create base abstract one?

@@ -1,5 +1,8 @@
 package org.ametiste.routine.mod.tasklog.interfaces.web;
 
+import org.ametiste.routine.domain.task.Task;
+import org.ametiste.routine.domain.task.properties.BasicTaskProperty;
+import org.ametiste.routine.domain.task.properties.TaskProperty;
 import org.ametiste.routine.mod.tasklog.domain.NoticeEntry;
 import org.ametiste.routine.mod.tasklog.domain.TaskLogEntry;
 import org.ametiste.routine.mod.tasklog.domain.TaskLogNotFoundException;
@@ -54,31 +57,60 @@ public class TaskLogController {
         return counts;
     }
 
+    // TODO: rework for Optional parameters
     @RequestMapping(method = RequestMethod.GET)
     public TaskLogEntryResources provideLogEntries(
             @RequestParam(value = "status", required = false) List<String> byStatus,
+            @RequestParam(value = "property", required = false) List<String> byProperty,
             @RequestParam(value = "offset", required = false, defaultValue = "0") int offset,
             @RequestParam(value = "limit", required = false, defaultValue = "10") int limit) {
 
-        final List<TaskLogEntryResource> entries = new ArrayList<>();
+        final List<TaskProperty> propertiesFilter;
+        final List<Task.State> states;
 
-        if (byStatus == null) {
-            taskLogRepository.findEntries().stream()
-                    .map(this::assembleLogEntryResource)
-                    .forEach(entries::add);
+        if (byProperty != null) {
+            //
+            // NOTE: properties filter format is:
+            //
+            //          property=name.one:value.one,name.two:value.two
+            //
+            // So, just split each part by ':' for two pieces, note is allows for values
+            // to contain ':' symbol also.
+            //
+            propertiesFilter = byProperty.stream()
+                    .map(s -> s.split(":", 2))
+                    .map(a -> new BasicTaskProperty(a[0], a[1]))
+                    .collect(Collectors.toList());
         } else {
-            byStatus.stream()
-                    .map((s) -> taskLogRepository.findEntries(s, offset, limit))
-                    .flatMap(List::stream)
-                    .map(this::assembleLogEntryResource)
-                    .forEach(entries::add);
+            propertiesFilter = Collections.emptyList();
         }
 
-        final TaskLogEntryResources resources = new TaskLogEntryResources(entries);
+        if (byStatus != null) {
+            states = byStatus.stream().map(Task.State::valueOf).collect(Collectors.toList());
+        } else {
+            states = Collections.emptyList();
+        }
+
+        final List<TaskLogEntry> entryList;
+        final List<TaskLogEntryResource> entryResources = new ArrayList<>();
+
+        if (byProperty == null && byStatus == null) {
+            entryList = taskLogRepository.findEntries();
+        } else if (byProperty != null) {
+            entryList = taskLogRepository.findEntries(states, propertiesFilter, offset, limit);
+        } else {
+            entryList = taskLogRepository.findEntries(states, offset, limit);
+        }
+
+        entryList.stream()
+                .map(this::assembleLogEntryResource)
+                .forEach(entryResources::add);
+
+        final TaskLogEntryResources resources = new TaskLogEntryResources(entryResources);
 
         resources.add(
                 linkTo(methodOn(TaskLogController.class)
-                                .provideLogEntries(byStatus, offset, limit)).withSelfRel()
+                                .provideLogEntries(byStatus, byProperty, offset, limit)).withSelfRel()
         );
 
         return resources;

@@ -109,6 +109,16 @@ public class InMemoryTaskLogRepository implements TaskLogRepository {
     }
 
     @Override
+    public List<TaskLogEntry> findEntries(List<Task.State> states, int offset, int limit) {
+        return null;
+    }
+
+    @Override
+    public List<TaskLogEntry> findEntries(List<Task.State> states, List<TaskProperty> properties, int offset, int limit) {
+        return null;
+    }
+
+    @Override
     public int countEntriesByStatus(String byStatus) {
         return 0;
     }

@@ -11,6 +11,7 @@ import org.ametiste.routine.infrastructure.persistency.ClosedTaskReflection;
 import org.ametiste.routine.infrastructure.persistency.jdbc.reflection.JdbcTaskReflection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.sql.Timestamp;
@@ -108,6 +109,52 @@ public class JdbcTaskLogRepository implements TaskLogRepository {
     }
 
     @Override
+    public List<TaskLogEntry> findEntries(List<Task.State> states, int offset, int limit) {
+        final String findQuery = String.format("SELECT agregate " +
+                        "FROM " + taskTable +
+                        " WHERE " +
+                        "   %s " +
+                        " ORDER BY cr_time DESC" +
+                        " LIMIT %s, %s ",
+                createStateFilter(states),
+                offset,
+                limit);
+
+        return new JdbcTaskReflection(taskTable, operationTable, jdbcTemplate)
+                .loadMultipleReflectionsAs(
+                        findQuery,
+                        this::processReflectedEntry
+                );
+    }
+
+    @Override
+    public List<TaskLogEntry> findEntries(List<Task.State> states, List<TaskProperty> properties, int offset, int limit) {
+
+        final String findQuery = String.format("SELECT agregate " +
+                "FROM " + taskTable + " JOIN " + taskPropertiesTable +
+                " ON " +
+                "   " + taskTable + ".id = " + taskPropertiesTable + ".task_id " +
+                " WHERE " +
+                "   %s " +
+                "   %s " +
+                " GROUP BY id " +
+                " HAVING COUNT(id) = %s" +
+                " ORDER BY cr_time DESC" +
+                " LIMIT %s, %s ",
+                    createStateFilter(states),
+                    (states.size() > 0 ? "AND " : "") + createPropertiesFilter(properties),
+                    properties.size(),
+                    offset,
+                    limit);
+
+        return new JdbcTaskReflection(taskTable, operationTable, jdbcTemplate)
+                .loadMultipleReflectionsAs(
+                        findQuery,
+                        this::processReflectedEntry
+                );
+    }
+
+    @Override
     public int countEntriesByStatus(String byStatus) {
 
         final int tasksCount = jdbcTemplate.queryForObject(
@@ -120,16 +167,19 @@ public class JdbcTaskLogRepository implements TaskLogRepository {
     @Override
     public int countByTaskState(Task.State[] states, TaskProperty[] properties) {
 
-        final String countQuery = String.format("SELECT COUNT(*) " +
-                "FROM " + taskTable + " LEFT JOIN " + taskPropertiesTable +
+        final String countQuery = String.format("SELECT COUNT(*) FROM ( " +
+                "SELECT id FROM " + taskTable + " JOIN " + taskPropertiesTable +
                 " ON " +
                 "   " + taskTable + ".id = " + taskPropertiesTable + ".task_id " +
                 " WHERE " +
-                "   state in (%s) " +
-                " AND " +
-                "   ( %s )", createStateFilter(states), createPropertiesFilter(properties));
-
-        logger.warn(countQuery);
+                "   %s "  +
+                "   %s " +
+                " GROUP BY id " +
+                " HAVING COUNT(id) = %s )",
+                createStateFilter(Arrays.asList(states)),
+                (states.length > 0 ? "AND " : "") + createPropertiesFilter(Arrays.asList(properties)),
+                properties.length
+        );
 
         return jdbcTemplate.queryForObject(countQuery, Integer.class);
     }
@@ -137,7 +187,7 @@ public class JdbcTaskLogRepository implements TaskLogRepository {
     @Override
     public int countByTaskState(Task.State[] states) {
         final int tasksCount = jdbcTemplate.queryForObject(
-                String.format("SELECT COUNT(id) FROM %s WHERE state in (%s)", taskTable, createStateFilter(states)),
+                String.format("SELECT COUNT(id) FROM %s WHERE state in (%s)", taskTable, createStateFilter(Arrays.asList(states))),
                 Integer.class);
         return tasksCount;
     }
@@ -171,21 +221,33 @@ public class JdbcTaskLogRepository implements TaskLogRepository {
         );
     }
 
-    private String createPropertiesFilter(TaskProperty[] properties) {
-        return String.join("OR ",
-                Arrays.asList(properties).stream().map(
-                        p -> String.format("(%s.name = '%s' AND %s.value = '%s')",
-                                taskPropertiesTable, p.name(), taskPropertiesTable, p.value()
-                        )).collect(Collectors.toList())
-        );
+    private String createPropertiesFilter(List<TaskProperty> properties) {
+
+        if (properties.isEmpty()) {
+            return "";
+        }
+
+        return taskPropertiesTable + ".name in (" + String.join(",", properties
+                .stream().map(p -> "'" + p.name() + "'")
+                .collect(Collectors.toList())
+        ) + ") AND " +
+                taskPropertiesTable + ".value in (" + String.join(",", properties
+                .stream().map(p -> "'" + p.value() + "'")
+                .collect(Collectors.toList())
+        ) + ")";
     }
 
-    private String createStateFilter(Task.State[] states) {
-        return String.join(",", Arrays.asList(states)
+    private String createStateFilter(List<Task.State> states) {
+
+        if (states.isEmpty()) {
+            return "";
+        }
+
+        return "state in (" + String.join(",", states
                 .stream()
                 .map(state -> "'" + state.name() + "'")
-                .collect(Collectors.toList())
-        );
+                .collect(Collectors.toList()))
+        + ")";
     }
 
 }
