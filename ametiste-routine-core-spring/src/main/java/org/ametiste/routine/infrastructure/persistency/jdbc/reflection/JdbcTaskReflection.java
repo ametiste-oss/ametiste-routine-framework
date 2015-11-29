@@ -64,7 +64,7 @@ public class JdbcTaskReflection extends ClosedTaskReflection {
 
     public JdbcTaskReflection(String taskTable, String operationTable, JdbcTemplate jdbcTemplate, ReflectedTaskData reflectedTaskData) {
         this(taskTable, operationTable, jdbcTemplate);
-        flareTaskId(reflectedTaskData.taskId);
+        // flareTaskId(reflectedTaskData.taskId);
         this.reflectedTaskData = reflectedTaskData;
     }
 
@@ -88,10 +88,10 @@ public class JdbcTaskReflection extends ClosedTaskReflection {
     }
 
     public void loadReflection() {
-        reflectedTaskData = jdbcTemplate.queryForObject(
-            String.format("SELECT agregate FROM %s WHERE id = ?", taskTable),
-                taskDataRowMapper, reflectedTaskData.taskId.toString()
-        );
+//        reflectedTaskData = jdbcTemplate.queryForObject(
+//            String.format("SELECT agregate FROM %s WHERE id = ?", taskTable),
+//                taskDataRowMapper, reflectedTaskData.taskId.toString()
+//        );
     }
 
 
@@ -171,109 +171,109 @@ public class JdbcTaskReflection extends ClosedTaskReflection {
         // TODO : replcae it be upsert
         if (isRecordExists()) {
 
-            if (logger.isDebugEnabled()) {
-                logger.debug("----");
-                logger.debug("Update task  : " + reflectedTaskData.taskId);
-                logger.debug("       state : " + reflectedTaskData.state);
-                logger.debug("----");
-            }
-
-            jdbcTemplate.update(String.format(updateTaskQuery, taskTable),
-                    new Object[]{
-                            reflectedTaskData.state.name(),
-                            Optional.ofNullable(reflectedTaskData.executionStartTime).map(Timestamp::from).orElse(null),
-                            Optional.ofNullable(reflectedTaskData.completionTime).map(Timestamp::from).orElse(null),
-                            new SqlLobValue(data, lobHandler),
-                            reflectedTaskData.taskId.toString()
-                    },
-                    new int[]{
-                            Types.VARCHAR,
-                            Types.TIMESTAMP,
-                            Types.TIMESTAMP,
-                            Types.BLOB,
-                            Types.VARCHAR,
-                    }
-            );
-
-            reflectedTaskData.properties.forEach(
-                    (k, v) -> {
-                        jdbcTemplate.update(saveTaskPropertiesQuery,
-                                new Object[] {
-                                        reflectedTaskData.taskId.toString(),
-                                        k,
-                                        v
-                                },
-                                new int[] {
-                                        Types.VARCHAR,
-                                        Types.VARCHAR,
-                                        Types.VARCHAR
-                                });
-                    }
-            );
-
-        } else {
-
-            if (logger.isDebugEnabled()) {
-                logger.debug("----");
-                logger.debug("Save task  : " + reflectedTaskData.taskId);
-                logger.debug("       state : " + reflectedTaskData.state);
-                logger.debug("----");
-            }
-
-            jdbcTemplate.update(String.format(saveTaskQuery, taskTable),
-                    new Object[]{
-                            reflectedTaskData.taskId.toString(),
-                            reflectedTaskData.state.name(),
-                            // TODO: Dunno how to store various properties, need to think about
-                            // reflectedTaskData.properties.get(BoundItem.PROPERTY_NAME),
-                            Optional.ofNullable(reflectedTaskData.creationTime).map(Timestamp::from).orElse(null),
-                            Optional.ofNullable(reflectedTaskData.executionStartTime).map(Timestamp::from).orElse(null),
-                            Optional.ofNullable(reflectedTaskData.completionTime).map(Timestamp::from).orElse(null),
-                            new SqlLobValue(data, lobHandler)
-                    },
-                    new int[]{
-                            Types.VARCHAR,
-                            Types.VARCHAR,
-                            // Types.VARCHAR,
-                            Types.TIMESTAMP,
-                            Types.TIMESTAMP,
-                            Types.TIMESTAMP,
-                            Types.BLOB
-                    }
-            );
-
-            reflectedTaskData.properties.forEach(
-                    (k, v) -> {
-                        jdbcTemplate.update(saveTaskPropertiesQuery,
-                            new Object[] {
-                                    reflectedTaskData.taskId.toString(),
-                                    k,
-                                    v
-                            },
-                            new int[] {
-                                    Types.VARCHAR,
-                                    Types.VARCHAR,
-                                    Types.VARCHAR
-                            });
-                    }
-            );
-
-            // NOTE: there is only mapping data to provide search query capabilities,
-            // actual operation data stored within the agregate blob
-
-            reflectedTaskData.operationFlare.forEach(o -> {
-                jdbcTemplate.update(String.format(saveTaskOperationQuery, operationTable),
-                    o.flashId().toString(),
-                    reflectedTaskData.taskId.toString()
-                );
-            });
+//            if (logger.isDebugEnabled()) {
+//                logger.debug("----");
+//                logger.debug("Update task  : " + reflectedTaskData.taskId);
+//                logger.debug("       state : " + reflectedTaskData.state);
+//                logger.debug("----");
+//            }
+//
+//            jdbcTemplate.update(String.format(updateTaskQuery, taskTable),
+//                    new Object[]{
+//                            reflectedTaskData.state.name(),
+//                            Optional.ofNullable(reflectedTaskData.executionStartTime).map(Timestamp::from).orElse(null),
+//                            Optional.ofNullable(reflectedTaskData.completionTime).map(Timestamp::from).orElse(null),
+//                            new SqlLobValue(data, lobHandler),
+//                            reflectedTaskData.id.toString()
+//                    },
+//                    new int[]{
+//                            Types.VARCHAR,
+//                            Types.TIMESTAMP,
+//                            Types.TIMESTAMP,
+//                            Types.BLOB,
+//                            Types.VARCHAR,
+//                    }
+//            );
+//
+//            reflectedTaskData.properties.forEach(
+//                    (k, v) -> {
+//                        jdbcTemplate.update(saveTaskPropertiesQuery,
+//                                new Object[] {
+//                                        reflectedTaskData.id.toString(),
+//                                        k,
+//                                        v
+//                                },
+//                                new int[] {
+//                                        Types.VARCHAR,
+//                                        Types.VARCHAR,
+//                                        Types.VARCHAR
+//                                });
+//                    }
+//            );
+//
+//        } else {
+//
+//            if (logger.isDebugEnabled()) {
+//                logger.debug("----");
+//                logger.debug("Save task  : " + reflectedTaskData.id);
+//                logger.debug("       state : " + reflectedTaskData.state);
+//                logger.debug("----");
+//            }
+//
+//            jdbcTemplate.update(String.format(saveTaskQuery, taskTable),
+//                    new Object[]{
+//                            reflectedTaskData.id.toString(),
+//                            reflectedTaskData.state.name(),
+//                            // TODO: Dunno how to store various properties, need to think about
+//                            // reflectedTaskData.properties.get(BoundItem.PROPERTY_NAME),
+//                            Optional.ofNullable(reflectedTaskData.creationTime).map(Timestamp::from).orElse(null),
+//                            Optional.ofNullable(reflectedTaskData.executionStartTime).map(Timestamp::from).orElse(null),
+//                            Optional.ofNullable(reflectedTaskData.completionTime).map(Timestamp::from).orElse(null),
+//                            new SqlLobValue(data, lobHandler)
+//                    },
+//                    new int[]{
+//                            Types.VARCHAR,
+//                            Types.VARCHAR,
+//                            // Types.VARCHAR,
+//                            Types.TIMESTAMP,
+//                            Types.TIMESTAMP,
+//                            Types.TIMESTAMP,
+//                            Types.BLOB
+//                    }
+//            );
+//
+//            reflectedTaskData.properties.forEach(
+//                    (k, v) -> {
+//                        jdbcTemplate.update(saveTaskPropertiesQuery,
+//                            new Object[] {
+//                                    reflectedTaskData.id.toString(),
+//                                    k,
+//                                    v
+//                            },
+//                            new int[] {
+//                                    Types.VARCHAR,
+//                                    Types.VARCHAR,
+//                                    Types.VARCHAR
+//                            });
+//                    }
+//            );
+//
+//            // NOTE: there is only mapping data to provide search query capabilities,
+//            // actual operation data stored within the agregate blob
+//
+//            reflectedTaskData.operationData.forEach(o -> {
+//                jdbcTemplate.update(String.format(saveTaskOperationQuery, operationTable),
+//                    o.id.toString(),
+//                    reflectedTaskData.id.toString()
+//                );
+//            });
 
         }
     }
 
     private boolean isRecordExists() {
         return jdbcTemplate.queryForObject(String.format(checkExistsTaskQuery, taskTable),
-                Integer.class, reflectedTaskData.taskId.toString()) > 0;
+                Integer.class, reflectedTaskData.id.toString()) > 0;
     }
 
 }

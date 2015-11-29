@@ -9,9 +9,9 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties
 public class JdbcTaskRepositoryConfigurationProperties {
 
-    private String taskTableName = "ame_routine.ame_routine_task";
+    private String taskTableName = "ame_routine_task";
 
-    private String operationTableName = "ame_routine.ame_routine_task_operation";
+    private String operationTableName = "ame_routine_task_operation";
 
     public void setTaskTableName(String taskTableName) {
         this.taskTableName = taskTableName;

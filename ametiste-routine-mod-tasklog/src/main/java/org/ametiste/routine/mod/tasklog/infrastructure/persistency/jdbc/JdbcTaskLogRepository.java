@@ -11,12 +11,10 @@ import org.ametiste.routine.infrastructure.persistency.ClosedTaskReflection;
 import org.ametiste.routine.infrastructure.persistency.jdbc.reflection.JdbcTaskReflection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.sql.Timestamp;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
@@ -28,7 +26,7 @@ import java.util.stream.Collectors;
  */
 public class JdbcTaskLogRepository implements TaskLogRepository {
 
-    private final String taskPropertiesTable = "ame_routine.ame_routine_task_property";
+    private final String taskPropertiesTable = "ame_routine_task_property";
     private JdbcTemplate jdbcTemplate;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -192,13 +190,17 @@ public class JdbcTaskLogRepository implements TaskLogRepository {
         return tasksCount;
     }
 
-    private NoticeEntry createNoticeEntry(Notice notice) {
-        return new NoticeEntry(notice.creationTime(), notice.text());
+    private NoticeEntry createNoticeEntry(ClosedTaskReflection.ReflectedOperationNoticeData notice) {
+        return new NoticeEntry(notice.creationTime, notice.text);
+    }
+
+    private NoticeEntry createNoticeEntry(ClosedTaskReflection.ReflectedTaskNoticeData notice) {
+        return new NoticeEntry(notice.creationTime, notice.text);
     }
 
     private TaskLogEntry processReflectedEntry(ClosedTaskReflection.ReflectedTaskData reflectedData) {
         return new TaskLogEntry(
-                reflectedData.taskId,
+                reflectedData.id,
                 reflectedData.creationTime,
                 reflectedData.executionStartTime,
                 reflectedData.completionTime,
@@ -206,14 +208,15 @@ public class JdbcTaskLogRepository implements TaskLogRepository {
                         .map(this::createNoticeEntry)
                         .collect(Collectors.toList()),
                 reflectedData.state.name(),
-                reflectedData.properties,
-                reflectedData.operationFlare.stream()
+                reflectedData.properties.stream()
+                        .collect(Collectors.toMap((p) -> p.name, (p) -> p.value)),
+                reflectedData.operationData.stream()
                         .map((x) -> {
                             return new OperationLog(
-                                    x.flashId(),
-                                    x.flashLabel(),
-                                    x.flashState(),
-                                    x.flashNotices().stream()
+                                    x.id,
+                                    x.label,
+                                    x.state,
+                                    x.notices.stream()
                                             .map(this::createNoticeEntry)
                                             .collect(Collectors.toList()));
                         })

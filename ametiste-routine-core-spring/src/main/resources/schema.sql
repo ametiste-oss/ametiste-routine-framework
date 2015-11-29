@@ -11,6 +11,35 @@ CREATE TABLE IF NOT EXISTS ame_routine.ame_routine_task (
   PRIMARY KEY (id)
 );
 
+CREATE TABLE IF NOT EXISTS ame_routine.ame_routine_task_operation (
+  id CHAR(36) NOT NULL,
+  task_id CHAR(36) NOT NULL,
+  label VARCHAR(128) NOT NULL,
+  state VARCHAR(16) NOT NULL,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE IF NOT EXISTS ame_routine.ame_routine_task_operation_property (
+  operation_id CHAR(36) NOT NULL,
+  name VARCHAR(128) NOT NULL,
+  value VARCHAR(128) NOT NULL,
+  PRIMARY KEY (operation_id, name)
+);
+
+CREATE TABLE IF NOT EXISTS ame_routine.ame_routine_task_operation_notice (
+  operation_id CHAR(36) NOT NULL,
+  cr_time TIMESTAMP NOT NULL,
+  text VARCHAR(128) NOT NULL,
+  PRIMARY KEY (operation_id, name)
+);
+
+CREATE TABLE IF NOT EXISTS ame_routine.ame_routine_task_notice (
+  operation_id CHAR(36) NOT NULL,
+  cr_time TIMESTAMP NOT NULL,
+  text VARCHAR(128) NOT NULL,
+  PRIMARY KEY (operation_id, name)
+);
+
 -- ALTER TABLE sro_task ADD INDEX state_idx (state);
 -- ALTER TABLE sro_task ADD INDEX propbiid_idx (prop_bound_item_id);
 -- ALTER TABLE sro_task ADD INDEX execst_idx (execs_time);

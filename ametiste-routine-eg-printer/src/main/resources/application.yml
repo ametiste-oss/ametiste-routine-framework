@@ -1,6 +1,6 @@
 logging:
   level:
-    org.ametiste: WARN
+    org.ametiste: DEBUG
 
 spring:
   h2:
@@ -8,7 +8,7 @@ spring:
       enabled: true
   datasource:
     driverClassName: org.h2.Driver
-    url: jdbc:h2:mem:testdb;MODE=MySQL;DB_CLOSE_ON_EXIT=FALSE
+    url: jdbc:h2:mem:ame_routine;MODE=MySQL;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1
     # url: jdbc:h2:file:./target/h2db/db/test-db;MODE=MySQL;DB_CLOSE_DELAY=-1
 
 org:
@@ -16,5 +16,5 @@ org:
     routine:
       mod:
         backlog:
-          enabled: true
-          renewRate: 50000
+          enabled: 'false'
+          renewRate: 5000
