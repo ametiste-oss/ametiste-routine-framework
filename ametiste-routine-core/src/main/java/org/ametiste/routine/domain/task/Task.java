@@ -197,13 +197,13 @@ public class Task implements DomainStateReflector<TaskReflection> {
         @Override
         public void flareOperation(OperationFlare operationFlare) {
             final Operation flared = Operation.createByFlare(operationFlare);
-            operationsOrder.add(flared);
-            operations.put(operationFlare.flashId(), flared);
+            Task. this.operationsOrder.add(flared);
+            Task. this.operations.put(operationFlare.flashId(), flared);
         }
 
         @Override
         public void flareProperty(String name, String value) {
-            properties.put(name, new BasicTaskProperty(name, value));
+            Task. this.properties.put(name, new BasicTaskProperty(name, value));
         }
 
         @Override

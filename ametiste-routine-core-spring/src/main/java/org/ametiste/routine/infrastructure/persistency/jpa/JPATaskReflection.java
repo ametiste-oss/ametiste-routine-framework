@@ -1,13 +1,16 @@
-package org.ametiste.routine.infrastructure.persistency.sdata;
+package org.ametiste.routine.infrastructure.persistency.jpa;
 
 import org.ametiste.routine.domain.task.Task;
 import org.ametiste.routine.domain.task.notices.Notice;
 import org.ametiste.routine.domain.task.reflect.OperationFlare;
 import org.ametiste.routine.domain.task.reflect.TaskReflection;
-import org.ametiste.routine.infrastructure.persistency.ClosedTaskReflection;
+import org.ametiste.routine.infrastructure.persistency.jpa.data.*;
 
 import java.time.Instant;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -70,14 +73,14 @@ public class JPATaskReflection implements TaskReflection {
         final TaskPropertyData taskPropertyData = new TaskPropertyData();
         taskPropertyData.name = name;
         taskPropertyData.value = value;
-        this.taskData.properties.add(taskPropertyData);
+        taskData.properties.add(taskPropertyData);
     }
 
     @Override
     public void flareTaskTimes(Instant creationTime, Instant executionStartTime, Instant completionTime) {
-        this.taskData.creationTime = creationTime;
-        this.taskData.executionStartTime = executionStartTime;
-        this.taskData.completionTime = completionTime;
+        taskData.creationTime = creationTime;
+        taskData.executionStartTime = executionStartTime;
+        taskData.completionTime = completionTime;
     }
 
     @Override
@@ -96,8 +99,17 @@ public class JPATaskReflection implements TaskReflection {
                 taskData.executionStartTime, taskData.completionTime);
         reflection.flareTaskState(Task.State.valueOf(taskData.state));
 
-        taskData.operationData.forEach((d) -> {
-            reflection.flareOperation(new OperationFlare(d.id, d.label, null, d.state, null));
+        taskData.operationData.forEach((operation) -> {
+
+            final List<Notice> notices = operation.notices.stream()
+                    .map(notice -> new Notice(notice.text)).collect(Collectors.toList());
+
+            final Map<String, String> properties = operation.properties.stream()
+                    .collect(Collectors.toMap(p -> p.name, p -> p.value));
+
+            reflection.flareOperation(
+                new OperationFlare(operation.id, operation.label, properties, operation.state, notices)
+            );
         });
 
         taskData.notices.forEach((d) -> {

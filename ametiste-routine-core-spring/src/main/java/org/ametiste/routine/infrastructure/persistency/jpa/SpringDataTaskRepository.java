@@ -1,17 +1,23 @@
-package org.ametiste.routine.infrastructure.persistency.sdata;
+package org.ametiste.routine.infrastructure.persistency.jpa;
 
 import org.ametiste.routine.domain.task.Task;
 import org.ametiste.routine.domain.task.TaskRepository;
-import org.ametiste.routine.infrastructure.persistency.ClosedTaskReflection;
+import org.ametiste.routine.infrastructure.persistency.jpa.data.TaskData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
  *
  * @since
  */
 public class SpringDataTaskRepository implements TaskRepository {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final JPATaskDataRepository jpaTaskDataRepository;
 
@@ -20,17 +26,21 @@ public class SpringDataTaskRepository implements TaskRepository {
     }
 
     @Override
+    @Transactional
     public Task findTask(UUID taskId) {
-        final TaskData taskData = jpaTaskDataRepository.findOne(taskId);
-        return new Task(new JPATaskReflection(taskData));
+        return reflectDataAsTask(jpaTaskDataRepository.findOne(taskId));
     }
 
     @Override
+    @Transactional
     public List<Task> findTasksByState(Task.State state, int limit) {
-        return jpaTaskDataRepository.findByState(state);
+        return jpaTaskDataRepository.findByState(state).stream().map(
+                this::reflectDataAsTask
+        ).collect(Collectors.toList());
     }
 
     @Override
+    @Transactional
     public void saveTask(Task task) {
         final JPATaskReflection jpaTaskReflection = new JPATaskReflection();
         task.reflectAs(jpaTaskReflection);
@@ -38,7 +48,13 @@ public class SpringDataTaskRepository implements TaskRepository {
     }
 
     @Override
+    @Transactional
     public Task findTaskByOperationId(UUID operationId) {
-        return jpaTaskDataRepository.findByOperationDataId(operationId);
+        return reflectDataAsTask(jpaTaskDataRepository.findByOperationDataId(operationId));
     }
+
+    private Task reflectDataAsTask(TaskData taskData) {
+        return new Task(new JPATaskReflection(taskData));
+    }
+
 }

@@ -66,7 +66,7 @@ public class Operation {
     }
 
     boolean isNotDone() {
-        return state == State.EXECUTION || state == State.PENDING;
+        return state == State.EXECUTION || state == State.PENDING || state == State.NEW;
     }
 
     public static Operation createByFlare(OperationFlare flare) {

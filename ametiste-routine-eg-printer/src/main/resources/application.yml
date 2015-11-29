@@ -3,6 +3,8 @@ logging:
     org.ametiste: DEBUG
 
 spring:
+  jpa:
+    show-sql: false
   h2:
     console:
       enabled: true
@@ -16,5 +18,5 @@ org:
     routine:
       mod:
         backlog:
-          enabled: 'false'
+          enabled: false
           renewRate: 5000
