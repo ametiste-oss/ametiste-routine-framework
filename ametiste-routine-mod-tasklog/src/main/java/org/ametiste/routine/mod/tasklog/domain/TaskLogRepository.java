@@ -22,17 +22,13 @@ public interface TaskLogRepository {
     // TODO: must return int
     long countActiveTasks();
 
-    List<UUID> findNewTasks(long appendCount);
-
-    void saveTaskLog(TaskLogEntry taskLogEntry);
-
+    @Deprecated
+    // TODO: replace by limited version
     List<TaskLogEntry> findEntries();
 
     TaskLogEntry findTaskLog(UUID taskId);
 
     List<UUID> findActiveTasksAfterDate(Instant timePoint);
-
-    List<TaskLogEntry> findEntries(String byStatus, int offset, int limit);
 
     List<TaskLogEntry> findEntries(List<Task.State> states, int offset, int limit);
 
@@ -49,5 +45,4 @@ public interface TaskLogRepository {
 
     int countByTaskState(Task.State[] states, TaskProperty[] properties);
 
-    int countByTaskState(Task.State[] states);
 }

@@ -57,31 +57,15 @@ public class JdbcTaskLogRepository implements TaskLogRepository {
     }
 
     @Override
-    public List<UUID> findNewTasks(long appendCount) {
-
-        final List<String> newTasks = jdbcTemplate.queryForList(
-                String.format("SELECT id FROM %s WHERE state = 'NEW' ORDER BY cr_time DESC LIMIT ?", taskTable), String.class, appendCount);
-
-        return newTasks.stream()
-                .map(UUID::fromString)
-                .collect(Collectors.toList());
-    }
-
-    @Override
-    public void saveTaskLog(TaskLogEntry taskLogEntry) {
-
-    }
-
-    @Override
     public List<TaskLogEntry> findEntries() {
         return new JdbcTaskReflection(taskTable, operationTable, jdbcTemplate)
-                .loadMultipleReflections(this::processReflectedEntry, 0, 100);
+                .loadMultipleReflections(JdbcTaskLogRepository::processReflectedEntry, 0, 100);
     }
 
     @Override
     public TaskLogEntry findTaskLog(UUID taskId) {
         final JdbcTaskReflection jdbcTaskReflection = new JdbcTaskReflection(taskTable, operationTable, taskId, jdbcTemplate);
-        return jdbcTaskReflection.processReflection(this::processReflectedEntry);
+        return jdbcTaskReflection.processReflection(JdbcTaskLogRepository::processReflectedEntry);
 
     }
 
@@ -101,12 +85,6 @@ public class JdbcTaskLogRepository implements TaskLogRepository {
     }
 
     @Override
-    public List<TaskLogEntry> findEntries(String byStatus, int offset, int limit) {
-        return new JdbcTaskReflection(taskTable, operationTable, jdbcTemplate)
-                .loadMultipleReflections(this::processReflectedEntry, byStatus, offset, limit);
-    }
-
-    @Override
     public List<TaskLogEntry> findEntries(List<Task.State> states, int offset, int limit) {
         final String findQuery = String.format("SELECT agregate " +
                         "FROM " + taskTable +
@@ -121,7 +99,7 @@ public class JdbcTaskLogRepository implements TaskLogRepository {
         return new JdbcTaskReflection(taskTable, operationTable, jdbcTemplate)
                 .loadMultipleReflectionsAs(
                         findQuery,
-                        this::processReflectedEntry
+                        JdbcTaskLogRepository::processReflectedEntry
                 );
     }
 
@@ -148,7 +126,7 @@ public class JdbcTaskLogRepository implements TaskLogRepository {
         return new JdbcTaskReflection(taskTable, operationTable, jdbcTemplate)
                 .loadMultipleReflectionsAs(
                         findQuery,
-                        this::processReflectedEntry
+                        JdbcTaskLogRepository::processReflectedEntry
                 );
     }
 
@@ -182,30 +160,22 @@ public class JdbcTaskLogRepository implements TaskLogRepository {
         return jdbcTemplate.queryForObject(countQuery, Integer.class);
     }
 
-    @Override
-    public int countByTaskState(Task.State[] states) {
-        final int tasksCount = jdbcTemplate.queryForObject(
-                String.format("SELECT COUNT(id) FROM %s WHERE state in (%s)", taskTable, createStateFilter(Arrays.asList(states))),
-                Integer.class);
-        return tasksCount;
-    }
-
-    private NoticeEntry createNoticeEntry(ClosedTaskReflection.ReflectedOperationNoticeData notice) {
+    public static NoticeEntry createNoticeEntry(ClosedTaskReflection.ReflectedOperationNoticeData notice) {
         return new NoticeEntry(notice.creationTime, notice.text);
     }
 
-    private NoticeEntry createNoticeEntry(ClosedTaskReflection.ReflectedTaskNoticeData notice) {
+    public static NoticeEntry createNoticeEntry(ClosedTaskReflection.ReflectedTaskNoticeData notice) {
         return new NoticeEntry(notice.creationTime, notice.text);
     }
 
-    private TaskLogEntry processReflectedEntry(ClosedTaskReflection.ReflectedTaskData reflectedData) {
+    public static TaskLogEntry processReflectedEntry(ClosedTaskReflection.ReflectedTaskData reflectedData) {
         return new TaskLogEntry(
                 reflectedData.id,
                 reflectedData.creationTime,
                 reflectedData.executionStartTime,
                 reflectedData.completionTime,
                 reflectedData.notices.stream()
-                        .map(this::createNoticeEntry)
+                        .map(JdbcTaskLogRepository::createNoticeEntry)
                         .collect(Collectors.toList()),
                 reflectedData.state.name(),
                 reflectedData.properties.stream()
@@ -217,7 +187,7 @@ public class JdbcTaskLogRepository implements TaskLogRepository {
                                     x.label,
                                     x.state,
                                     x.notices.stream()
-                                            .map(this::createNoticeEntry)
+                                            .map(JdbcTaskLogRepository::createNoticeEntry)
                                             .collect(Collectors.toList()));
                         })
                         .collect(Collectors.toList())

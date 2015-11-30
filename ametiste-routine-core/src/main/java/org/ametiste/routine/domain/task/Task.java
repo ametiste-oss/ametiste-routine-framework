@@ -142,7 +142,10 @@ public class Task implements DomainStateReflector<TaskReflection> {
          *   that task not done and can be or already executing.
          * </p>
          * */
+        @Deprecated
         public static State[] activeStates = { NEW, PENDING, EXECUTION };
+
+        public static List<State> activeStatesList = Arrays.asList(activeStates);
 
         /**
          * Defines can be the task executed in the given state.
