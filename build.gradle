@@ -18,6 +18,9 @@ subprojects {
     repositories {
         mavenLocal()
         mavenCentral()
+        maven {
+            url "https://dl.bintray.com/ametiste-oss/maven/"
+        }
     }
 
     configurations {

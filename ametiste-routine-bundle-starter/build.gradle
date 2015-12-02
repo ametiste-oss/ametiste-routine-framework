@@ -35,6 +35,11 @@ repositories {
     mavenCentral()
 }
 
+bootRepackage {
+    enabled = false
+}
+
+
 dependencies {
     compile project(":ametiste-routine-core")
     compile("org.springframework.boot:spring-boot")

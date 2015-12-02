@@ -17,6 +17,10 @@ description = "Routine core components implementation using Spring Framework."
 apply plugin: 'maven-publish'
 apply plugin: 'spring-boot'
 
+bootRepackage {
+    enabled = false
+}
+
 publishing {
     publications {
         mavenJava(MavenPublication) {

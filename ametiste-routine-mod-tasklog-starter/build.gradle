@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '1.2.3.RELEASE'
+        springBootVersion = '1.3.0.RELEASE'
     }
     repositories {
         mavenCentral()
@@ -14,6 +14,10 @@ buildscript {
 
 apply plugin: 'maven-publish'
 apply plugin: 'spring-boot'
+
+bootRepackage {
+    enabled = false
+}
 
 publishing {
     publications {
