@@ -3,6 +3,10 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'maven'
     apply plugin: 'idea'
+
+    apply from: "https://raw.githubusercontent.com/ametiste-oss/ametiste-bintray-gradle/master/bintray-ext-ame-oss.gradle"
+    apply from: "https://raw.githubusercontent.com/ametiste-oss/ametiste-bintray-gradle/master/bintray-ext.gradle"
+
     apply plugin: 'maven-publish'
 
     sourceCompatibility = 1.8
@@ -13,14 +17,14 @@ subprojects {
 
     ext {
         slf4jVersion = "1.7.12"
+
+        bintray_vcsUrl = 'https://github.com/ametiste-oss/ametiste-routine-framework.git'
     }
 
     repositories {
         mavenLocal()
         mavenCentral()
-        maven {
-            url "https://dl.bintray.com/ametiste-oss/maven/"
-        }
+        jcenter()
     }
 
     configurations {
