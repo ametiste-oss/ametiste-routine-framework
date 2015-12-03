@@ -19,9 +19,11 @@ public class OperationData implements Persistable<UUID> {
     public String state;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "operation_id")
     public List<OperationPropertyData> properties = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "operation_id")
     public List<OperationNoticeData> notices = new ArrayList<>();
 
     @Override

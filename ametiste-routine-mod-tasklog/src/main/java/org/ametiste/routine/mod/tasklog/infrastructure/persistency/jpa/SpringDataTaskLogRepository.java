@@ -2,21 +2,22 @@ package org.ametiste.routine.mod.tasklog.infrastructure.persistency.jpa;
 
 import org.ametiste.routine.domain.task.Task;
 import org.ametiste.routine.domain.task.properties.TaskProperty;
-import org.ametiste.routine.infrastructure.persistency.jpa.data.OperationNoticeData;
-import org.ametiste.routine.infrastructure.persistency.jpa.data.TaskData;
-import org.ametiste.routine.infrastructure.persistency.jpa.data.TaskNoticeData;
-import org.ametiste.routine.infrastructure.persistency.jpa.data.TaskPropertyData;
+import org.ametiste.routine.infrastructure.persistency.jpa.data.*;
 import org.ametiste.routine.mod.tasklog.domain.NoticeEntry;
 import org.ametiste.routine.mod.tasklog.domain.OperationLog;
 import org.ametiste.routine.mod.tasklog.domain.TaskLogEntry;
 import org.ametiste.routine.mod.tasklog.domain.TaskLogRepository;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.criteria.*;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -25,16 +26,73 @@ import java.util.stream.Collectors;
  */
 public class SpringDataTaskLogRepository implements TaskLogRepository {
 
-    private final JPATaskLogRepository jpaTaskLogRepository;
+    private static class TaskDataSpecifications {
 
-    public SpringDataTaskLogRepository(JPATaskLogRepository jpaTaskLogRepository) {
-        this.jpaTaskLogRepository = jpaTaskLogRepository;
+        public static Specification<TaskData> hasProperty(TaskProperty taskProperty) {
+            return (root, query, cb) -> {
+
+                final ListJoin<TaskData, TaskPropertyData> join =
+                        root.join(TaskData_.properties);
+
+                final Path<String> stringPath = root.get(TaskData_.state);
+
+                return cb.and(
+                    cb.equal(join.get(TaskPropertyData_.name), taskProperty.name()),
+                    cb.equal(join.get(TaskPropertyData_.value), taskProperty.value())
+                );
+            };
+        }
+
+        public static Specification<TaskData> hasState(final List<Task.State> states) {
+            return (root, query, cb) -> {
+                return root.get(TaskData_.state)
+                        .in(states.stream()
+                                .map(Task.State::name)
+                                .collect(Collectors.toList())
+                        );
+            };
+        }
+
+    }
+
+    // TODO: extract me
+    private static class SpecificationAccumulator<T> implements Supplier<Specification<T>>, Specification<T> {
+
+        private Specifications<T> accumulator;
+
+        public SpecificationAccumulator(Specifications<T> accumulator) {
+            this.accumulator = accumulator;
+        }
+
+        public void and(Specification<T> specification) {
+            this.accumulator = this.accumulator.and(specification);
+        }
+
+        public void or(Specification<T> specification) {
+            this.accumulator = this.accumulator.or(specification);
+        }
+
+        @Override
+        public Specifications<T> get() {
+            return accumulator;
+        }
+
+        @Override
+        public Predicate toPredicate(Root<T> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+            return accumulator.toPredicate(root, query, cb);
+        }
+    }
+
+    private final JPATaskLogDataRepository jpaTaskLogDataRepository;
+
+    public SpringDataTaskLogRepository(JPATaskLogDataRepository jpaTaskLogDataRepository) {
+        this.jpaTaskLogDataRepository = jpaTaskLogDataRepository;
     }
 
     @Override
     @Transactional
     public long countActiveTasks() {
-        return jpaTaskLogRepository.countTaskByStateIn(
+        return jpaTaskLogDataRepository.countTaskByStateIn(
             statesToString(Task.State.activeStatesList)
         );
     }
@@ -49,7 +107,7 @@ public class SpringDataTaskLogRepository implements TaskLogRepository {
     @Transactional
     public TaskLogEntry findTaskLog(UUID taskId) {
         return processReflectedEntry(
-            jpaTaskLogRepository.findOne(taskId)
+            jpaTaskLogDataRepository.findOne(taskId)
         );
     }
 
@@ -62,8 +120,11 @@ public class SpringDataTaskLogRepository implements TaskLogRepository {
     @Override
     @Transactional
     public List<TaskLogEntry> findEntries(List<Task.State> states, int offset, int limit) {
-        return jpaTaskLogRepository.
-                findTaskByStateIn(statesToString(states), new PageRequest(offset, limit))
+
+        final Specifications<TaskData> accumulator =
+                Specifications.where(TaskDataSpecifications.hasState(states));
+
+        return jpaTaskLogDataRepository.findAll(accumulator, new PageRequest(offset, limit))
                 .getContent()
                 .stream()
                 .map(this::processReflectedEntry)
@@ -73,11 +134,7 @@ public class SpringDataTaskLogRepository implements TaskLogRepository {
     @Override
     @Transactional
     public List<TaskLogEntry> findEntries(List<Task.State> states, List<TaskProperty> properties, int offset, int limit) {
-        return jpaTaskLogRepository.findTaskByStateInAndPropertiesNameInAndPropertiesValueIn(
-                        statesToString(states),
-                        properties.stream().map(TaskProperty::name).collect(Collectors.toList()),
-                        properties.stream().map(TaskProperty::value).collect(Collectors.toList()),
-                        new PageRequest(offset, limit))
+        return jpaTaskLogDataRepository.findAll(createStateAndPropsSpec(states, properties), new PageRequest(offset, limit))
                 .getContent()
                 .stream()
                 .map(this::processReflectedEntry)
@@ -87,20 +144,17 @@ public class SpringDataTaskLogRepository implements TaskLogRepository {
     @Override
     @Transactional
     public int countEntriesByStatus(String byStatus) {
-        return jpaTaskLogRepository.countTaskByState(byStatus);
+        return jpaTaskLogDataRepository.countTaskByState(byStatus);
     }
 
     @Override
     @Transactional
-    public int countByTaskState(Task.State[] states, TaskProperty[] properties) {
-        return jpaTaskLogRepository.countTaskByStateInAndPropertiesIn(
-                statesToString(Arrays.asList(states)), Arrays.asList(properties).stream().map(
-                        (p) -> {
-                            return propsToData(p);
-                        }
-                ).collect(Collectors.toList())
-        );
+    public long countByTaskState(List<Task.State> states, List<TaskProperty> properties) {
+        return jpaTaskLogDataRepository.count(createStateAndPropsSpec(states, properties));
     }
+
+
+    /* Helper methods section */
 
     private List<String> statesToString(List<Task.State> states) {
         return states.stream().map(Task.State::name).collect(Collectors.toList());
@@ -146,4 +200,17 @@ public class SpringDataTaskLogRepository implements TaskLogRepository {
                         .collect(Collectors.toList())
         );
     }
+
+    private SpecificationAccumulator<TaskData> createStateAndPropsSpec(List<Task.State> states, List<TaskProperty> properties) {
+
+        final SpecificationAccumulator<TaskData> accumulator =
+                new SpecificationAccumulator<>(Specifications.where(TaskDataSpecifications.hasState(states)));
+
+        properties.stream()
+                .map(TaskDataSpecifications::hasProperty)
+                .forEach(accumulator::and);
+
+        return accumulator;
+    }
+
 }

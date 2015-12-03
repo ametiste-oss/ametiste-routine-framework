@@ -8,6 +8,7 @@ import org.ametiste.routine.mod.tasklog.domain.TaskLogEntry;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
@@ -17,7 +18,8 @@ import java.util.UUID;
  *
  * @since
  */
-public interface JPATaskLogRepository extends CrudRepository<TaskData, UUID> {
+public interface JPATaskLogDataRepository extends CrudRepository<TaskData, UUID>,
+        JpaSpecificationExecutor<TaskData> {
 
     int countTaskByStateIn(List<String> state);
 
@@ -25,10 +27,4 @@ public interface JPATaskLogRepository extends CrudRepository<TaskData, UUID> {
 
     int countTaskByStateInAndPropertiesIn(List<String> states, List<TaskPropertyData> properties);
 
-    Slice<TaskData> findTaskByStateIn(List<String> states, Pageable pageable);
-
-    Slice<TaskData> findTaskByStateInAndPropertiesNameInAndPropertiesValueIn(List<String> states,
-                                                                             List<String> propertiesName,
-                                                                             List<String> propertiesValue,
-                                                                             Pageable pageable);
 }

@@ -19,7 +19,6 @@ public interface TaskLogRepository {
      *
      * @return
      */
-    // TODO: must return int
     long countActiveTasks();
 
     @Deprecated
@@ -43,6 +42,6 @@ public interface TaskLogRepository {
     @Deprecated
     int countEntriesByStatus(String byStatus);
 
-    int countByTaskState(Task.State[] states, TaskProperty[] properties);
+    long countByTaskState(List<Task.State> states, List<TaskProperty> properties);
 
 }

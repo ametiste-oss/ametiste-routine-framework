@@ -7,6 +7,7 @@ import org.ametiste.routine.mod.backlog.application.scheme.BacklogRenewTaskSchem
 import org.ametiste.routine.mod.backlog.domain.Backlog;
 import org.ametiste.routine.mod.tasklog.domain.TaskLogRepository;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 /**
@@ -42,14 +43,14 @@ public class BacklogRenewService {
     // TODO: have various constraints for renew
     private boolean hasActiveTasksFromBacklog(String taskSchemeName) {
 
-        final int activeCount = taskLogRepository.countByTaskState(
-                Task.State.activeStates,
-                new TaskProperty[]{
+        final long activeCount = taskLogRepository.countByTaskState(
+                Task.State.activeStatesList,
+                Arrays.asList(
                     // TODO: this properties are required and installed by core services,
                     // TODO Need some kind of constants or something like this
                     new TaskProperty("task.scheme", taskSchemeName),
                     new TaskProperty("created.by", "mod-backlog")
-                }
+                )
         );
 
         return activeCount > 0;

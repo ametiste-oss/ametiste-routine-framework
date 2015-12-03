@@ -18,12 +18,15 @@ public class TaskData implements Persistable<UUID> {
     public String state;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "task_id")
     public List<OperationData> operationData = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "task_id")
     public List<TaskPropertyData> properties = new ArrayList<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "task_id")
     public List<TaskNoticeData> notices = new ArrayList<>();
 
     @Column(name = "cr_time")
