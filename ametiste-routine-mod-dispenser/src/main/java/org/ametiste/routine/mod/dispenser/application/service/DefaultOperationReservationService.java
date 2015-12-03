@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 /**
  * <p>
  *     Basic implementation of the {@link OperationReservationService} which implemented
- *     using core {@link org.ametiste.routine.sdk.domain.task.TaskRepository} service to
+ *     using core {@link org.ametiste.routine.domain.task.TaskRepository} service to
  *     find and save reserved operations.
  * </p>
  *

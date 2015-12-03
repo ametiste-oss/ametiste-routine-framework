@@ -1,4 +1,29 @@
+buildscript {
+    ext {
+        springBootVersion = '1.3.0.RELEASE'
+    }
+    repositories {
+        mavenCentral()
+        maven { url "https://repo.spring.io/snapshot" }
+        maven { url "https://repo.spring.io/milestone" }
+    }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+    }
+}
+
+plugins {
+    id "com.jfrog.bintray" version "1.3.1"
+}
+
+apply from: "https://raw.githubusercontent.com/ametiste-oss/ametiste-bintray-gradle/master/bintray.gradle"
+
 apply plugin: 'maven-publish'
+apply plugin: 'spring-boot'
+
+bootRepackage {
+    enabled = false
+}
 
 publishing {
     publications {
@@ -9,18 +34,14 @@ publishing {
     }
 }
 
-ext {
-    springVersion = "4.1.6.RELEASE"
-}
-
 dependencies {
 
     compile project(":ametiste-routine-core-spring")
 
-    compile("org.springframework:spring-webmvc:${springVersion}")
-    compile("org.springframework.plugin:spring-plugin-core:1.1.0.RELEASE")
-    compile("org.springframework.hateoas:spring-hateoas:0.17.0.RELEASE")
-    compile("com.fasterxml.jackson.core:jackson-annotations:2.5.0")
+    compile("org.springframework:spring-webmvc")
+    compile("org.springframework.plugin:spring-plugin-core")
+    compile("org.springframework.hateoas:spring-hateoas")
+    compile("com.fasterxml.jackson.core:jackson-annotations")
 
     compile("org.slf4j:slf4j-api:1.7.12")
 

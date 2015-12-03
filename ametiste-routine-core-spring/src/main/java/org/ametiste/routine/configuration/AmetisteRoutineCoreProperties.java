@@ -7,7 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  *     Core properties, configures base features of the system.
  * </p>
  *
- * @sine 0.1.0
+ * @since 0.1.0
  */
 @ConfigurationProperties
 public class AmetisteRoutineCoreProperties {
