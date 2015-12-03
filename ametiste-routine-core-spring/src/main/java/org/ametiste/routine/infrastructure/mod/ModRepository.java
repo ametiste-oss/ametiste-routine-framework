@@ -6,7 +6,7 @@ import java.util.Optional;
  *
  * @since
  */
-public interface ModDataRepository {
+public interface ModRepository {
 
     void saveModProperty(String modId, String name, String value);
 
