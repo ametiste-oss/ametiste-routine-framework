@@ -1,9 +1,9 @@
 package org.ametiste.routine.application.service.execution;
 
-import org.ametiste.routine.domain.task.ExecutionOrder;
+import org.ametiste.domain.AggregateInstant;
+import org.ametiste.routine.application.service.TaskAppEvenets;
 import org.ametiste.routine.domain.task.Task;
 import org.ametiste.routine.domain.task.TaskRepository;
-import org.ametiste.routine.application.service.TaskAppEvenets;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -32,13 +32,12 @@ public class DefaultTaskExecutionService implements TaskExecutionService, Execut
 
     @Override
     public void executeTask(UUID taskId) {
-
-        logger.debug("Executing task : {} ", taskId);
-
-        final ExecutionOrder executionOrder = issueExecutionOrder(taskId);
-        taskAppEvenets.taskPended(executionOrder);
-
-        logger.debug("Pass execution order to operations service: {}", executionOrder.executionLines());
+        AggregateInstant.create(taskId, taskRepository::findTask, taskRepository::saveTask)
+                .action(t -> { logger.debug("Executing task : {} ", t.entityId()); })
+                .action(Task::prepareExecution)
+                .consume(taskAppEvenets::taskPended)
+                .consume(o -> logger.debug("Pass execution order to operations service: {}", o.executionLines()))
+                .done();
     }
 
     @Override
@@ -47,58 +46,54 @@ public class DefaultTaskExecutionService implements TaskExecutionService, Execut
          // required for task timeouts and termination implementation
     }
 
-    /**
-     * <p>
-     * Loads task and issue this task execution order.
-     * </p>
-     *
-     * <p>
-     * Note, this method is transactional, after method completeon, the state of task
-     * will be changed.
-     * </p>
-     *
-     * <p>
-     * Transaction would be completed before any messages to external services sent to get consistent
-     * state of the domain.
-     * </p>
-     *
-     * @param taskId target task identifier
-     * @return task execution order
-     */
-    // @Transactional
-    private ExecutionOrder issueExecutionOrder(UUID taskId) {
+    @Override
+    public void operationStarted(UUID operationId) {
+        taskInstantForOperation(operationId)
+                .action(Task::executeOperation, operationId)
+                .done();
+    }
 
-        final Task task = taskRepository.findTask(taskId);
-        final ExecutionOrder executionOrder = task.prepareExecution();
-
-        taskRepository.saveTask(task);
-
-        return executionOrder;
+    @Override
+    public void operationDone(UUID operationId) {
+        taskInstantForOperation(operationId)
+                .action(Task::completeOperation, operationId)
+                .done();
     }
 
     @Override
     public void operationStarted(UUID operationId, String withMessage) {
-        final Task task = taskRepository.findTaskByOperationId(operationId);
-        task.executeOperation(operationId, withMessage);
-        taskRepository.saveTask(task);
+        taskInstantForOperation(operationId)
+                .action(Task::noticeOperation, operationId, withMessage)
+                .action(Task::executeOperation, operationId)
+                .done();
     }
 
     @Override
     public void operationDone(UUID operationId, String withMessage) {
-        final Task task = taskRepository.findTaskByOperationId(operationId);
-        task.completeOperation(operationId, withMessage);
-        taskRepository.saveTask(task);
+        taskInstantForOperation(operationId)
+                .action(Task::noticeOperation, operationId, withMessage)
+                .action(Task::completeOperation, operationId)
+                .done();
     }
 
     @Override
     public void operationNotice(UUID operationId, String noticeMessage) {
-        throw new RuntimeException("Not implemented yet.");
+        taskInstantForOperation(operationId)
+                .action(Task::noticeOperation, operationId, noticeMessage);
     }
 
     @Override
     public void operationFailed(UUID operationId, String withMessage) {
-        final Task task = taskRepository.findTaskByOperationId(operationId);
-        task.terminateOperation(operationId, withMessage);
-        taskRepository.saveTask(task);
+        taskInstantForOperation(operationId)
+                .action(Task::noticeOperation, operationId, withMessage)
+                .action(Task::terminateOperation, operationId)
+                .done();
     }
+
+    private AggregateInstant<UUID, Task> taskInstantForOperation(UUID operationId) {
+        return AggregateInstant.create(operationId,
+                taskRepository::findTaskByOperationId, taskRepository::saveTask
+        );
+    }
+
 }

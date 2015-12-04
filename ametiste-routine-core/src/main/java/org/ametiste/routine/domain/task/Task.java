@@ -10,6 +10,7 @@ import org.ametiste.routine.domain.task.reflect.TaskReflection;
 
 import java.time.Instant;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -315,42 +316,31 @@ public class Task implements DomainStateReflector<TaskReflection> {
 
     }
 
-    public void completeOperation(UUID operationId, String message) {
-
-        inState.canCompleteOperation();
-
-        final Operation operation = lookupOperation(operationId);
-
-        operation.complete(message);
-
-        checkIsTaskCompleted();
-
+    public void noticeOperation(UUID operationId, String message) {
+        invokeOnOperation(operationId, o -> o.addNotice(message));
     }
 
-    public void terminateOperation(UUID operationId, String message) {
-
+    public void completeOperation(UUID operationId) {
         inState.canCompleteOperation();
-
-        final Operation operation = lookupOperation(operationId);
-
-        operation.terminate(message);
-
+        invokeOnOperation(operationId, Operation::complete);
         checkIsTaskCompleted();
-
     }
 
-    public void executeOperation(UUID operationId, String message) {
+    public void terminateOperation(UUID operationId) {
+        inState.canCompleteOperation();
+        invokeOnOperation(operationId, Operation::terminate);
+        checkIsTaskCompleted();
+    }
+
+    public void executeOperation(UUID operationId) {
 
         inState.canUpdateOperation();
-
-        final Operation operation = lookupOperation(operationId);
-        operation.execute(message);
+        invokeOnOperation(operationId, Operation::execute);
 
         // NOTE: after first operation execution started, the task is moved to execution state
         if (inState != State.EXECUTION) {
             inState = State.EXECUTION;
         }
-
     }
 
     public List<UUID> terminate(String message) {
@@ -365,7 +355,8 @@ public class Task implements DomainStateReflector<TaskReflection> {
             }).collect(Collectors.toList());
 
         toBeterminated.forEach((o) -> {
-            o.terminate("Terminated with reason : " + message);
+            o.addNotice("Terminated with reason : " + message);
+            o.terminate();
         });
 
         final List<UUID> terminated = toBeterminated.stream()
@@ -385,20 +376,17 @@ public class Task implements DomainStateReflector<TaskReflection> {
         taskLensSupplier.get();
     }
 
-    private Operation lookupOperation(UUID operationId) {
+    private void invokeOnOperation(UUID operationId, Consumer<Operation> operationConsumer) {
 
         final Operation operation;
 
         if (operations.containsKey(operationId)) {
-            operation = operations.get(operationId);
+            operationConsumer.accept(operations.get(operationId));
         } else {
             throw new IllegalArgumentException(
                     "Task does not own operation with the given id: " + operationId.toString()
             );
         }
-
-        return operation;
-
     }
 
     /**

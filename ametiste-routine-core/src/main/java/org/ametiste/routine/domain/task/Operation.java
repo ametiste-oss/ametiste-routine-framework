@@ -41,19 +41,20 @@ public class Operation {
         this.notices = new ArrayList<>(notices);
     }
 
-    void complete(String message) {
-        notices.add(new Notice(message));
+    void complete() {
         state = State.DONE;
     }
 
-    void terminate(String message) {
-        notices.add(new Notice(message));
+    void terminate() {
         state = State.TERMINATED;
     }
 
-    void execute(String message) {
-        notices.add(new Notice(message));
+    void execute() {
         state = State.EXECUTION;
+    }
+
+    void addNotice(String text) {
+        this.notices.add(new Notice(text));
     }
 
     ExecutionLine prepareExecution() {

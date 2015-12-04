@@ -8,6 +8,10 @@ import java.util.UUID;
  */
 public interface ExecutionFeedback {
 
+    void operationStarted(UUID operationId);
+
+    void operationDone(UUID operationId);
+
     void operationStarted(UUID operationId, String withMessage);
 
     void operationDone(UUID operationId, String withMessage);
