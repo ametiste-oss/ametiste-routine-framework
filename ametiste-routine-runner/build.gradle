@@ -23,7 +23,10 @@ apply plugin: 'spring-boot'
 
 springBoot {
     layout = 'ZIP'
+    backupSource = false
 }
+
+bintrayUpload.dependsOn build
 
 publishing {
     publications {
