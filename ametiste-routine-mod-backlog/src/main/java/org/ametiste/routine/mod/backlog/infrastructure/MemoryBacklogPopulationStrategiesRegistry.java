@@ -1,4 +1,4 @@
-package org.ametiste.routine.mod.backlog.infrasturcture;
+package org.ametiste.routine.mod.backlog.infrastructure;
 
 import java.util.Map;
 

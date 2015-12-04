@@ -34,7 +34,7 @@ public interface TaskLogRepository {
     List<TaskLogEntry> findEntries(List<Task.State> states, List<TaskProperty> properties, int offset, int limit);
 
     /**
-     * @deprecated use {@link #countByTaskState(Task.State...)} instead.
+     * @deprecated use {@link #countByTaskState(List, List)} instead.
      * @param byStatus
      *
      * @return

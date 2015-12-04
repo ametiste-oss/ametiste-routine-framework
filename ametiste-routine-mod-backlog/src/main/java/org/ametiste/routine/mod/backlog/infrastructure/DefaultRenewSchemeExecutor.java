@@ -1,4 +1,4 @@
-package org.ametiste.routine.mod.backlog.infrasturcture;
+package org.ametiste.routine.mod.backlog.infrastructure;
 
 import org.ametiste.routine.mod.backlog.domain.RenewSchemeExecutor;
 import org.ametiste.routine.mod.backlog.domain.RenewScheme;
