@@ -6,7 +6,7 @@ import org.ametiste.routine.mod.backlog.application.operation.BacklogRenewOperat
 import org.ametiste.routine.mod.backlog.application.service.BacklogRenewService;
 import org.ametiste.routine.mod.backlog.domain.Backlog;
 import org.ametiste.routine.mod.backlog.domain.BacklogRepository;
-import org.ametiste.routine.mod.backlog.infrasturcture.*;
+import org.ametiste.routine.mod.backlog.infrastructure.*;
 import org.ametiste.routine.mod.tasklog.domain.TaskLogRepository;
 import org.ametiste.routine.sdk.operation.OperationExecutor;
 import org.springframework.beans.factory.annotation.Autowired;

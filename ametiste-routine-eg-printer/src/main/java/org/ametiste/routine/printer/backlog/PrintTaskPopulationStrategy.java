@@ -3,7 +3,7 @@ package org.ametiste.routine.printer.backlog;
 import org.ametiste.routine.sdk.mod.DataGateway;
 import org.ametiste.routine.sdk.mod.TaskGateway;
 import org.ametiste.routine.printer.scheme.PrintTaskScheme;
-import org.ametiste.routine.mod.backlog.infrasturcture.BacklogPopulationStrategy;
+import org.ametiste.routine.mod.backlog.infrastructure.BacklogPopulationStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -23,6 +23,10 @@ public class PrintTaskPopulationStrategy implements BacklogPopulationStrategy {
         int issuedTasksCount = dataGateway
                 .loadModDataInt("backlog-print-tasks-count")
                 .orElse(0);
+
+        if (issuedTasksCount == 10) {
+            return;
+        }
 
         for (int i = 0; i < 10; i++, issuedTasksCount++) {
             taskGateway.issueTask(PrintTaskScheme.NAME,
