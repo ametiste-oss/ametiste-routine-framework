@@ -2,6 +2,7 @@ package org.ametiste.routine.infrastructure.mod.jpa.data;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
+import javax.persistence.Index;
 import javax.persistence.Table;
 
 /**

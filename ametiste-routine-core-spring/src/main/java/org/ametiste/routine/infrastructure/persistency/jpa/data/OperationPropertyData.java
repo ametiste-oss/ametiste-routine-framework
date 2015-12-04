@@ -3,7 +3,10 @@ package org.ametiste.routine.infrastructure.persistency.jpa.data;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "ame_routine_task_operation_property")
+@Table(name = "ame_routine_task_operation_property", indexes = {
+        @Index(name = "op_prop_name_idx", columnList = "name", unique = false),
+        @Index(name = "op_prop_value_idx", columnList = "value", unique = false)
+})
 public class OperationPropertyData {
 
     @Id
