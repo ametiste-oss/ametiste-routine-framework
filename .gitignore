@@ -1,3 +1,5 @@
+/ametiste-routine-eg-printer/src/main/resources/application-local.yml
+application-local.yml
 .*
 !.gitignore
 !.travis.yml

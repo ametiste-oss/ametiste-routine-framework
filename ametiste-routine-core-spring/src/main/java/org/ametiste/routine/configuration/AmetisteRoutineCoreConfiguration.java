@@ -57,12 +57,6 @@ public class AmetisteRoutineCoreConfiguration {
     @Autowired
     private JPAModDataRepository modDataRepository;
 
-    @Autowired(required = false)
-    private Map<String, OperationExecutorFactory> operationExecutorFactories = Collections.emptyMap();
-
-    @Autowired(required = false)
-    private Map<String, OperationExecutor> operationExecutors = Collections.emptyMap();
-
     @Autowired
     private AmetisteRoutineCoreProperties props;
 
@@ -79,65 +73,8 @@ public class AmetisteRoutineCoreConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public OperationExecutionGateway operationExecutionGateway() {
-
-        final HashMap<String, OperationExecutorFactory> factories = new HashMap<>();
-        factories.putAll(operationExecutorFactories);
-
-        //
-        // DOCUMENTATE ME:
-        //
-        // OperationExecutorFactory allows to control process of OperationExecutor creation,
-        // that may be useful when OperationExecutor is stateful or require additional configuration.
-        // Also it may be used if new executor instance required for each operation execution.
-        //
-        // Registered OperationExecutor beans will be adopted to OperationExecutorFactory.
-        //
-        // Note, be careful to use OperationExecutor shortcut, be shure to use it only for stateless
-        // executors.
-        //
-
-        //
-        // NOTE: adoptation of stateless executors to factories, to shortcut configuration for
-        // stateless executors, that anonymous factory will return one instance of an executor for
-        // each request.
-        //
-        operationExecutors.entrySet().stream().forEach(
-                (k) -> factories.put(k.getKey(), () -> k.getValue())
-        );
-
-        return new DefaultOperationExecutionGateway(factories);
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    // NOTE: DefaultTaskExecutionService implements ExecutionFeedback interface also, so we need it as type
-    public DefaultTaskExecutionService taskExecutionService() {
-        return new DefaultTaskExecutionService(taskRepository, taskAppEvenets(), operationExecutionGateway());
-    }
-
-//    @Bean
-//    public JmsListenerContainerFactory<?> issuedTasksListenerContainerFactory(ConnectionFactory connectionFactory) {
-//        DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory();
-//        factory.setConnectionFactory(connectionFactory);
-//        factory.setConcurrency(Integer.toString(props.getInitialExecutionConcurrency()));
-//        return factory;
-//    }
-
-    @Bean
-    @ConditionalOnMissingBean
     public TaskAppEvenets taskAppEvenets() {
         return new JmsTaskAppEvents(jmsTemplate);
-    }
-
-    @Bean
-    @ConditionalOnMissingBean
-    public JmsTaskEventsListener issuedTaskEventListener() {
-        return new JmsTaskEventsListener(taskExecutionService(),
-                taskExecutionService(),  // NOTE: DefaultTaskExecutionService implements ExecutionFeedback interface
-                operationExecutionGateway(),
-                props.getInitialExecutionConcurrency()
-        );
     }
 
     @Bean

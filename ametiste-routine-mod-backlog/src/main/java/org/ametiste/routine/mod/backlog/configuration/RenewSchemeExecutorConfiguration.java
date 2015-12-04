@@ -1,12 +1,14 @@
 package org.ametiste.routine.mod.backlog.configuration;
 
 import org.ametiste.routine.application.service.issue.TaskIssueService;
+import org.ametiste.routine.configuration.AmetisteRoutineCoreConfiguration;
 import org.ametiste.routine.infrastructure.mod.ModRepository;
 import org.ametiste.routine.mod.backlog.domain.RenewSchemeExecutor;
 import org.ametiste.routine.mod.backlog.infrastructure.*;
 import org.ametiste.routine.mod.backlog.infrastructure.BacklogTaskGateway;
 import org.ametiste.routine.sdk.mod.DataGateway;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
