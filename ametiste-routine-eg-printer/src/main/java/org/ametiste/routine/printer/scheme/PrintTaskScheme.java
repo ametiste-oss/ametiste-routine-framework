@@ -27,6 +27,13 @@ public class PrintTaskScheme extends AbstractTaskScheme {
 
     @Override
     protected void fulfillOperations(Task task, Map<String, String> schemeParams) {
+
+        task.addProperty(new TaskProperty("printer-eg.task.number",
+                schemeParams.getOrDefault("task.number", "[none]")));
+
+        task.addProperty(new TaskProperty("printer-eg.task.out",
+                schemeParams.getOrDefault("task.out", "[none]")));
+
         task.addOperation(PrintOperation.NAME,
                 Collections.singletonMap("out", schemeParams.getOrDefault("out", "[none]")+"::operation-1"));
         task.addOperation(PrintOperation.NAME,

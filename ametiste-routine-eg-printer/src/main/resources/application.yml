@@ -2,16 +2,18 @@ logging:
   level:
     org.ametiste: DEBUG
 
+
+
 spring:
   jpa:
     show-sql: false
-  h2:
-    console:
-      enabled: true
+    generate-ddl: true
+#  h2:
+#    console:
+#      enabled: true
   datasource:
-    driverClassName: org.h2.Driver
-    url: jdbc:h2:mem:ame_routine;MODE=MySQL;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1
-    # url: jdbc:h2:file:./target/h2db/db/test-db;MODE=MySQL;DB_CLOSE_DELAY=-1
+    # url: jdbc:h2:mem:ame_routine;MODE=MySQL;DB_CLOSE_ON_EXIT=FALSE;DB_CLOSE_DELAY=-1
+    url: jdbc:h2:mem;MODE=MySQL;DB_CLOSE_DELAY=-1
 
 org:
   ametiste:
@@ -20,3 +22,6 @@ org:
         backlog:
           enabled: true
           renewRate: 5000
+
+server:
+  port: 8081
