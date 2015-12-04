@@ -271,7 +271,6 @@ public class Task implements DomainStateReflector<TaskReflection> {
         this.id = UUID.randomUUID();
         this.inState = State.NEW;
         this.creationTime = Instant.now();
-        this.notices.add(new Notice("Just created."));
     }
 
     public Task(TaskReflection reflection) {
