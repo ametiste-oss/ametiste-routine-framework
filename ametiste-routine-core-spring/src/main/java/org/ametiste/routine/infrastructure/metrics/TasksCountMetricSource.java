@@ -50,6 +50,7 @@ public class TasksCountMetricSource {
     @Autowired(required = false)
     private JPATaskDataRepository taskDataRepository;
 
+    // TODO: extract as property
     @Scheduled(fixedRate = 30000)
     public void countMetrics() {
 
