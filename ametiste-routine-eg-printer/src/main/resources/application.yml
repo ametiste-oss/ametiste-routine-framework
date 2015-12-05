@@ -11,6 +11,9 @@ spring:
 org:
   ametiste:
     routine:
+      eg:
+        printer:
+          delayTime: 2000
       mod:
         backlog:
           enabled: true
