@@ -32,6 +32,8 @@ public interface TaskRepository {
 
     List<Task> findTasksByState(Task.State state, int limit);
 
+    List<Task> findTasksByState(List<Task.State> state, int limit);
+
     void saveTask(Task task);
 
     Task findTaskByOperationId(UUID operationId);

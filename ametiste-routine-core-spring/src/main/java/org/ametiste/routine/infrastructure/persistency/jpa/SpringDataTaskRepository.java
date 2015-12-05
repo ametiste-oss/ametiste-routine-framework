@@ -7,12 +7,11 @@ import org.ametiste.routine.infrastructure.persistency.PersistencyMetrics;
 import org.ametiste.routine.infrastructure.persistency.jpa.data.TaskData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.function.BiConsumer;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -38,11 +37,24 @@ public class SpringDataTaskRepository implements TaskRepository {
 
     @Override
     @Transactional
-    @Timeable(name = PersistencyMetrics.FIND_TASK_BY_ID_STATE)
+    @Timeable(name = PersistencyMetrics.FIND_TASK_BY_STATE)
     public List<Task> findTasksByState(Task.State state, int limit) {
         return jpaTaskDataRepository.findByState(state).stream().map(
                 this::reflectDataAsTask
         ).collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    @Timeable(name = PersistencyMetrics.FIND_TASK_BY_MULTIPLE_STATE)
+    public List<Task> findTasksByState(List<Task.State> state, int limit) {
+        return jpaTaskDataRepository.findByStateIn(
+                state.stream().map(Task.State::name).collect(Collectors.toList()), new PageRequest(0, limit)
+        )
+            .getContent()
+            .stream()
+            .map(this::reflectDataAsTask)
+            .collect(Collectors.toList());
     }
 
     @Override

@@ -14,8 +14,11 @@ public interface PersistencyMetrics {
     String FIND_TASK_BY_ID_TIMING = TASK_REPO_PREFIX +
             "find-by-id.timing";
 
-    String FIND_TASK_BY_ID_STATE = TASK_REPO_PREFIX +
+    String FIND_TASK_BY_STATE = TASK_REPO_PREFIX +
             "find-by-state.timing";
+
+    String FIND_TASK_BY_MULTIPLE_STATE = TASK_REPO_PREFIX +
+            "find-by-multiple-state.timing";
 
     String FIND_TASK_BY_OP_ID = TASK_REPO_PREFIX +
             "find-by-op-id.timing";
