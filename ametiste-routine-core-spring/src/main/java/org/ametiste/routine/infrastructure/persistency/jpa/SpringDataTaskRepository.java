@@ -39,6 +39,7 @@ public class SpringDataTaskRepository implements TaskRepository {
     @Transactional
     @Timeable(name = PersistencyMetrics.FIND_TASK_BY_STATE)
     public List<Task> findTasksByState(Task.State state, int limit) {
+        // TODO: LIMIT parameter is missed!
         return jpaTaskDataRepository.findByState(state).stream().map(
                 this::reflectDataAsTask
         ).collect(Collectors.toList());
