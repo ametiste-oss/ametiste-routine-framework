@@ -15,9 +15,13 @@ publishing {
     }
 }
 
+//configurations {
+//    compile.exclude module: 'spring-boot', version: "1.2.7.RELEASE"
+//}
+
 dependencies {
 
-    compile "org.slf4j:slf4j-api:1.7.12"
-    compile "org.ametiste.domain:ametiste-domain-core:0.2.0-RELEASE"
+    compile ("org.ametiste.domain:ametiste-domain-core:0.2.0-RELEASE")
+    compile ("org.slf4j:slf4j-api:1.7.12")
 
 }

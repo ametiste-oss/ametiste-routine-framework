@@ -1,26 +1,25 @@
 package org.ametiste.routine.configuration;
 
-import org.ametiste.routine.application.service.execution.DefaultTaskExecutionService;
-import org.ametiste.routine.infrastructure.execution.DefaultOperationExecutionGateway;
+import org.ametiste.routine.application.service.TaskAppEvenets;
 import org.ametiste.routine.application.service.issue.DefaultTaskIssueService;
 import org.ametiste.routine.application.service.issue.TaskIssueService;
 import org.ametiste.routine.domain.scheme.TaskSchemeRepository;
 import org.ametiste.routine.domain.task.TaskRepository;
 import org.ametiste.routine.domain.task.properties.TaskPropertiesRegistry;
 import org.ametiste.routine.domain.task.properties.TaskProperty;
-import org.ametiste.routine.application.service.execution.OperationExecutionGateway;
+import org.ametiste.routine.infrastructure.messaging.JmsTaskAppEvents;
+import org.ametiste.routine.infrastructure.metrics.InfoMetrics;
+import org.ametiste.routine.infrastructure.metrics.TasksCountMetricSource;
 import org.ametiste.routine.infrastructure.mod.ModRepository;
 import org.ametiste.routine.infrastructure.mod.SpringDataModRepository;
 import org.ametiste.routine.infrastructure.mod.jpa.JPAModDataRepository;
-import org.ametiste.routine.sdk.operation.OperationExecutor;
-import org.ametiste.routine.sdk.operation.OperationExecutorFactory;
-import org.ametiste.routine.sdk.application.service.issue.constraints.IssueConstraint;
-import org.ametiste.routine.application.service.TaskAppEvenets;
-import org.ametiste.routine.infrastructure.messaging.JmsTaskEventsListener;
-import org.ametiste.routine.infrastructure.messaging.JmsTaskAppEvents;
+import org.ametiste.routine.infrastructure.persistency.jpa.JPATaskDataRepository;
 import org.ametiste.routine.interfaces.web.TaskController;
+import org.ametiste.routine.sdk.application.service.issue.constraints.IssueConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
@@ -28,14 +27,15 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.jms.core.JmsTemplate;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Configuration
-@Import({JdbcTaskRepositoryConfiguration.class,TaskSchemeRepositoryConfiguration.class})
-@ComponentScan(basePackageClasses = {TaskController.class})
+@ComponentScan(basePackageClasses =
+    {
+        TaskController.class,   // enables scan for info web components
+        InfoMetrics.class       // enables scan for info metric source components
+    }
+)
 @EnableConfigurationProperties(AmetisteRoutineCoreProperties.class)
 public class AmetisteRoutineCoreConfiguration {
 

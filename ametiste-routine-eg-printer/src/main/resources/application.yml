@@ -1,8 +1,6 @@
 logging:
   level:
-    org.ametiste: DEBUG
-
-
+    org.ametiste: ERROR
 
 spring:
   jpa:
@@ -21,6 +19,14 @@ org:
         backlog:
           enabled: true
           renewRate: 5000
+
+    # ame-metrics configuration
+
+    metrics:
+      prefix: ametiste.dev.routine.eg.printer.suncloud-local
+      statsd:
+        host: 188.166.87.159
+        port: 8125
 
 server:
   port: 8081

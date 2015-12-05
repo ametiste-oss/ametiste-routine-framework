@@ -1,7 +1,9 @@
 package org.ametiste.routine.infrastructure.persistency.jpa;
 
+import org.ametiste.metrics.annotations.Timeable;
 import org.ametiste.routine.domain.task.Task;
 import org.ametiste.routine.domain.task.TaskRepository;
+import org.ametiste.routine.infrastructure.persistency.PersistencyMetrics;
 import org.ametiste.routine.infrastructure.persistency.jpa.data.TaskData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,12 +31,14 @@ public class SpringDataTaskRepository implements TaskRepository {
 
     @Override
     @Transactional
+    @Timeable(name = PersistencyMetrics.FIND_TASK_BY_ID_TIMING)
     public Task findTask(UUID taskId) {
         return reflectDataAsTask(jpaTaskDataRepository.findOne(taskId));
     }
 
     @Override
     @Transactional
+    @Timeable(name = PersistencyMetrics.FIND_TASK_BY_ID_STATE)
     public List<Task> findTasksByState(Task.State state, int limit) {
         return jpaTaskDataRepository.findByState(state).stream().map(
                 this::reflectDataAsTask
@@ -43,6 +47,7 @@ public class SpringDataTaskRepository implements TaskRepository {
 
     @Override
     @Transactional
+    @Timeable(name = PersistencyMetrics.SAVE_TASK_TIMING)
     public void saveTask(Task task) {
         final JPATaskReflection jpaTaskReflection = new JPATaskReflection();
         task.reflectAs(jpaTaskReflection);
@@ -51,6 +56,7 @@ public class SpringDataTaskRepository implements TaskRepository {
 
     @Override
     @Transactional
+    @Timeable(name = PersistencyMetrics.FIND_TASK_BY_OP_ID)
     public Task findTaskByOperationId(UUID operationId) {
         return reflectDataAsTask(jpaTaskDataRepository.findByOperationDataId(operationId));
     }

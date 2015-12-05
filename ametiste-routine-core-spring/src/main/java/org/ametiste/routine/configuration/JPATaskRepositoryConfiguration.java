@@ -9,8 +9,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@EnableConfigurationProperties(JdbcTaskRepositoryConfigurationProperties.class)
-public class JdbcTaskRepositoryConfiguration {
+@EnableConfigurationProperties(RepositoryConfigurationProperties.class)
+public class JPATaskRepositoryConfiguration {
 
     @Autowired
     private JPATaskDataRepository jpaTaskDataRepository;
