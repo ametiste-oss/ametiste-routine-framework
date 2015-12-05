@@ -1,16 +1,12 @@
 logging:
   level:
-    org.ametiste: ERROR
+    org.ametiste: DEBUG
 
 spring:
   jpa:
     show-sql: false
-#  h2:
-#    console:
-#      enabled: true
   datasource:
     url: jdbc:h2:mem:ame_routine;MODE=MySQL;DB_CLOSE_DELAY=-1
-    #url: jdbc:h2:mem;MODE=MySQL;DB_CLOSE_DELAY=-1
 
 org:
   ametiste:
@@ -19,14 +15,6 @@ org:
         backlog:
           enabled: true
           renewRate: 5000
-
-    # ame-metrics configuration
-
-    metrics:
-      prefix: ametiste.dev.routine.eg.printer.suncloud-local
-      statsd:
-        host: 188.166.87.159
-        port: 8125
 
 server:
   port: 8081
