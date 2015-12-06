@@ -76,7 +76,7 @@ public class JPATaskReflection implements TaskReflection {
             return;
         }
 
-        if (name.equals("crated.by")) {
+        if (name.equals("created.by")) {
             taskData.creatorId = value;
             return;
         }
@@ -132,6 +132,8 @@ public class JPATaskReflection implements TaskReflection {
             reflection.flareProperty(p.name, p.value);
         });
 
+        reflection.flareProperty("task.scheme", taskData.schemeId);
+        reflection.flareProperty("created.by", taskData.creatorId);
     }
 
     public TaskData reflectedTaskData() {
