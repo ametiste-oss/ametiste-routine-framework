@@ -52,8 +52,8 @@ public class DefaultTaskIssueService implements TaskIssueService {
             throw new RuntimeException("Task creation rejected by scheme.", e);
         }
 
-        task.addProperty(new TaskProperty("task.scheme", taskSchemeName));
-        task.addProperty(new TaskProperty("created.by", creatorIdenifier));
+        task.addProperty(new TaskProperty(Task.SCHEME_PROPERTY_NAME, taskSchemeName));
+        task.addProperty(new TaskProperty(Task.CREATOR_PROPERTY_NAME, creatorIdenifier));
 
         taskRepository.saveTask(task);
         taskAppEvenets.taskIssued(task.entityId());

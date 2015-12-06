@@ -20,6 +20,10 @@ import java.util.stream.Collectors;
  */
 public class Task implements DomainStateReflector<TaskReflection> {
 
+    public static String SCHEME_PROPERTY_NAME = "task.scheme";
+
+    public static String CREATOR_PROPERTY_NAME = "created.by";
+
     public enum State {
 
         NEW {

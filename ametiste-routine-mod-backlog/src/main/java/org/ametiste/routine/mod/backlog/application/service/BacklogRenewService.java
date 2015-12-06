@@ -6,6 +6,8 @@ import org.ametiste.routine.domain.task.properties.TaskProperty;
 import org.ametiste.routine.mod.backlog.application.scheme.BacklogRenewTaskScheme;
 import org.ametiste.routine.mod.backlog.domain.Backlog;
 import org.ametiste.routine.mod.tasklog.domain.TaskLogRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -20,6 +22,8 @@ public class BacklogRenewService {
 
     private final TaskIssueService taskIssueService;
 
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
     public BacklogRenewService(TaskLogRepository taskLogRepository, TaskIssueService taskIssueService) {
         this.taskLogRepository = taskLogRepository;
         this.taskIssueService = taskIssueService;
@@ -28,6 +32,7 @@ public class BacklogRenewService {
     public void renewBy(Backlog backlog) {
 
         if (hasActiveTasksFromBacklog(backlog.boundTaskScheme())) {
+            logger.debug("Backlog population skiped, has active tasks: {}", backlog.boundTaskScheme());
             return;
         }
 
@@ -48,8 +53,8 @@ public class BacklogRenewService {
                 Arrays.asList(
                     // TODO: this properties are required and installed by core services,
                     // TODO Need some kind of constants or something like this
-                    new TaskProperty("task.scheme", taskSchemeName),
-                    new TaskProperty("created.by", "mod-backlog")
+                    new TaskProperty(Task.SCHEME_PROPERTY_NAME, taskSchemeName),
+                    new TaskProperty(Task.CREATOR_PROPERTY_NAME, "mod-backlog")
                 )
         );
 

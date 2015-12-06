@@ -1,6 +1,8 @@
 logging:
   level:
     org.ametiste: WARN
+    org.ametiste.routine.printer.backlog.PrintTaskPopulationStrategy: DEBUG
+    org.ametiste.routine.mod.backlog.application.service.BacklogRenewService: DEBUG
 
 spring:
   jpa:
@@ -14,6 +16,7 @@ org:
       eg:
         printer:
           delayTime: 2000
+          populationCount: 10
       mod:
         backlog:
           enabled: true

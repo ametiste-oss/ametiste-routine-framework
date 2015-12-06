@@ -71,12 +71,12 @@ public class JPATaskReflection implements TaskReflection {
     @Override
     public void flareProperty(String name, String value) {
 
-        if (name.equals("task.scheme"))  {
+        if (name.equals(Task.SCHEME_PROPERTY_NAME))  {
             taskData.schemeId = value;
             return;
         }
 
-        if (name.equals("created.by")) {
+        if (name.equals(Task.CREATOR_PROPERTY_NAME)) {
             taskData.creatorId = value;
             return;
         }
@@ -132,8 +132,8 @@ public class JPATaskReflection implements TaskReflection {
             reflection.flareProperty(p.name, p.value);
         });
 
-        reflection.flareProperty("task.scheme", taskData.schemeId);
-        reflection.flareProperty("created.by", taskData.creatorId);
+        reflection.flareProperty(Task.SCHEME_PROPERTY_NAME, taskData.schemeId);
+        reflection.flareProperty(Task.CREATOR_PROPERTY_NAME, taskData.creatorId);
     }
 
     public TaskData reflectedTaskData() {

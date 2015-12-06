@@ -236,11 +236,11 @@ public class SpringDataTaskLogRepository implements TaskLogRepository {
 
     private Specification<TaskData> createPropSpec(TaskProperty taskProperty) {
 
-        if (taskProperty.name().equals("created.by")) {
+        if (taskProperty.name().equals(Task.CREATOR_PROPERTY_NAME)) {
             return TaskDataSpecifications.hasCreator(taskProperty.value());
         }
 
-        if (taskProperty.name().equals("task.scheme")) {
+        if (taskProperty.name().equals(Task.SCHEME_PROPERTY_NAME)) {
             return TaskDataSpecifications.hasScheme(taskProperty.value());
         }
 
