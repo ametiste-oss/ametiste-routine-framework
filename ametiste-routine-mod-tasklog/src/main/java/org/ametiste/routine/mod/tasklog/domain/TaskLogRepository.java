@@ -40,7 +40,7 @@ public interface TaskLogRepository {
      * @return
      */
     @Deprecated
-    int countEntriesByStatus(String byStatus);
+    int countByState(String byStatus);
 
     long countByTaskState(List<Task.State> states, List<TaskProperty> properties);
 

@@ -50,7 +50,7 @@ public class TaskLogController {
         Map<String, Integer> counts = new HashMap<>();
 
         for (String status : byStatus) {
-            final int entriesCount = taskLogRepository.countEntriesByStatus(status);
+            final int entriesCount = taskLogRepository.countByState(status);
             counts.put(status, entriesCount);
         }
 

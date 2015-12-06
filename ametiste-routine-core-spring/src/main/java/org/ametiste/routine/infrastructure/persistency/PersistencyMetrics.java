@@ -9,7 +9,7 @@ import org.ametiste.metrics.annotations.markers.MetricsInterface;
 @MetricsInterface
 public interface PersistencyMetrics {
 
-    String TASK_REPO_PREFIX = "infrastructure.persistency.task-repository.";
+    String TASK_REPO_PREFIX = "core.infrastructure.persistency.task-repository.";
 
     String FIND_TASK_BY_ID_TIMING = TASK_REPO_PREFIX +
             "find-by-id.timing";

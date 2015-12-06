@@ -1,5 +1,6 @@
 package org.ametiste.routine.mod.tasklog.infrastructure.persistency.jpa;
 
+import org.ametiste.metrics.annotations.Timeable;
 import org.ametiste.routine.domain.task.Task;
 import org.ametiste.routine.domain.task.properties.TaskProperty;
 import org.ametiste.routine.infrastructure.persistency.jpa.data.*;
@@ -7,6 +8,7 @@ import org.ametiste.routine.mod.tasklog.domain.NoticeEntry;
 import org.ametiste.routine.mod.tasklog.domain.OperationLog;
 import org.ametiste.routine.mod.tasklog.domain.TaskLogEntry;
 import org.ametiste.routine.mod.tasklog.domain.TaskLogRepository;
+import org.ametiste.routine.mod.tasklog.infrastructure.persistency.PersistencyMetrics;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
@@ -14,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.*;
 import java.time.Instant;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Supplier;
@@ -91,6 +92,7 @@ public class SpringDataTaskLogRepository implements TaskLogRepository {
 
     @Override
     @Transactional
+    @Timeable(name = PersistencyMetrics.COUNT_ACTIVE_TASKS_TIMING)
     public long countActiveTasks() {
         return jpaTaskLogDataRepository.countTaskByStateIn(
             statesToString(Task.State.activeStatesList)
@@ -99,12 +101,14 @@ public class SpringDataTaskLogRepository implements TaskLogRepository {
 
     @Override
     @Transactional
+    @Timeable(name = PersistencyMetrics.FIND_ENTRIES_TIMING)
     public List<TaskLogEntry> findEntries() {
         throw new UnsupportedOperationException("Reimplemnt it as limited query.");
     }
 
     @Override
     @Transactional
+    @Timeable(name = PersistencyMetrics.FIND_ENTRY_TIMING)
     public TaskLogEntry findTaskLog(UUID taskId) {
         return processReflectedEntry(
             jpaTaskLogDataRepository.findOne(taskId)
@@ -113,12 +117,14 @@ public class SpringDataTaskLogRepository implements TaskLogRepository {
 
     @Override
     @Transactional
+    @Timeable(name = PersistencyMetrics.FIND_ACTIVE_AFTER_DATE_TIMING)
     public List<UUID> findActiveTasksAfterDate(Instant timePoint) {
         return null;
     }
 
     @Override
     @Transactional
+    @Timeable(name = PersistencyMetrics.FIND_BY_STATE_TIMING)
     public List<TaskLogEntry> findEntries(List<Task.State> states, int offset, int limit) {
 
         final Specifications<TaskData> accumulator =
@@ -133,6 +139,7 @@ public class SpringDataTaskLogRepository implements TaskLogRepository {
 
     @Override
     @Transactional
+    @Timeable(name = PersistencyMetrics.FIND_BY_STATE_AND_PROPS_TIMING)
     public List<TaskLogEntry> findEntries(List<Task.State> states, List<TaskProperty> properties, int offset, int limit) {
         return jpaTaskLogDataRepository.findAll(createStateAndPropsSpec(states, properties), new PageRequest(offset, limit))
                 .getContent()
@@ -143,12 +150,14 @@ public class SpringDataTaskLogRepository implements TaskLogRepository {
 
     @Override
     @Transactional
-    public int countEntriesByStatus(String byStatus) {
+    @Timeable(name = PersistencyMetrics.COUNT_BY_STATE_TIMING)
+    public int countByState(String byStatus) {
         return jpaTaskLogDataRepository.countTaskByState(byStatus);
     }
 
     @Override
     @Transactional
+    @Timeable(name = PersistencyMetrics.COUNT_BY_STATE_AND_PROP_TIMING)
     public long countByTaskState(List<Task.State> states, List<TaskProperty> properties) {
         return jpaTaskLogDataRepository.count(createStateAndPropsSpec(states, properties));
     }
