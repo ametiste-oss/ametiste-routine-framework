@@ -22,4 +22,5 @@ public interface JPATaskDataRepository extends CrudRepository<TaskData, UUID> {
 
     Page<TaskData> findByStateIn(List<String> state, Pageable page);
 
+    long countByState(String state);
 }

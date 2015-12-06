@@ -2,6 +2,7 @@ package org.ametiste.routine.infrastructure.metrics;
 
 import org.ametiste.metrics.MetricsService;
 import org.ametiste.routine.configuration.AmetisteRoutineCoreConfiguration;
+import org.ametiste.routine.domain.task.Task;
 import org.ametiste.routine.infrastructure.persistency.jpa.JPATaskDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
@@ -15,7 +16,12 @@ import org.springframework.stereotype.Component;
  *
  * <p>
  *     This {@code metric source} periodicaly counts stored tasks and provides this value
- *     as {@code gauage} metric named as <b>'{@value InfoMetrics#STORED_TASKS_COUNT}'</b>.
+ *     as {@code gauage} metrics named as
+ *     <ul>
+ *         <li>{@value InfoMetrics#STORED_TASKS_COUNT}</li>
+ *         <li>{@value InfoMetrics#TERMINATED_TASKS_COUNT}</li>
+ *         <li>{@value InfoMetrics#DONE_TASKS_COUNT}</li>
+ *     </ul>
  * </p>
  *
  * <p>
@@ -61,7 +67,15 @@ public class TasksCountMetricSource {
 
         // NOTE: just ignoring possible bits lose, in the case of this application these big values does not
         // have sense anyway. See javadoc.
-        metricsService.gauge(InfoMetrics.STORED_TASKS_COUNT, (int) taskDataRepository.count());
+        metricsService.gauge(InfoMetrics.STORED_TASKS_COUNT, (int) taskDataRepository
+                .count());
+
+        metricsService.gauge(InfoMetrics.TERMINATED_TASKS_COUNT, (int) taskDataRepository
+                .countByState(Task.State.TERMINATED.name()));
+
+        metricsService.gauge(InfoMetrics.DONE_TASKS_COUNT, (int) taskDataRepository
+                .countByState(Task.State.DONE.name()));
+
     }
 
 }
