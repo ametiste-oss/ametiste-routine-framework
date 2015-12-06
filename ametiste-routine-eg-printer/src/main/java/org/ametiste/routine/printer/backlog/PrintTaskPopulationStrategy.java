@@ -6,6 +6,7 @@ import org.ametiste.routine.printer.scheme.PrintTaskScheme;
 import org.ametiste.routine.mod.backlog.infrastructure.BacklogPopulationStrategy;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
@@ -16,6 +17,9 @@ public class PrintTaskPopulationStrategy implements BacklogPopulationStrategy {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
+    @Value("${org.ametiste.routine.eg.printer.populationCount:1000}")
+    private int populationCount;
+
     @Override
     public void populate(TaskGateway taskGateway, DataGateway dataGateway) {
 
@@ -25,7 +29,7 @@ public class PrintTaskPopulationStrategy implements BacklogPopulationStrategy {
                 .loadModDataInt("backlog-print-tasks-count")
                 .orElse(0);
 
-        for (int i = 0; i < 10; i++, issuedTasksCount++) {
+        for (int i = 0; i < populationCount; i++, issuedTasksCount++) {
 
             final HashMap<String, String> params = new HashMap<>();
             params.put("task.number", Integer.toString(issuedTasksCount));
