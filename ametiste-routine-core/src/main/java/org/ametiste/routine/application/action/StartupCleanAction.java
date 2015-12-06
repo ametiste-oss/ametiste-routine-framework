@@ -2,6 +2,8 @@ package org.ametiste.routine.application.action;
 
 import org.ametiste.routine.domain.task.Task;
 import org.ametiste.routine.domain.task.TaskRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -18,6 +20,8 @@ import java.util.List;
  * @since 0.1.0
  */
 public class StartupCleanAction implements Runnable {
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private TaskRepository taskRepository;
 
@@ -36,6 +40,10 @@ public class StartupCleanAction implements Runnable {
             if (tasks.size() == 0) {
                 break;
             }
+
+            // TODO: application event to show it from UI also required
+            logger.warn("Active during startup tasks will be terminated, tasks count is: {} ", tasks.size());
+            logger.debug("Tasks ids: {}", tasks);
 
             tasks.forEach(
                     task -> {
