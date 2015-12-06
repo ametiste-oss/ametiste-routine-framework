@@ -28,7 +28,7 @@ public final class PrintOperation implements OperationExecutor {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        logger.warn("YAYAYYA " + properties.get("out"));
+        logger.debug("YAYAYYA " + properties.get("out"));
         feedback.operationSucceed();
     }
 

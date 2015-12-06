@@ -23,7 +23,7 @@ public class PrintTaskPopulationStrategy implements BacklogPopulationStrategy {
     @Override
     public void populate(TaskGateway taskGateway, DataGateway dataGateway) {
 
-        logger.warn("Create task entries from backlog.");
+        logger.debug("Create task entries from backlog.");
 
         int issuedTasksCount = dataGateway
                 .loadModDataInt("backlog-print-tasks-count")
