@@ -15,6 +15,8 @@ public abstract class TaskData_ {
 	public static volatile SingularAttribute<TaskData, Instant> completionTime;
 	public static volatile SingularAttribute<TaskData, Instant> creationTime;
 	public static volatile ListAttribute<TaskData, OperationData> operationData;
+	public static volatile SingularAttribute<TaskData, String> creatorId;
+	public static volatile SingularAttribute<TaskData, String> schemeId;
 	public static volatile SingularAttribute<TaskData, Instant> executionStartTime;
 	public static volatile SingularAttribute<TaskData, UUID> id;
 	public static volatile SingularAttribute<TaskData, String> state;

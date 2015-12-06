@@ -29,6 +29,18 @@ public class SpringDataTaskLogRepository implements TaskLogRepository {
 
     private static class TaskDataSpecifications {
 
+        public static Specification<TaskData> hasScheme(String schemeId) {
+            return (root, query, cb) -> {
+                return cb.equal(root.get(TaskData_.schemeId), schemeId);
+            };
+        }
+
+        public static Specification<TaskData> hasCreator(String creatorId) {
+            return (root, query, cb) -> {
+                return cb.equal(root.get(TaskData_.creatorId), creatorId);
+            };
+        }
+
         public static Specification<TaskData> hasProperty(TaskProperty taskProperty) {
             return (root, query, cb) -> {
 
@@ -216,10 +228,23 @@ public class SpringDataTaskLogRepository implements TaskLogRepository {
                 new SpecificationAccumulator<>(Specifications.where(TaskDataSpecifications.hasState(states)));
 
         properties.stream()
-                .map(TaskDataSpecifications::hasProperty)
+                .map(this::createPropSpec)
                 .forEach(accumulator::and);
 
         return accumulator;
+    }
+
+    private Specification<TaskData> createPropSpec(TaskProperty taskProperty) {
+
+        if (taskProperty.name().equals("created.by")) {
+            return TaskDataSpecifications.hasCreator(taskProperty.value());
+        }
+
+        if (taskProperty.name().equals("task.scheme")) {
+            return TaskDataSpecifications.hasScheme(taskProperty.value());
+        }
+
+        return TaskDataSpecifications.hasProperty(taskProperty);
     }
 
 }

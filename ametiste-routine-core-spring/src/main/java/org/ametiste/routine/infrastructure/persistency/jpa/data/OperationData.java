@@ -9,7 +9,8 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "ame_routine_task_operation", indexes = {
-        @Index(name = "op_state_idx", columnList = "state", unique = false)
+        @Index(name = "op_state_idx", columnList = "state", unique = false),
+        @Index(name = "op_task_idx", columnList = "task_id", unique = false)
 })
 public class OperationData implements Persistable<UUID> {
 

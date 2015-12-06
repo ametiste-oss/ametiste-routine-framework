@@ -4,7 +4,9 @@ import javax.persistence.*;
 import java.time.Instant;
 
 @Entity
-@Table(name = "ame_routine_task_notice")
+@Table(name = "ame_routine_task_notice", indexes = {
+        @Index(name = "task_prop_task_id_idx", columnList = "task_id", unique = false)
+})
 public class TaskNoticeData {
 
     @Id

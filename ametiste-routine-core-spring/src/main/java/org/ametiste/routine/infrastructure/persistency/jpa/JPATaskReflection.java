@@ -70,9 +70,21 @@ public class JPATaskReflection implements TaskReflection {
 
     @Override
     public void flareProperty(String name, String value) {
+
+        if (name.equals("task.scheme"))  {
+            taskData.schemeId = value;
+            return;
+        }
+
+        if (name.equals("crated.by")) {
+            taskData.creatorId = value;
+            return;
+        }
+
         final TaskPropertyData taskPropertyData = new TaskPropertyData();
         taskPropertyData.name = name;
         taskPropertyData.value = value;
+
         taskData.properties.add(taskPropertyData);
     }
 
