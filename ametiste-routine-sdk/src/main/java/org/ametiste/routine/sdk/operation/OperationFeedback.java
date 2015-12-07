@@ -14,8 +14,6 @@ public interface OperationFeedback {
 
     void operationFailed(String withMessage);
 
-    default void operationSucceed() {
-        operationDone("SUCCEED");
-    };
+    void operationSucceed();
 
 }

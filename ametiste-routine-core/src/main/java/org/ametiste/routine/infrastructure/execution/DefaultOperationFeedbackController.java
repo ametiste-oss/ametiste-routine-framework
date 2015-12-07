@@ -39,4 +39,9 @@ class DefaultOperationFeedbackController implements OperationFeedback {
     public void operationFailed(String withMessage) {
         feedback.operationFailed(operationId, withMessage);
     }
+
+    @Override
+    public void operationSucceed() {
+        feedback.operationDone(operationId);
+    }
 }

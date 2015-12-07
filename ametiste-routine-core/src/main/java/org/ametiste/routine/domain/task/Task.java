@@ -359,14 +359,12 @@ public class Task implements DomainStateReflector<TaskReflection> {
             }).collect(Collectors.toList());
 
         toBeterminated.forEach((o) -> {
-            o.addNotice("Terminated with reason : " + message);
+            o.addNotice(message);
             o.terminate();
         });
 
         final List<UUID> terminated = toBeterminated.stream()
-            .map((o) -> {
-                return o.id;
-            }).collect(Collectors.toList());
+            .map(Operation::id).collect(Collectors.toList());
 
         return terminated;
     }

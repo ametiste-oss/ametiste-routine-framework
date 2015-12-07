@@ -41,6 +41,10 @@ public class Operation {
         this.notices = new ArrayList<>(notices);
     }
 
+    UUID id() {
+        return id;
+    }
+
     void complete() {
         state = State.DONE;
     }
