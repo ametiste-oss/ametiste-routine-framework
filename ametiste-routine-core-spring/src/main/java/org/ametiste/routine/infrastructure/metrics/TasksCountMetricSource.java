@@ -13,31 +13,22 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
- *
+ * This {@code metric source} periodically counts stored tasks and provides this value
+ * as {@code gauage} metrics named as
+ * <ul>
+ *     <li>{@value InfoMetrics#STORED_TASKS_COUNT}</li>
+ *     <li>{@value InfoMetrics#TERMINATED_TASKS_COUNT}</li>
+ *     <li>{@value InfoMetrics#DONE_TASKS_COUNT}</li>
+ * </ul>
  * <p>
- *     This {@code metric source} periodicaly counts stored tasks and provides this value
- *     as {@code gauage} metrics named as
- *     <ul>
- *         <li>{@value InfoMetrics#STORED_TASKS_COUNT}</li>
- *         <li>{@value InfoMetrics#TERMINATED_TASKS_COUNT}</li>
- *         <li>{@value InfoMetrics#DONE_TASKS_COUNT}</li>
- *     </ul>
- * </p>
- *
+ * Note, this autoconfigured components depends on {@link JPATaskDataRepository} and
+ * will be active only if this repository object is presented within the context.
  * <p>
- *     Note, this autoconfigured componentn depends on {@link JPATaskDataRepository} and
- *     will be active only if this repository object is presented within the context.
- * </p>
- *
+ * {@code org.ametiste.routine.metrics.source.info.stored-tasks-count.enabled} property may be used
+ * to disable this metric source.
  * <p>
- *    {@code org.ametiste.routine.metrics.source.info.stored-tasks-count.enabled} property may be used
- *    to disable this metric source.
- * </p>
- *
- * <p>
- *     Also note, in case where tasks count exceed {@value Integer#MAX_VALUE} [int max value],
- *     this metric source would provide incorrect information and should be replaced or disabled.
- * </p>
+ * Also note, in case where tasks count exceed {@value Integer#MAX_VALUE} [int max value],
+ * this metric source would provide incorrect information and should be replaced or disabled.
  *
  * @since 0.1.0
  * @see InfoMetrics
