@@ -33,7 +33,6 @@ import org.springframework.stereotype.Component;
  * @since 0.1.0
  * @see InfoMetrics
  */
-
 @Component
 @ConditionalOnProperty(name = "org.ametiste.routine.metrics.source.info.stored-tasks-count.enabled",
         matchIfMissing = true)
