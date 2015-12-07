@@ -12,14 +12,11 @@ public final class PrintOperation implements OperationExecutor {
 
     @Override
     public void execOperation(UUID operationId, Map<String, String> properties, OperationFeedback feedback) {
-        feedback.operationStarted("Printer launched.");
         try {
             Thread.sleep(1000l);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("YAYAYYA " + properties.get("out"));
-        feedback.operationSucceed();
     }
 
 }

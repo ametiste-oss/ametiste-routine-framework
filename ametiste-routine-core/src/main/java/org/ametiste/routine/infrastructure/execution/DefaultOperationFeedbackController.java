@@ -21,16 +21,6 @@ class DefaultOperationFeedbackController implements OperationFeedback {
     }
 
     @Override
-    public void operationStarted(String withMessage) {
-        feedback.operationStarted(operationId, withMessage);
-    }
-
-    @Override
-    public void operationDone(String withMessage) {
-        feedback.operationDone(operationId, withMessage);
-    }
-
-    @Override
     public void operationNotice(String noticeMessage) {
         feedback.operationNotice(operationId, noticeMessage);
     }
@@ -40,8 +30,4 @@ class DefaultOperationFeedbackController implements OperationFeedback {
         feedback.operationFailed(operationId, withMessage);
     }
 
-    @Override
-    public void operationSucceed() {
-        feedback.operationDone(operationId);
-    }
 }

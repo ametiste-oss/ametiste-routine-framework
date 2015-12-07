@@ -8,6 +8,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.OptionalLong;
+import java.util.Random;
 import java.util.UUID;
 
 @Component(PrintOperation.NAME)
@@ -22,12 +24,16 @@ public final class PrintOperation implements OperationExecutor {
 
     @Override
     public void execOperation(UUID operationId, Map<String, String> properties, OperationFeedback feedback) {
+
+        final long any = new Random().longs(50, delyaTime).findAny().getAsLong();
+
+        feedback.operationNotice("Delay time is: " + any);
+
         try {
-            Thread.sleep(delyaTime);
+            Thread.sleep(any);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        feedback.operationSucceed();
     }
 
 }

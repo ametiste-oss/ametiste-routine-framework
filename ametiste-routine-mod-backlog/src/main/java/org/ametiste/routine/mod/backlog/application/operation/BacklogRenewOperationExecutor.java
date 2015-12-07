@@ -28,15 +28,12 @@ public class BacklogRenewOperationExecutor implements OperationExecutor {
 
     @Override
     public void execOperation(UUID operationId, Map<String, String> properties, OperationFeedback feedback) {
-        feedback.operationStarted("Starting renew operation.");
 
         final Backlog backlog = backlogRepository.loadBacklogOf(properties.get("schemeName"));
         final RenewScheme renewScheme = backlog.createRenewScheme();
 
         backlogRepository.save(backlog);
         renewSchemeExecutor.executeRenewScheme(renewScheme);
-
-        feedback.operationSucceed();
     }
 
 }

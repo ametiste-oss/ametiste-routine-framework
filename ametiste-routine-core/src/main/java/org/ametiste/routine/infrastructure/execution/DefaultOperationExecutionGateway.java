@@ -43,6 +43,8 @@ public class DefaultOperationExecutionGateway implements OperationExecutionGatew
         final DefaultOperationFeedbackController feedbackController =
                 new DefaultOperationFeedbackController(feedback, operationId);
 
+        feedback.operationStarted(operationId);
+
         try {
             operationExecutors.get(operationExecLine)
                     .createExecutor()
@@ -51,7 +53,11 @@ public class DefaultOperationExecutionGateway implements OperationExecutionGatew
         } catch (Exception e) {
             logger.error("Error during task operation execution.", e);
             feedback.operationFailed(operationId, "Operation failed on execution.");
+            return;
         }
+
+        feedback.operationDone(operationId);
+
     }
 
 }
