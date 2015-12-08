@@ -79,7 +79,8 @@ public class DefaultTaskExecutionService implements TaskExecutionService, Execut
     @Override
     public void operationNotice(UUID operationId, String noticeMessage) {
         taskInstantForOperation(operationId)
-                .action(Task::noticeOperation, operationId, noticeMessage);
+                .action(Task::noticeOperation, operationId, noticeMessage)
+                .done();
     }
 
     @Override
