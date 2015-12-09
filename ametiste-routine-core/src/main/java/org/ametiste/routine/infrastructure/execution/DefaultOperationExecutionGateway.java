@@ -1,5 +1,6 @@
 package org.ametiste.routine.infrastructure.execution;
 
+import org.ametiste.metrics.annotations.Timeable;
 import org.ametiste.routine.application.service.execution.ExecutionFeedback;
 import org.ametiste.routine.application.service.execution.OperationExecutionGateway;
 import org.ametiste.routine.sdk.operation.OperationExecutorFactory;
@@ -31,6 +32,7 @@ public class DefaultOperationExecutionGateway implements OperationExecutionGatew
     }
 
     @Override
+    @Timeable(name = ExecutionMetrics.TASK_EXECUTION_TIMING)
     public void executeOperation(UUID operationId,
                                  String operationExecLine,
                                  Map<String, String> properties,

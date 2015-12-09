@@ -1,5 +1,6 @@
 logging:
   level:
+    org.springframework: DEBUG
     org.ametiste: WARN
     org.ametiste.routine.printer.backlog.PrintTaskPopulationStrategy: DEBUG
     org.ametiste.routine.mod.backlog.application.service.BacklogRenewService: DEBUG

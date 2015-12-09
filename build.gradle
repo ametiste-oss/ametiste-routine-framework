@@ -17,6 +17,7 @@ subprojects {
 
     ext {
         slf4jVersion = "1.7.12"
+        ameMetricsVersion = "0.2.0-5-SNAPSHOT"
 
         bintray_vcsUrl = 'https://github.com/ametiste-oss/ametiste-routine-framework.git'
     }
