@@ -24,7 +24,7 @@ public class Application {
 
         final ConfigurableApplicationContext context = SpringApplication.run(Application.class, args);
 
-        checkExecutors(context);rur
+        checkExecutors(context);
     }
 
     private static void checkExecutors(ConfigurableApplicationContext context) {
