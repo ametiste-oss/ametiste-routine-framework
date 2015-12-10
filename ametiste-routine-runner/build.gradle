@@ -57,6 +57,7 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
 
     compile("com.h2database:h2")
+    compile("org.postgresql:postgresql")
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
