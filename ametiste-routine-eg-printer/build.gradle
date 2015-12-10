@@ -21,6 +21,8 @@ apply from: "https://raw.githubusercontent.com/ametiste-oss/ametiste-bintray-gra
 apply plugin: 'maven-publish'
 apply plugin: 'spring-boot'
 
+bintrayUpload.dependsOn build
+
 publishing {
     publications {
         mavenJava(MavenPublication) {
