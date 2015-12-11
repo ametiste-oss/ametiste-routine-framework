@@ -12,6 +12,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties
 public class AmetisteRoutineCoreProperties {
 
+    public static final String PREFIX = "org.ametiste.routine";
+
     /**
      * Defines how many workers would initialized to execute pending tasks.
      *
