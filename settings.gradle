@@ -13,4 +13,5 @@ include 'ametiste-routine-runner'
 include 'ametiste-routine-eg-printer-bundle'
 include 'ametiste-routine-bundle-starter'
 include 'ametiste-routine-mod-backlog'
+include 'ametiste-routine-mod-backlog-starter'
 

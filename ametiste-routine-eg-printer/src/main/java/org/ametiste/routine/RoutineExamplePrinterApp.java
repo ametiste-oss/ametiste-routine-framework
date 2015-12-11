@@ -14,8 +14,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  * @since
  */
 @SpringBootApplication
-@EnableScheduling
-@Import(BacklogModConfiguration.class)
 public class RoutineExamplePrinterApp {
 
     public static void main(String[] args) {
