@@ -10,12 +10,14 @@ import org.ametiste.routine.domain.task.properties.TaskProperty;
 import org.ametiste.routine.infrastructure.messaging.JmsTaskAppEvents;
 import org.ametiste.routine.infrastructure.metrics.InfoMetrics;
 import org.ametiste.routine.infrastructure.metrics.TasksCountMetricSource;
+import org.ametiste.routine.infrastructure.mod.ModRegistry;
 import org.ametiste.routine.infrastructure.mod.ModRepository;
 import org.ametiste.routine.infrastructure.mod.SpringDataModRepository;
 import org.ametiste.routine.infrastructure.mod.jpa.JPAModDataRepository;
 import org.ametiste.routine.infrastructure.persistency.jpa.JPATaskDataRepository;
 import org.ametiste.routine.interfaces.web.TaskController;
 import org.ametiste.routine.sdk.application.service.issue.constraints.IssueConstraint;
+import org.ametiste.routine.sdk.mod.ModGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -59,6 +61,16 @@ public class AmetisteRoutineCoreConfiguration {
 
     @Autowired
     private AmetisteRoutineCoreProperties props;
+
+    @Autowired
+    private List<ModGateway> modGateways;
+
+    @Bean
+    public ModRegistry modRegistry() {
+        final ModRegistry modRegistry = new ModRegistry();
+        modGateways.forEach(modRegistry::addMod);
+        return modRegistry;
+    }
 
     @Bean
     public TaskIssueService taskIssueService() {

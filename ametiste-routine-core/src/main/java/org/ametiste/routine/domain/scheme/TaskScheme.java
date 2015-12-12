@@ -10,6 +10,7 @@ import java.util.Map;
  */
 public interface TaskScheme {
 
-    Task createTask(Map<String, String> schemeParams, String creatorIdenifier) throws TaskCreationRejectedBySchemeException;
+    Task createTask(Map<String, String> schemeParams, String creatorIdenifier)
+            throws TaskSchemeException;
 
 }
