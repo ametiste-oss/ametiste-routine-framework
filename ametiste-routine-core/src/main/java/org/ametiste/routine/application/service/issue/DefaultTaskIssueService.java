@@ -49,7 +49,7 @@ public class DefaultTaskIssueService implements TaskIssueService {
             task = taskScheme.createTask(params, creatorIdenifier);
         } catch (TaskSchemeException e) {
             // TODO: add specific app exception
-            throw new RuntimeException("Task creation rejected by scheme.", e);
+            throw new RuntimeException("Task creation error", e);
         }
 
         task.addProperty(new TaskProperty(Task.SCHEME_PROPERTY_NAME, taskSchemeName));
