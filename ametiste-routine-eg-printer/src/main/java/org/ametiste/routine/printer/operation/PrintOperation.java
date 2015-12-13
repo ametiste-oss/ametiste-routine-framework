@@ -1,5 +1,6 @@
 package org.ametiste.routine.printer.operation;
 
+import org.ametiste.routine.sdk.mod.protocol.ProtocolGateway;
 import org.ametiste.routine.sdk.operation.OperationExecutor;
 import org.ametiste.routine.sdk.operation.OperationFeedback;
 import org.slf4j.Logger;
@@ -21,6 +22,35 @@ public final class PrintOperation implements OperationExecutor {
 
     @Value("${org.ametiste.routine.eg.printer.delayTime:1000}")
     private long delyaTime;
+
+    /*
+    @Override
+    public void execOperation(UUID operationId, Map<String, String> properties, OperationFeedback feedback, ProtocolGateway protocolGateway) {
+
+        final UUID id = protocolGateway.invoke(
+                d -> {
+                    d.protocol("task-gateway")
+                        .message("create-task")
+                        .param("task.scheme", "print-eg-task");
+                },
+                (Map<String, String> m)
+                        -> UUID.fromString(m.get("id"))
+        );
+
+        protocolGateway.query(q ->
+            q.dataSource("mod-data")
+                    .select("value")
+                    .field("mod-name", "")
+                    .field("property-name", "")
+                    .accept((String s) -> s.equals("s"))
+        );
+
+        final Integer value = protocolGateway.query(
+                query -> query.select("value"),
+                (String v) -> Integer.valueOf(v)
+        );
+
+    } */
 
     @Override
     public void execOperation(UUID operationId, Map<String, String> properties, OperationFeedback feedback) {

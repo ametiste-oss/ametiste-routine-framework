@@ -6,7 +6,7 @@ import java.util.Optional;
  *
  * @since
  */
-public interface DataGateway {
+public interface ModDataGateway {
 
     void storeModData(String name, String value);
 

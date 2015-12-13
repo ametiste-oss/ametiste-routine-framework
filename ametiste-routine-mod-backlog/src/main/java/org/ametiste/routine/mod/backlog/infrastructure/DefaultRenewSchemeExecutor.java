@@ -2,7 +2,7 @@ package org.ametiste.routine.mod.backlog.infrastructure;
 
 import org.ametiste.routine.mod.backlog.domain.RenewSchemeExecutor;
 import org.ametiste.routine.mod.backlog.domain.RenewScheme;
-import org.ametiste.routine.sdk.mod.DataGateway;
+import org.ametiste.routine.sdk.mod.ModDataGateway;
 import org.ametiste.routine.sdk.mod.TaskGateway;
 
 /**
@@ -13,14 +13,14 @@ public class DefaultRenewSchemeExecutor implements RenewSchemeExecutor {
 
     private final BacklogPopulationStrategiesRegistry registry;
     private final TaskGateway taskGateway;
-    private final DataGateway dataGateway;
+    private final ModDataGateway modDataGateway;
 
     public DefaultRenewSchemeExecutor(BacklogPopulationStrategiesRegistry registry,
                                       TaskGateway taskGateway,
-                                      DataGateway dataGateway) {
+                                      ModDataGateway modDataGateway) {
         this.registry = registry;
         this.taskGateway = taskGateway;
-        this.dataGateway = dataGateway;
+        this.modDataGateway = modDataGateway;
     }
 
     @Override
@@ -29,7 +29,7 @@ public class DefaultRenewSchemeExecutor implements RenewSchemeExecutor {
         final BacklogPopulationStrategy populationStrategy =
                 registry.findPopulationStrategy(renewScheme.populationStrategyName());
 
-        populationStrategy.populate(taskGateway, dataGateway);
+        populationStrategy.populate(taskGateway, modDataGateway);
         // TODO: exceptions
     }
 
