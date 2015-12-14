@@ -47,7 +47,7 @@ bootRepackage {
 
 
 dependencies {
-    compile project(":ametiste-routine-core")
+    compile project(":ametiste-routine-sdk")
     compile("org.springframework.boot:spring-boot")
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }

@@ -36,6 +36,7 @@ publishing {
 
 dependencies {
 
+    compile project(":ametiste-routine-sdk")
     compile project(":ametiste-routine-core-spring")
     compile project(":ametiste-routine-mod-tasklog")
 

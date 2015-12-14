@@ -49,4 +49,5 @@ repositories {
 
 dependencies {
     compile project(":ametiste-routine-bundle-starter")
+    compile project(":ametiste-routine-mod-backlog-starter")
 }
