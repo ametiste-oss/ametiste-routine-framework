@@ -4,6 +4,9 @@ import org.ametiste.routine.application.service.issue.TaskIssueService;
 import org.ametiste.routine.configuration.AmetisteRoutineCoreProperties;
 import org.ametiste.routine.mod.backlog.application.action.BacklogRenewAction;
 import org.ametiste.routine.mod.backlog.application.operation.BacklogRenewOperationExecutor;
+import org.ametiste.routine.mod.backlog.application.service.ActiveBacklogTasksConstraint;
+import org.ametiste.routine.mod.backlog.application.service.ActiveRenewTaskConstraint;
+import org.ametiste.routine.mod.backlog.application.service.BacklogRenewConstraint;
 import org.ametiste.routine.mod.backlog.application.service.BacklogRenewService;
 import org.ametiste.routine.mod.backlog.domain.Backlog;
 import org.ametiste.routine.mod.backlog.domain.BacklogRepository;
@@ -12,7 +15,6 @@ import org.ametiste.routine.mod.backlog.mod.BacklogModGateway;
 import org.ametiste.routine.mod.tasklog.domain.TaskLogRepository;
 import org.ametiste.routine.sdk.operation.OperationExecutor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -40,6 +42,9 @@ public class BacklogModConfiguration {
     @Autowired(required = false)
     private List<Backlog> backlogs = new ArrayList<>();
 
+    @Autowired
+    private List<BacklogRenewConstraint> constraints;
+
     @Bean(name = BacklogRenewOperationExecutor.NAME)
     public OperationExecutor backlogRenewOperationExecutor() {
         return new BacklogRenewOperationExecutor();
@@ -47,7 +52,7 @@ public class BacklogModConfiguration {
 
     @Bean
     public BacklogRenewService backlogRenewService() {
-        return new BacklogRenewService(taskLogRepository, taskIssueService);
+        return new BacklogRenewService(taskIssueService, constraints);
     }
 
     @Bean
@@ -63,6 +68,16 @@ public class BacklogModConfiguration {
     @Bean
     public BacklogModGateway backlogModGateway() {
          return new BacklogModGateway();
+    }
+
+    @Bean
+    public BacklogRenewConstraint activeRenewTaskConstraint() {
+        return new ActiveRenewTaskConstraint(taskLogRepository);
+    }
+
+    @Bean
+    public BacklogRenewConstraint activeBacklogTaskConstraint() {
+        return new ActiveBacklogTasksConstraint(taskLogRepository);
     }
 
 }
