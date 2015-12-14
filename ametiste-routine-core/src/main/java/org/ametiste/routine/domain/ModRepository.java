@@ -1,4 +1,4 @@
-package org.ametiste.routine.infrastructure.mod;
+package org.ametiste.routine.domain;
 
 import java.util.Optional;
 

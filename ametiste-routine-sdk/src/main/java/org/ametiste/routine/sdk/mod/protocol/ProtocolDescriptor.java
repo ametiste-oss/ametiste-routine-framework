@@ -19,6 +19,4 @@ public interface ProtocolDescriptor {
 
     void accept(Consumer<Map<String, String>> callback);
 
-    <T> T descriptorOfType(Class<T> descriptorClass);
-
 }

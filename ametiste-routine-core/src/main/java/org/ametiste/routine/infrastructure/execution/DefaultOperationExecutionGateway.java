@@ -3,6 +3,8 @@ package org.ametiste.routine.infrastructure.execution;
 import org.ametiste.metrics.annotations.Timeable;
 import org.ametiste.routine.application.service.execution.ExecutionFeedback;
 import org.ametiste.routine.application.service.execution.OperationExecutionGateway;
+import org.ametiste.routine.infrastructure.protocol.ProtocolGatewayService;
+import org.ametiste.routine.sdk.mod.protocol.ProtocolGateway;
 import org.ametiste.routine.sdk.operation.OperationExecutorFactory;
 import org.ametiste.routine.sdk.operation.OperationFeedback;
 import org.slf4j.Logger;
@@ -21,14 +23,19 @@ import java.util.UUID;
  * @since 0.1.0
  *
  */
+// TODO: rename to LocalOperationExecutionGateway
 public class DefaultOperationExecutionGateway implements OperationExecutionGateway {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final Map<String, OperationExecutorFactory> operationExecutors;
+    private final ProtocolGatewayService protocolGatewayService;
 
-    public DefaultOperationExecutionGateway(Map<String, OperationExecutorFactory> operationExecutors) {
+    public DefaultOperationExecutionGateway(
+            Map<String, OperationExecutorFactory> operationExecutors,
+            ProtocolGatewayService protocolGatewayService) {
         this.operationExecutors = operationExecutors;
+        this.protocolGatewayService = protocolGatewayService;
     }
 
     @Override
@@ -45,13 +52,15 @@ public class DefaultOperationExecutionGateway implements OperationExecutionGatew
         final DefaultOperationFeedbackController feedbackController =
                 new DefaultOperationFeedbackController(feedback, operationId);
 
+        // TODO: pass scheme name, operation name and caller id somehow
+        final ProtocolGateway protocolGateway = protocolGatewayService.createGateway();
+
         feedback.operationStarted(operationId);
 
         try {
             operationExecutors.get(operationExecLine)
                     .createExecutor()
-                    .execOperation(operationId, properties, feedbackController
-            );
+                    .execOperation(operationId, properties, feedbackController, protocolGateway);
         } catch (Exception e) {
             logger.error("Error during task operation execution.", e);
             feedback.operationFailed(operationId, "Operation failed on execution.");

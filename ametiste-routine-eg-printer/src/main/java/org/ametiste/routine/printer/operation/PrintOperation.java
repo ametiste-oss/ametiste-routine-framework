@@ -27,10 +27,10 @@ public final class PrintOperation implements OperationExecutor {
     @Override
     public void execOperation(UUID operationId, Map<String, String> properties, OperationFeedback feedback, ProtocolGateway protocolGateway) {
 
-        final UUID id = protocolGateway.invoke(
+        final UUID id = protocolGateway.session(
                 d -> {
                     d.protocol("task-gateway")
-                        .message("create-task")
+                        .session("create-task")
                         .param("task.scheme", "print-eg-task");
                 },
                 (Map<String, String> m)

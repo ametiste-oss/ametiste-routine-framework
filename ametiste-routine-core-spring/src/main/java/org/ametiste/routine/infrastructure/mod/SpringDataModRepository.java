@@ -1,5 +1,6 @@
 package org.ametiste.routine.infrastructure.mod;
 
+import org.ametiste.routine.domain.ModRepository;
 import org.ametiste.routine.infrastructure.mod.jpa.JPAModDataRepository;
 import org.ametiste.routine.infrastructure.mod.jpa.data.ModData;
 import org.ametiste.routine.infrastructure.mod.jpa.data.ModDataKey;

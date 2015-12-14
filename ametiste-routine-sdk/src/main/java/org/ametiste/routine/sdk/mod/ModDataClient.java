@@ -40,15 +40,15 @@ public class ModDataClient implements ModDataGateway {
     @Override
     public Optional<String> loadModData(String name) {
 
-        final String modData = protocol.query(q -> {
-                    q.dataSource("mod-values")
-                            .select("value")
-                            .field("value-name", "backlog-print-tasks-count");
-                },
+        final String value = protocol.session(p ->
+                p.protocol("mod-data")
+                        .message("query-data")
+                        .param("query-data.with-name", name)
+        ).collect(
                 GatewayMappers.asString("value")
         );
 
-        return Optional.ofNullable(modData);
+        return Optional.ofNullable(value);
     }
 
     @Override

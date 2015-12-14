@@ -10,14 +10,12 @@ import java.util.function.Function;
  */
 public interface ProtocolGateway {
 
-    void invoke(Consumer<ProtocolDescriptor> descriptorConsumer);
+    ProtocolSession session(String protocolType);
 
-    void invoke(Consumer<ProtocolDescriptor> descriptorConsumer, Consumer<Map<String, String>> callback);
-
-    <T> T invoke(Consumer<ProtocolDescriptor> descriptorConsumer, Function<Map<String, String>, T> callbackMapper);
+//    void session(Consumer<ProtocolDescriptor> descriptorConsumer, GatewayCallback callback);
 
     // TODO: extract to QueryGateway
-    void query(Consumer<QueryDescriptor> queryConsumer);
+//    void query(Consumer<QueryDescriptor> queryConsumer);
 
     /**
      * <p>
@@ -35,7 +33,7 @@ public interface ProtocolGateway {
      *
      * @see GatewayMappers for details on builtin mappers
      */
-    String query(Consumer<QueryDescriptor> queryConsumer, GatewayCallback callback);
+//    String query(Consumer<QueryDescriptor> queryConsumer, GatewayCallback callback);
 
     /**
      * <p>
@@ -54,6 +52,6 @@ public interface ProtocolGateway {
      *
      * @see GatewayMappers for details on builtin mappers
      */
-    <T> T query(Consumer<QueryDescriptor> queryConsumer, GatewayResponseMapper<T> callbackMapper);
+//    <T> T query(Consumer<QueryDescriptor> queryConsumer, GatewayResponseMapper<T> callbackMapper);
 
 }
