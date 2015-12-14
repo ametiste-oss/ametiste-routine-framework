@@ -14,11 +14,11 @@ import java.util.stream.Collectors;
  */
 public class DirectProtocolGateway implements ProtocolGateway {
 
-    private final List<ProtocolFactory> protocols;
+    private final Map<Class<? extends Protocol>, ProtocolFactory> protocols;
 
     private final GatewayContext gc;
 
-    public DirectProtocolGateway(List<ProtocolFactory> protocols, GatewayContext gc) {
+    public DirectProtocolGateway(Map<Class<? extends Protocol>, ProtocolFactory> protocols, GatewayContext gc) {
         this.gc = gc;
         this.protocols = protocols;
     }
@@ -27,7 +27,7 @@ public class DirectProtocolGateway implements ProtocolGateway {
     public <T extends Protocol> T session(Class<T> protocolType) {
 
         final Protocol protocol = protocols
-                .stream().filter();
+                .get(protocolType).createProtocol(gc);
 
         if (!protocolType.isAssignableFrom(protocol.getClass())) {
              throw new IllegalStateException("Gateway has no access to " +

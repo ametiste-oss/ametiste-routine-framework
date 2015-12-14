@@ -13,8 +13,8 @@ public class DirectGatewayContext implements GatewayContext {
 
     private final Map<String, String> attributes = new HashMap<>();
 
-    public DirectGatewayContext(String invokerId) {
-        attributes.put("invokerId", invokerId);
+    public DirectGatewayContext(String clientId) {
+        attributes.put("clientId", clientId);
     }
 
     @Override

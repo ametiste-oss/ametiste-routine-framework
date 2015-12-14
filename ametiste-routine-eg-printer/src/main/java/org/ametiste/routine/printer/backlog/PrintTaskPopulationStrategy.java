@@ -32,6 +32,8 @@ public class PrintTaskPopulationStrategy implements BacklogPopulationStrategy {
                 .loadModDataInt("backlog-print-tasks-count")
                 .orElse(0);
 
+        logger.debug("Create backlog entries: {}", issuedTasksCount);
+
         for (int i = 0; i < populationCount; i++, issuedTasksCount++) {
 
             final HashMap<String, String> params = new HashMap<>();

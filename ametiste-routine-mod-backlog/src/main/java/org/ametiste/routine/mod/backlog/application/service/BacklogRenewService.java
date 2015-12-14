@@ -1,16 +1,15 @@
 package org.ametiste.routine.mod.backlog.application.service;
 
 import org.ametiste.routine.application.service.issue.TaskIssueService;
-import org.ametiste.routine.domain.task.Task;
-import org.ametiste.routine.domain.task.properties.TaskProperty;
 import org.ametiste.routine.mod.backlog.application.scheme.BacklogRenewTaskScheme;
 import org.ametiste.routine.mod.backlog.domain.Backlog;
-import org.ametiste.routine.mod.tasklog.domain.TaskLogRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 /**
  *
@@ -18,27 +17,28 @@ import java.util.Collections;
  */
 public class BacklogRenewService {
 
-    private final TaskLogRepository taskLogRepository;
-
     private final TaskIssueService taskIssueService;
+
+    private final List<BacklogRenewConstraint> constraints;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    public BacklogRenewService(TaskLogRepository taskLogRepository, TaskIssueService taskIssueService) {
-        this.taskLogRepository = taskLogRepository;
+    public BacklogRenewService(TaskIssueService taskIssueService,
+                               List<BacklogRenewConstraint> constraints) {
         this.taskIssueService = taskIssueService;
+        this.constraints = constraints;
     }
 
     public void renewBy(Backlog backlog) {
 
-        // TODO: fold as set of constraints
-        if (hasActiveRenewOfBacklog()) {
-            logger.debug("Backlog population skiped, has active renew for: {}", backlog.boundTaskScheme());
-            return;
-        }
+        final Optional<BacklogRenewConstraint> appliedConstraint =
+                applyConstraint(backlog);
 
-        if (hasActiveTasksFromBacklog(backlog.boundTaskScheme())) {
-            logger.debug("Backlog population skiped, has active tasks: {}", backlog.boundTaskScheme());
+        if (appliedConstraint.isPresent()) {
+            if (logger.isDebugEnabled()) {
+                logger.debug("Renew constraint '{}' applied, renew skiped.",
+                        appliedConstraint.get().getClass().getName());
+            }
             return;
         }
 
@@ -47,36 +47,19 @@ public class BacklogRenewService {
                 Collections.singletonMap("schemeName", backlog.boundTaskScheme()),
                 "mod-backlog:meta"
         );
-
     }
 
-    private boolean hasActiveRenewOfBacklog() {
+    private Optional<BacklogRenewConstraint> applyConstraint(Backlog backlog) {
 
-        final long activeCount = taskLogRepository.countByTaskState(
-                Task.State.activeStatesList,
-                Arrays.asList(
-                    new TaskProperty(Task.SCHEME_PROPERTY_NAME, BacklogRenewTaskScheme.NAME)
-                )
-        );
+        final ArrayList<BacklogRenewConstraint> backlogRenewConstraints =
+                new ArrayList<>(this.constraints);
 
-        return activeCount > 0;
-    }
+        backlogRenewConstraints.addAll(backlog.boundConstraints());
 
-    // TODO: I want to have it as part of backlog definition, various backlogs may
-    // TODO: have various constraints for renew
-    private boolean hasActiveTasksFromBacklog(String taskSchemeName) {
-
-        final long activeCount = taskLogRepository.countByTaskState(
-                Task.State.activeStatesList,
-                Arrays.asList(
-                    // TODO: this properties are required and installed by core services,
-                    // TODO Need some kind of constants or something like this
-                    new TaskProperty(Task.SCHEME_PROPERTY_NAME, taskSchemeName),
-                    new TaskProperty(Task.CREATOR_PROPERTY_NAME, "mod-backlog")
-                )
-        );
-
-        return activeCount > 0;
+        return backlogRenewConstraints
+                .stream()
+                .filter(c -> c.isApplicable(backlog) == true)
+                .findAny();
     }
 
 }
