@@ -31,6 +31,12 @@ public class BacklogRenewService {
 
     public void renewBy(Backlog backlog) {
 
+        // TODO: fold as set of constraints
+        if (hasActiveRenewOfBacklog()) {
+            logger.debug("Backlog population skiped, has active renew for: {}", backlog.boundTaskScheme());
+            return;
+        }
+
         if (hasActiveTasksFromBacklog(backlog.boundTaskScheme())) {
             logger.debug("Backlog population skiped, has active tasks: {}", backlog.boundTaskScheme());
             return;
@@ -42,6 +48,18 @@ public class BacklogRenewService {
                 "mod-backlog:meta"
         );
 
+    }
+
+    private boolean hasActiveRenewOfBacklog() {
+
+        final long activeCount = taskLogRepository.countByTaskState(
+                Task.State.activeStatesList,
+                Arrays.asList(
+                    new TaskProperty(Task.SCHEME_PROPERTY_NAME, BacklogRenewTaskScheme.NAME)
+                )
+        );
+
+        return activeCount > 0;
     }
 
     // TODO: I want to have it as part of backlog definition, various backlogs may
