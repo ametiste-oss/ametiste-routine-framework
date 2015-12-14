@@ -9,6 +9,7 @@ import java.util.Map;
  *
  * @since 0.1.0
  */
+@Deprecated
 public interface TaskGateway {
 
     void issueTask(String schemaName, Map<String, String> schemaParams);

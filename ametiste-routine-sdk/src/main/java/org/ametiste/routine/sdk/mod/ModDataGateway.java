@@ -6,6 +6,7 @@ import java.util.Optional;
  *
  * @since
  */
+@Deprecated
 public interface ModDataGateway {
 
     void storeModData(String name, String value);
