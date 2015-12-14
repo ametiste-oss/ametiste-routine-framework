@@ -2,15 +2,15 @@ package org.ametiste.routine.configuration;
 
 import org.ametiste.routine.application.service.issue.TaskIssueService;
 import org.ametiste.routine.domain.ModRepository;
-import org.ametiste.routine.infrastructure.protocol.ModDataProtocol;
+import org.ametiste.routine.infrastructure.protocol.moddata.DirectModDataProtocol;
 import org.ametiste.routine.infrastructure.protocol.ProtocolGatewayService;
-import org.ametiste.routine.infrastructure.protocol.taskpool.TaskPoolProtocol;
-import org.ametiste.routine.sdk.mod.TaskPool;
+import org.ametiste.routine.infrastructure.protocol.taskpool.DirectTaskPoolProtocol;
 import org.ametiste.routine.sdk.mod.protocol.ProtocolFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -21,7 +21,7 @@ import java.util.Map;
 public class ProtocolGatewayServiceConfiguration {
 
     @Autowired
-    private Map<String, ProtocolFactory> protocolFactories;
+    private List<ProtocolFactory> protocolFactories;
 
     @Autowired
     private TaskIssueService taskIssueService;
@@ -34,14 +34,20 @@ public class ProtocolGatewayServiceConfiguration {
          return new ProtocolGatewayService(protocolFactories);
     }
 
-    @Bean(name = TaskPool.PROTOCOL_NAME)
+    @Bean
     public ProtocolFactory taskPoolProtocolFactory() {
-        return () -> new TaskPoolProtocol(taskIssueService);
+        return (c) -> new DirectTaskPoolProtocol(
+                c.lookupAttribute("invokerId"),
+                taskIssueService
+        );
     }
 
-    @Bean(name = "mod-data")
+    @Bean
     public ProtocolFactory modDataProtocolFactory() {
-        return () -> new ModDataProtocol(modRepository);
+        return (c) -> new DirectModDataProtocol(
+                c.lookupAttribute("modId"),
+                modRepository
+        );
     }
 
 }

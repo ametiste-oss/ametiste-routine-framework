@@ -6,6 +6,6 @@ package org.ametiste.routine.sdk.mod.protocol;
  */
 public interface ProtocolFactory {
 
-    Protocol createProtocol();
+    Protocol createProtocol(GatewayContext gatewayContext);
 
 }

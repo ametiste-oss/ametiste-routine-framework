@@ -19,57 +19,46 @@ public class ModDataClient implements ModDataGateway {
 
     @Override
     public void storeModData(String name, String value) {
-
-    }
-
-    @Override
-    public void storeModData(String name, Integer value) {
-
-    }
-
-    @Override
-    public void storeModData(String name, Long value) {
-
-    }
-
-    @Override
-    public void storeModData(String name, Boolean value) {
-
+        protocol.session(ModDataProtocol.class)
+                .storeData(name, value);
     }
 
     @Override
     public Optional<String> loadModData(String name) {
+        return protocol.session(ModDataProtocol.class)
+                .loadData(name);
+    }
 
-        final String value = protocol.session(p ->
-                p.protocol("mod-data")
-                        .message("query-data")
-                        .param("query-data.with-name", name)
-        ).collect(
-                GatewayMappers.asString("value")
-        );
+    // Shortcut methods section
 
-        return Optional.ofNullable(value);
+    @Override
+    public void storeModData(String name, Integer value) {
+        storeModData(name, Integer.toString(value));
+    }
+
+    @Override
+    public void storeModData(String name, Long value) {
+        storeModData(name, Long.toString(value));
+    }
+
+    @Override
+    public void storeModData(String name, Boolean value) {
+        storeModData(name, Boolean.toString(value));
     }
 
     @Override
     public Optional<Integer> loadModDataInt(String name) {
-        return Optional.ofNullable(
-                Integer.valueOf(loadModData(name).get())
-        );
+        return loadModData(name).map(Integer::valueOf);
     }
 
     @Override
     public Optional<Long> loadModDataLong(String name) {
-        return Optional.ofNullable(
-                Long.valueOf(loadModData(name).get())
-        );
+        return loadModData(name).map(Long::valueOf);
     }
 
     @Override
     public Optional<Boolean> loadModDataBool(String name) {
-        return Optional.ofNullable(
-                Boolean.valueOf(loadModData(name).get())
-        );
+        return loadModData(name).map(Boolean::valueOf);
     }
 
 }

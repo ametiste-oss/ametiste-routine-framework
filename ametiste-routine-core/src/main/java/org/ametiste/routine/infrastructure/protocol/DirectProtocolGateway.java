@@ -2,9 +2,11 @@ package org.ametiste.routine.infrastructure.protocol;
 
 import org.ametiste.routine.sdk.mod.protocol.*;
 
+import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -12,16 +14,33 @@ import java.util.function.Function;
  */
 public class DirectProtocolGateway implements ProtocolGateway {
 
-    private final Map<String, Protocol> protocols;
+    private final List<ProtocolFactory> protocols;
 
-    public DirectProtocolGateway(Map<String, Protocol> protocols) {
+    private final GatewayContext gc;
+
+    public DirectProtocolGateway(List<ProtocolFactory> protocols, GatewayContext gc) {
+        this.gc = gc;
         this.protocols = protocols;
     }
 
     @Override
-    public ProtocolSession session(String protocolType) {
-        final Protocol protocol = protocols.get(protocolType);
-        return new DirectProtocolSession(protocol);
+    public <T extends Protocol> T session(Class<T> protocolType) {
+
+        final Protocol protocol = protocols
+                .stream().filter();
+
+        if (!protocolType.isAssignableFrom(protocol.getClass())) {
+             throw new IllegalStateException("Gateway has no access to " +
+                     "protocol of the given type: " + protocolType.getName());
+        }
+
+        try {
+            return protocolType.cast(protocol);
+        } catch (ClassCastException e) {
+            throw new IllegalStateException("Gateway has error during access to " +
+                    "protocol of the given type: " + protocolType.getName(), e);
+        }
+
     }
 
 }

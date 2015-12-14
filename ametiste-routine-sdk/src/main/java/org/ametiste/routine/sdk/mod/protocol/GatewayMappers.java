@@ -1,7 +1,6 @@
 package org.ametiste.routine.sdk.mod.protocol;
 
-import java.util.Map;
-import java.util.function.Function;
+import java.util.Optional;
 
 /**
  *
@@ -15,6 +14,10 @@ public class GatewayMappers {
 
     public static GatewayResponseMapper<String> asString(String key) {
         return m -> m.get(key);
+    }
+
+    public static GatewayResponseMapper<Optional<String>> asOptionalString(String key) {
+        return m -> Optional.ofNullable(m.get(key));
     }
 
 }

@@ -52,8 +52,8 @@ public class DefaultOperationExecutionGateway implements OperationExecutionGatew
         final DefaultOperationFeedbackController feedbackController =
                 new DefaultOperationFeedbackController(feedback, operationId);
 
-        // TODO: pass scheme name, operation name and caller id somehow
-        final ProtocolGateway protocolGateway = protocolGatewayService.createGateway();
+        final ProtocolGateway protocolGateway =
+                protocolGatewayService.createGateway(operationExecLine);
 
         feedback.operationStarted(operationId);
 

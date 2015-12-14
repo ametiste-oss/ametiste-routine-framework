@@ -10,6 +10,6 @@ import java.util.function.Function;
  */
 public interface Protocol {
 
-    MessageSession message(String messageType);
+
 
 }

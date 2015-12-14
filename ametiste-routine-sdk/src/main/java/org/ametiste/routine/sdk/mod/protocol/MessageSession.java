@@ -8,9 +8,11 @@ import java.util.Map;
  */
 public interface MessageSession {
 
-    void params(Map<String, Map<String, String>> params);
+    MessageSession param(String name, String value);
 
-    void callback(GatewayCallback callback);
+    MessageSession params(Map<String, Map<String, String>> params);
+
+    MessageSession callback(GatewayCallback callback);
 
     <T> T collect(GatewayResponseMapper<T> collector);
 

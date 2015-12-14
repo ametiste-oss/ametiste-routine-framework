@@ -10,12 +10,7 @@ import java.util.function.Function;
  */
 public interface ProtocolGateway {
 
-    ProtocolSession session(String protocolType);
-
-//    void session(Consumer<ProtocolDescriptor> descriptorConsumer, GatewayCallback callback);
-
-    // TODO: extract to QueryGateway
-//    void query(Consumer<QueryDescriptor> queryConsumer);
+    <T extends Protocol> T session(Class<T> protocolType);
 
     /**
      * <p>

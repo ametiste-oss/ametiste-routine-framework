@@ -27,7 +27,7 @@ public class DefaultRenewSchemeExecutor implements RenewSchemeExecutor {
         final BacklogPopulationStrategy populationStrategy =
                 registry.findPopulationStrategy(renewScheme.populationStrategyName());
 
-        populationStrategy.populate(protocolGatewayService.createGateway());
+        populationStrategy.populate(protocolGatewayService.createGateway("mod-backlog:meta"));
         // TODO: exceptions
     }
 
