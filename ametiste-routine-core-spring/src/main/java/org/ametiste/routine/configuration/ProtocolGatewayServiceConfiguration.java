@@ -7,11 +7,13 @@ import org.ametiste.routine.infrastructure.protocol.moddata.DirectModDataProtoco
 import org.ametiste.routine.infrastructure.protocol.taskpool.DirectTaskPoolProtocol;
 import org.ametiste.routine.sdk.mod.ModDataProtocol;
 import org.ametiste.routine.sdk.mod.TaskPoolProtocol;
+import org.ametiste.routine.sdk.mod.protocol.GatewayContext;
 import org.ametiste.routine.sdk.mod.protocol.ProtocolFactory;
 import org.ametiste.routine.sdk.mod.protocol.configuration.ProtocolUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 
 import java.util.List;
 
@@ -39,19 +41,31 @@ public class ProtocolGatewayServiceConfiguration {
     }
 
     @Bean
-    public ProtocolFactory<TaskPoolProtocol> taskPoolProtocolFactory() {
-        return c -> new DirectTaskPoolProtocol(
+    @Scope(scopeName = "prototype")
+    public TaskPoolProtocol taskPoolProtocol(GatewayContext c) {
+        return new DirectTaskPoolProtocol(
                 c.lookupAttribute("clientId"),
                 taskIssueService
         );
     }
 
     @Bean
-    public ProtocolFactory<ModDataProtocol> modDataProtocolFactory() {
-        return c -> new DirectModDataProtocol(
+    @Scope(scopeName = "prototype")
+    public ModDataProtocol modDataProtocol(GatewayContext c) {
+        return new DirectModDataProtocol(
                 c.lookupAttribute("clientId"),
                 modRepository
         );
+    }
+
+    @Bean
+    public ProtocolFactory<TaskPoolProtocol> taskPoolProtocolFactory() {
+        return c -> taskPoolProtocol(c);
+    }
+
+    @Bean
+    public ProtocolFactory<ModDataProtocol> modDataProtocolFactory() {
+        return c -> modDataProtocol(c);
     }
 
 }
