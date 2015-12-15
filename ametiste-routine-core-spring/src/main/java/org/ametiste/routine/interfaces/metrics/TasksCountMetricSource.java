@@ -1,14 +1,10 @@
-package org.ametiste.routine.infrastructure.metrics;
+package org.ametiste.routine.interfaces.metrics;
 
 import org.ametiste.metrics.MetricsService;
-import org.ametiste.routine.configuration.AmetisteRoutineCoreConfiguration;
 import org.ametiste.routine.domain.task.Task;
 import org.ametiste.routine.infrastructure.persistency.jpa.JPATaskDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -65,6 +61,10 @@ public class TasksCountMetricSource {
 
         metricsService.gauge(InfoMetrics.DONE_TASKS_COUNT, (int) taskDataRepository
                 .countByState(Task.State.DONE.name()));
+
+// TODO: add active tasks count
+//        metricsService.gauge(InfoMetrics.DONE_TASKS_COUNT, (int) taskDataRepository
+//                .countByState());
 
     }
 
