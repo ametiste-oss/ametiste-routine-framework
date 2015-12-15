@@ -23,37 +23,9 @@ public final class PrintOperation implements OperationExecutor {
     @Value("${org.ametiste.routine.eg.printer.delayTime:1000}")
     private long delyaTime;
 
-    /*
     @Override
-    public void execOperation(UUID operationId, Map<String, String> properties, OperationFeedback feedback, ProtocolGateway protocolGateway) {
-
-        final UUID id = protocolGateway.session(
-                d -> {
-                    d.protocol("task-gateway")
-                        .session("create-task")
-                        .param("task.scheme", "print-eg-task");
-                },
-                (Map<String, String> m)
-                        -> UUID.fromString(m.get("id"))
-        );
-
-        protocolGateway.query(q ->
-            q.dataSource("mod-data")
-                    .select("value")
-                    .field("mod-name", "")
-                    .field("property-name", "")
-                    .accept((String s) -> s.equals("s"))
-        );
-
-        final Integer value = protocolGateway.query(
-                query -> query.select("value"),
-                (String v) -> Integer.valueOf(v)
-        );
-
-    } */
-
-    @Override
-    public void execOperation(UUID operationId, Map<String, String> properties, OperationFeedback feedback) {
+    public void execOperation(UUID operationId, Map<String, String> properties, OperationFeedback feedback,
+                              ProtocolGateway protocolGateway) {
 
         final long any = new Random().longs(50, delyaTime).findAny().getAsLong();
 
@@ -64,6 +36,7 @@ public final class PrintOperation implements OperationExecutor {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
     }
 
 }

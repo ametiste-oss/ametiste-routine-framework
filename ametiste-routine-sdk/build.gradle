@@ -22,6 +22,7 @@ publishing {
 dependencies {
 
     compile ("org.ametiste.domain:ametiste-domain-core:0.2.0-RELEASE")
+    compile ('net.jodah:typetools:0.4.4')
     compile ("org.slf4j:slf4j-api:1.7.12")
 
 }
