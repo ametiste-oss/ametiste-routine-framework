@@ -2,7 +2,7 @@ package org.ametiste.routine.configuration;
 
 import org.ametiste.routine.application.service.issue.TaskIssueService;
 import org.ametiste.routine.domain.ModRepository;
-import org.ametiste.routine.infrastructure.protocol.ProtocolGatewayservice;
+import org.ametiste.routine.infrastructure.protocol.ProtocolGatewayService;
 import org.ametiste.routine.infrastructure.protocol.moddata.DirectModDataProtocol;
 import org.ametiste.routine.infrastructure.protocol.taskpool.DirectTaskPoolProtocol;
 import org.ametiste.routine.sdk.mod.ModDataProtocol;
@@ -32,8 +32,8 @@ public class ProtocolGatewayServiceConfiguration {
     private List<ProtocolFactory<?>> protocolFactories;
 
     @Bean
-    public ProtocolGatewayservice protocolGatewayService() {
-        return new ProtocolGatewayservice(
+    public ProtocolGatewayService protocolGatewayService() {
+        return new ProtocolGatewayService(
             ProtocolUtils.protocolsMapping(protocolFactories)
         );
     }

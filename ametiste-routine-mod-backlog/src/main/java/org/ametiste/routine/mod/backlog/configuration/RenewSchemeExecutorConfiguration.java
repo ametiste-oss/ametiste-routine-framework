@@ -2,7 +2,7 @@ package org.ametiste.routine.mod.backlog.configuration;
 
 import org.ametiste.routine.application.service.issue.TaskIssueService;
 import org.ametiste.routine.domain.ModRepository;
-import org.ametiste.routine.infrastructure.protocol.ProtocolGatewayservice;
+import org.ametiste.routine.infrastructure.protocol.ProtocolGatewayService;
 import org.ametiste.routine.mod.backlog.domain.RenewSchemeExecutor;
 import org.ametiste.routine.mod.backlog.infrastructure.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class RenewSchemeExecutorConfiguration {
     private ModRepository modRepository;
 
     @Autowired
-    private ProtocolGatewayservice protocolGatewayservice;
+    private ProtocolGatewayService protocolGatewayservice;
 
     @Bean
     public RenewSchemeExecutor renewSchemeExecutor() {

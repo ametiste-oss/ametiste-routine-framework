@@ -10,11 +10,11 @@ import java.util.Map;
  *
  * @since
  */
-public class ProtocolGatewayservice {
+public class ProtocolGatewayService {
 
     private final Map<Class<? extends Protocol>, ProtocolFactory<?>> protocolFactories;
 
-    public ProtocolGatewayservice(Map<Class<? extends Protocol>, ProtocolFactory<?>> protocolFactories) {
+    public ProtocolGatewayService(Map<Class<? extends Protocol>, ProtocolFactory<?>> protocolFactories) {
         this.protocolFactories = protocolFactories;
     }
 

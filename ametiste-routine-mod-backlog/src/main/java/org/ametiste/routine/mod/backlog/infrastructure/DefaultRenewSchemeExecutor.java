@@ -1,6 +1,6 @@
 package org.ametiste.routine.mod.backlog.infrastructure;
 
-import org.ametiste.routine.infrastructure.protocol.ProtocolGatewayservice;
+import org.ametiste.routine.infrastructure.protocol.ProtocolGatewayService;
 import org.ametiste.routine.mod.backlog.domain.RenewSchemeExecutor;
 import org.ametiste.routine.mod.backlog.domain.RenewScheme;
 
@@ -11,10 +11,10 @@ import org.ametiste.routine.mod.backlog.domain.RenewScheme;
 public class DefaultRenewSchemeExecutor implements RenewSchemeExecutor {
 
     private final BacklogPopulationStrategiesRegistry registry;
-    private final ProtocolGatewayservice protocolGatewayservice;
+    private final ProtocolGatewayService protocolGatewayservice;
 
     public DefaultRenewSchemeExecutor(BacklogPopulationStrategiesRegistry registry,
-                                      ProtocolGatewayservice protocolGatewayservice) {
+                                      ProtocolGatewayService protocolGatewayservice) {
         this.registry = registry;
         this.protocolGatewayservice = protocolGatewayservice;
     }

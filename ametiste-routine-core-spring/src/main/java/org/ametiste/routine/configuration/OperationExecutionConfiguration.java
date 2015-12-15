@@ -6,7 +6,7 @@ import org.ametiste.routine.application.service.execution.OperationExecutionGate
 import org.ametiste.routine.domain.task.TaskRepository;
 import org.ametiste.routine.infrastructure.execution.DefaultOperationExecutionGateway;
 import org.ametiste.routine.infrastructure.messaging.JmsTaskEventsListener;
-import org.ametiste.routine.infrastructure.protocol.ProtocolGatewayservice;
+import org.ametiste.routine.infrastructure.protocol.ProtocolGatewayService;
 import org.ametiste.routine.sdk.operation.OperationExecutor;
 import org.ametiste.routine.sdk.operation.OperationExecutorFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,7 +43,7 @@ public class OperationExecutionConfiguration {
     private TaskAppEvenets taskAppEvenets;
 
     @Autowired
-    private ProtocolGatewayservice protocolGatewayservice;
+    private ProtocolGatewayService protocolGatewayservice;
 
     @Bean
     @ConditionalOnMissingBean
