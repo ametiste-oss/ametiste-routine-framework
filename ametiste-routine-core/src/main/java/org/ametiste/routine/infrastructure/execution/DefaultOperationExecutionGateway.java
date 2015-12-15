@@ -3,7 +3,7 @@ package org.ametiste.routine.infrastructure.execution;
 import org.ametiste.metrics.annotations.Timeable;
 import org.ametiste.routine.application.service.execution.ExecutionFeedback;
 import org.ametiste.routine.application.service.execution.OperationExecutionGateway;
-import org.ametiste.routine.infrastructure.protocol.ProtocolGatewayService;
+import org.ametiste.routine.infrastructure.protocol.ProtocolGatewayservice;
 import org.ametiste.routine.sdk.mod.protocol.ProtocolGateway;
 import org.ametiste.routine.sdk.operation.OperationExecutorFactory;
 import org.slf4j.Logger;
@@ -28,13 +28,13 @@ public class DefaultOperationExecutionGateway implements OperationExecutionGatew
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final Map<String, OperationExecutorFactory> operationExecutors;
-    private final ProtocolGatewayService protocolGatewayService;
+    private final ProtocolGatewayservice protocolGatewayservice;
 
     public DefaultOperationExecutionGateway(
             Map<String, OperationExecutorFactory> operationExecutors,
-            ProtocolGatewayService protocolGatewayService) {
+            ProtocolGatewayservice protocolGatewayservice) {
         this.operationExecutors = operationExecutors;
-        this.protocolGatewayService = protocolGatewayService;
+        this.protocolGatewayservice = protocolGatewayservice;
     }
 
     @Override
@@ -52,7 +52,7 @@ public class DefaultOperationExecutionGateway implements OperationExecutionGatew
                 new DefaultOperationFeedbackController(feedback, operationId);
 
         final ProtocolGateway protocolGateway =
-                protocolGatewayService.createGateway(operationExecLine);
+                protocolGatewayservice.createGateway(operationExecLine);
 
         feedback.operationStarted(operationId);
 
