@@ -9,7 +9,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  *
  * @since 0.1.0
  */
-@ConfigurationProperties
+@ConfigurationProperties(prefix = AmetisteRoutineCoreProperties.PREFIX)
 public class AmetisteRoutineCoreProperties {
 
     public static final String PREFIX = "org.ametiste.routine";
