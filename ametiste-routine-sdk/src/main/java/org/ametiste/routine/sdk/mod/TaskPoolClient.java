@@ -1,6 +1,6 @@
 package org.ametiste.routine.sdk.mod;
 
-import org.ametiste.routine.sdk.mod.protocol.ProtocolGateway;
+import org.ametiste.laplatform.protocol.ProtocolGateway;
 
 import java.util.Map;
 

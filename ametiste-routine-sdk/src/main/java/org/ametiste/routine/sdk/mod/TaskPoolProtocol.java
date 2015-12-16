@@ -1,6 +1,6 @@
 package org.ametiste.routine.sdk.mod;
 
-import org.ametiste.routine.sdk.mod.protocol.Protocol;
+import org.ametiste.laplatform.protocol.Protocol;
 
 import java.util.Map;
 import java.util.UUID;

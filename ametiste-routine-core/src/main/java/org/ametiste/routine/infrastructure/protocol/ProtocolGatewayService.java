@@ -1,8 +1,8 @@
 package org.ametiste.routine.infrastructure.protocol;
 
-import org.ametiste.routine.sdk.mod.protocol.Protocol;
-import org.ametiste.routine.sdk.mod.protocol.ProtocolFactory;
-import org.ametiste.routine.sdk.mod.protocol.ProtocolGateway;
+import org.ametiste.laplatform.protocol.Protocol;
+import org.ametiste.laplatform.protocol.ProtocolFactory;
+import org.ametiste.laplatform.protocol.ProtocolGateway;
 
 import java.util.Map;
 

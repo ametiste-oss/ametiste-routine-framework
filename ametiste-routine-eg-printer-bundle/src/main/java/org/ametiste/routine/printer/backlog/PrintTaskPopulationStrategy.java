@@ -1,10 +1,10 @@
 package org.ametiste.routine.printer.backlog;
 
+import org.ametiste.laplatform.protocol.ProtocolGateway;
 import org.ametiste.routine.mod.backlog.infrastructure.BacklogPopulationStrategy;
 import org.ametiste.routine.printer.scheme.PrintTaskScheme;
 import org.ametiste.routine.sdk.mod.ModDataClient;
 import org.ametiste.routine.sdk.mod.TaskPoolClient;
-import org.ametiste.routine.sdk.mod.protocol.ProtocolGateway;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;

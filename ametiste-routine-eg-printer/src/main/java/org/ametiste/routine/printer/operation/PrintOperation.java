@@ -1,6 +1,6 @@
 package org.ametiste.routine.printer.operation;
 
-import org.ametiste.routine.sdk.mod.protocol.ProtocolGateway;
+import org.ametiste.laplatform.protocol.ProtocolGateway;
 import org.ametiste.routine.sdk.operation.OperationExecutor;
 import org.ametiste.routine.sdk.operation.OperationFeedback;
 import org.slf4j.Logger;
@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
-import java.util.OptionalLong;
 import java.util.Random;
 import java.util.UUID;
 

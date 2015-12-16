@@ -1,10 +1,10 @@
 package org.ametiste.routine.infrastructure.execution;
 
+import org.ametiste.laplatform.protocol.ProtocolGateway;
 import org.ametiste.metrics.annotations.Timeable;
 import org.ametiste.routine.application.service.execution.ExecutionFeedback;
 import org.ametiste.routine.application.service.execution.OperationExecutionGateway;
 import org.ametiste.routine.infrastructure.protocol.ProtocolGatewayService;
-import org.ametiste.routine.sdk.mod.protocol.ProtocolGateway;
 import org.ametiste.routine.sdk.operation.OperationExecutorFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
