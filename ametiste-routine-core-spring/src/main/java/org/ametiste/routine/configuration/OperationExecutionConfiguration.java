@@ -1,12 +1,12 @@
 package org.ametiste.routine.configuration;
 
+import org.ametiste.laplatform.protocol.gateway.ProtocolGatewayService;
 import org.ametiste.routine.application.service.TaskAppEvenets;
 import org.ametiste.routine.application.service.execution.DefaultTaskExecutionService;
 import org.ametiste.routine.application.service.execution.OperationExecutionGateway;
 import org.ametiste.routine.domain.task.TaskRepository;
 import org.ametiste.routine.infrastructure.execution.DefaultOperationExecutionGateway;
 import org.ametiste.routine.infrastructure.messaging.JmsTaskEventsListener;
-import org.ametiste.routine.infrastructure.protocol.ProtocolGatewayService;
 import org.ametiste.routine.sdk.operation.OperationExecutor;
 import org.ametiste.routine.sdk.operation.OperationExecutorFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,7 +71,7 @@ public class OperationExecutionConfiguration {
         // each request.
         //
         operationExecutors.entrySet().stream().forEach(
-                (k) -> factories.put(k.getKey(), () -> k.getValue())
+                k -> factories.put(k.getKey(), () -> k.getValue())
         );
 
         return new DefaultOperationExecutionGateway(factories, protocolGatewayservice);

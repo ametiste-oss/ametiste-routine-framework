@@ -1,8 +1,8 @@
 package org.ametiste.routine.mod.backlog.infrastructure;
 
-import org.ametiste.routine.infrastructure.protocol.ProtocolGatewayService;
-import org.ametiste.routine.mod.backlog.domain.RenewSchemeExecutor;
+import org.ametiste.laplatform.protocol.gateway.ProtocolGatewayService;
 import org.ametiste.routine.mod.backlog.domain.RenewScheme;
+import org.ametiste.routine.mod.backlog.domain.RenewSchemeExecutor;
 
 /**
  *
