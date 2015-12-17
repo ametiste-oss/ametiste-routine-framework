@@ -139,8 +139,10 @@ public class TaskLogController {
                                     o.getLine(),
                                     o.getNotices().stream()
                                             .map(this::createNoticeDTO)
-                                            .collect(Collectors.toList()));
-                        }).collect(Collectors.toList())
+                                            .collect(Collectors.toList()),
+                                    o.getProperties()
+                            );}
+                        ).collect(Collectors.toList())
         );
 
         final TaskLogEntryResource resource = new TaskLogEntryResource(content);

@@ -1,6 +1,7 @@
 package org.ametiste.routine.mod.tasklog.interfaces.web.resources;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -15,12 +16,19 @@ public class OperationLogDTO {
 
     private final String description;
     private final List<NoticeDTO> notices;
+    private final Map<String, String> properties;
 
-    public OperationLogDTO(UUID operationId, String state, String description, List<NoticeDTO> notices) {
+    public OperationLogDTO(UUID operationId, String state, String description,
+                           List<NoticeDTO> notices, Map<String, String> properties) {
         this.operationId = operationId;
         this.state = state;
         this.description = description;
         this.notices = notices;
+        this.properties = properties;
+    }
+
+    public Map<String, String> getProperties() {
+        return properties;
     }
 
     public UUID getOperationId() {

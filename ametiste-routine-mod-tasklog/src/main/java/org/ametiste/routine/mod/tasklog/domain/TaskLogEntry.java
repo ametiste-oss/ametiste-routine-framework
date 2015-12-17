@@ -20,6 +20,7 @@ public class TaskLogEntry {
     private final List<NoticeEntry> notices;
 
     private final String state;
+
     private final Map<String, String> properties;
 
     private final Collection<OperationLog> lines;
