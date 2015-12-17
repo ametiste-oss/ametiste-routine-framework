@@ -21,9 +21,9 @@ publishing {
 
 dependencies {
 
-    compile ("org.ametiste.lambda-platform:lambda-platform-pgw:0.0.1-b1")
-    compile ("org.ametiste.domain:ametiste-domain-core:0.2.0-RELEASE")
+    compile ("org.ametiste.lambda-platform:lambda-platform-pgw:${ameLaPlatformVersion}")
+    compile ("org.ametiste.domain:ametiste-domain-core:${ameDomainVersion}")
 
-    compile ("org.slf4j:slf4j-api:1.7.12")
+    compile ("org.slf4j:slf4j-api:${slf4jVersion}")
 
 }
