@@ -21,14 +21,9 @@ import java.util.List;
  *
  * @since
  */
+// TODO: extract to lambdaplatform-protocol-srping-starter
 @Configuration
 public class ProtocolGatewayServiceConfiguration {
-
-    @Autowired
-    private TaskIssueService taskIssueService;
-
-    @Autowired
-    private ModRepository modRepository;
 
     @Autowired
     private List<ProtocolFactory<?>> protocolFactories;
@@ -38,34 +33,6 @@ public class ProtocolGatewayServiceConfiguration {
         return new ProtocolGatewayService(
             ProtocolUtils.protocolsMapping(protocolFactories)
         );
-    }
-
-    @Bean
-    @Scope(scopeName = "prototype")
-    public TaskPoolProtocol taskPoolProtocol(GatewayContext c) {
-        return new DirectTaskPoolProtocol(
-                c.lookupAttribute("clientId"),
-                taskIssueService
-        );
-    }
-
-    @Bean
-    @Scope(scopeName = "prototype")
-    public ModDataProtocol modDataProtocol(GatewayContext c) {
-        return new DirectModDataProtocol(
-                c.lookupAttribute("clientId"),
-                modRepository
-        );
-    }
-
-    @Bean
-    public ProtocolFactory<TaskPoolProtocol> taskPoolProtocolFactory() {
-        return c -> taskPoolProtocol(c);
-    }
-
-    @Bean
-    public ProtocolFactory<ModDataProtocol> modDataProtocolFactory() {
-        return c -> modDataProtocol(c);
     }
 
 }
