@@ -206,7 +206,7 @@ public class SpringDataTaskLogRepository implements TaskLogRepository {
                         .map(this::createNoticeEntry)
                         .collect(Collectors.toList()),
                 reflectedData.state,
-                reflectedData.properties.stream()               ya
+                reflectedData.properties.stream()
                         .collect(Collectors.toMap(p -> p.name, p -> p.value)),
                 reflectedData.operationData.stream()
                         .map((x) -> {
