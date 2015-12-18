@@ -15,6 +15,7 @@ import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.*;
+import java.sql.Date;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
@@ -27,7 +28,7 @@ import java.util.stream.Collectors;
  */
 public class SpringDataTaskLogRepository implements TaskLogRepository {
 
-    private static class TaskDataSpecifications {
+    public static class TaskDataSpecifications {
 
         public static Specification<TaskData> hasScheme(String schemeId) {
             return (root, query, cb) -> {
@@ -63,6 +64,27 @@ public class SpringDataTaskLogRepository implements TaskLogRepository {
                                 .map(Task.State::name)
                                 .collect(Collectors.toList())
                         );
+            };
+        }
+
+        public static Specification<TaskData> afterCreationTime(Instant crTime) {
+            return (root, criteriaQuery, criteriaBuilder) -> {
+                return criteriaBuilder
+                        .lessThan(root.get(TaskData_.creationTime), Date.from(crTime));
+            };
+        }
+
+        public static Specification<TaskData> afterExecStartTime(Instant execTime) {
+            return (root, criteriaQuery, criteriaBuilder) -> {
+                return criteriaBuilder
+                        .lessThan(root.get(TaskData_.executionStartTime), Date.from(execTime));
+            };
+        }
+
+        public static Specification<TaskData> afterCompletionTime(Instant coTime) {
+            return (root, criteriaQuery, criteriaBuilder) -> {
+                return criteriaBuilder.
+                        lessThan(root.get(TaskData_.completionTime), Date.from(coTime));
             };
         }
 
@@ -107,7 +129,7 @@ public class SpringDataTaskLogRepository implements TaskLogRepository {
     @Timeable(name = PersistencyMetrics.COUNT_ACTIVE_TASKS_TIMING)
     public long countActiveTasks() {
         return jpaTaskLogDataRepository.countTaskByStateIn(
-            statesToString(Task.State.activeStatesList)
+            statesToString(Task.State.activeState)
         );
     }
 
@@ -199,9 +221,9 @@ public class SpringDataTaskLogRepository implements TaskLogRepository {
     private TaskLogEntry processReflectedEntry(TaskData reflectedData) {
         return new TaskLogEntry(
                 reflectedData.id,
-                reflectedData.creationTime,
-                reflectedData.executionStartTime,
-                reflectedData.completionTime,
+                reflectedData.creationTime.toInstant(),
+                reflectedData.executionStartTime.toInstant(),
+                reflectedData.completionTime.toInstant(),
                 reflectedData.notices.stream()
                         .map(this::createNoticeEntry)
                         .collect(Collectors.toList()),

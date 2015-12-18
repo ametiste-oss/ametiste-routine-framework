@@ -28,6 +28,7 @@ public class StartupCleanActionConfiguration implements ApplicationListener<Appl
         return new StartupCleanAction(taskRepository);
     }
 
+    // TODO: move it to GTE somehow, singletone action or something like this
     @Override
     public void onApplicationEvent(ApplicationReadyEvent applicationReadyEvent) {
         startupCleanAction().run();

@@ -3,6 +3,8 @@ logging:
     org.ametiste: WARN
     org.ametiste.routine.printer.backlog.PrintTaskPopulationStrategy: DEBUG
     org.ametiste.routine.mod.backlog.application.service.BacklogRenewService: DEBUG
+    org.ametiste.routine.application.action.TaskTimeoutAction: DEBUG
+    org.ametiste.routine.application.service.issue.DefaultTaskIssueService: DEBUG
 
 spring:
   jpa:
@@ -14,6 +16,9 @@ spring:
 org:
   ametiste:
     routine:
+      action:
+        task-timeout:
+          enabled: true
       startup:
         cleanup:
           enabled: true

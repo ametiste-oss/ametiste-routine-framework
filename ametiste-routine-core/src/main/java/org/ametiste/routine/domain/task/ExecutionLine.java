@@ -5,8 +5,12 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
+ * <p>
+ *   Describes ne operationName from execution order, this operationName defines what shuld be done and
+ *   conveys paramters for this execution process.
+ * </p>
  *
- * @since
+ * @since 0.-1.0
  */
 public class ExecutionLine implements Serializable {
 
@@ -24,7 +28,7 @@ public class ExecutionLine implements Serializable {
         return operationId;
     }
 
-    public String line() {
+    public String operationName() {
         return line;
     }
 

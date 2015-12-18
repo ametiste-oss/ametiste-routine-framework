@@ -5,13 +5,13 @@ import org.ametiste.routine.sdk.mod.TaskPoolProtocol;
 
 /**
  * <p>
- *     Set of metrics for {@link DirectTaskPoolProtocol} implementation of {@link TaskPoolProtocol}.
+ *     Set of metrics for {@link DirectTaskPoolConnection} implementation of {@link TaskPoolProtocol}.
  * </p>
  *
  * @since 0.1.0
  */
 @MetricsInterface
-public interface DirectTaskPoolProtocolMetrics {
+public interface DirectTaskPoolConnectionMetrics {
 
     String __PREFIX = "core.infrastructure.protocol.task-pool";
 

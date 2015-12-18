@@ -2,11 +2,14 @@ package org.ametiste.routine.configuration;
 
 import org.ametiste.laplatform.protocol.GatewayContext;
 import org.ametiste.laplatform.protocol.ProtocolFactory;
+import org.ametiste.routine.application.service.execution.TaskExecutionService;
 import org.ametiste.routine.application.service.issue.TaskIssueService;
 import org.ametiste.routine.domain.ModRepository;
-import org.ametiste.routine.infrastructure.protocol.moddata.DirectModDataProtocol;
-import org.ametiste.routine.infrastructure.protocol.taskpool.DirectTaskPoolProtocol;
+import org.ametiste.routine.infrastructure.protocol.moddata.DirectModDataConnection;
+import org.ametiste.routine.infrastructure.protocol.taskcontrol.DirectTaskControlConnection;
+import org.ametiste.routine.infrastructure.protocol.taskpool.DirectTaskPoolConnection;
 import org.ametiste.routine.sdk.mod.ModDataProtocol;
+import org.ametiste.routine.sdk.mod.TaskControlProtocol;
 import org.ametiste.routine.sdk.mod.TaskPoolProtocol;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -26,10 +29,13 @@ public class CoreProtocolsConfiguration {
     @Autowired
     private ModRepository modRepository;
 
+    @Autowired
+    private TaskExecutionService taskExecutionService;
+
     @Bean
     @Scope(scopeName = "prototype")
     public TaskPoolProtocol taskPoolProtocol(GatewayContext c) {
-        return new DirectTaskPoolProtocol(
+        return new DirectTaskPoolConnection(
                 c.lookupAttribute("clientId"),
                 taskIssueService
         );
@@ -37,8 +43,17 @@ public class CoreProtocolsConfiguration {
 
     @Bean
     @Scope(scopeName = "prototype")
+    public TaskControlProtocol taskControlProtocol(GatewayContext c) {
+        return new DirectTaskControlConnection(
+                c.lookupAttribute("clientId"),
+                taskExecutionService
+        );
+    }
+
+    @Bean
+    @Scope(scopeName = "prototype")
     public ModDataProtocol modDataProtocol(GatewayContext c) {
-        return new DirectModDataProtocol(
+        return new DirectModDataConnection(
                 c.lookupAttribute("clientId"),
                 modRepository
         );
@@ -54,5 +69,9 @@ public class CoreProtocolsConfiguration {
         return c -> modDataProtocol(c);
     }
 
+    @Bean
+    public ProtocolFactory<TaskControlProtocol> taskControlProtocolFactory() {
+        return c -> taskControlProtocol(c);
+    }
 
 }

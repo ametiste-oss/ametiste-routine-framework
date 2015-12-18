@@ -1,6 +1,6 @@
 package org.ametiste.routine.application.service.issue;
 
-import org.ametiste.routine.application.service.TaskAppEvenets;
+import org.ametiste.routine.application.service.TaskDomainEvenets;
 import org.ametiste.routine.domain.scheme.TaskScheme;
 import org.ametiste.routine.domain.scheme.TaskSchemeException;
 import org.ametiste.routine.domain.scheme.TaskSchemeRepository;
@@ -9,6 +9,8 @@ import org.ametiste.routine.domain.task.TaskRepository;
 import org.ametiste.routine.domain.task.properties.TaskPropertiesRegistry;
 import org.ametiste.routine.domain.task.properties.TaskProperty;
 import org.ametiste.routine.sdk.application.service.issue.constraints.IssueConstraint;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -23,28 +25,32 @@ public class DefaultTaskIssueService implements TaskIssueService {
 
     private TaskSchemeRepository taskSchemeRepository;
 
-    private final TaskAppEvenets taskAppEvenets;
+    private final TaskDomainEvenets taskDomainEvenets;
 
     private final List<IssueConstraint> issueConstraints;
+
+    private final Logger logger = LoggerFactory.getLogger(getClass());
 
     public DefaultTaskIssueService(TaskRepository taskRepository,
                                    TaskPropertiesRegistry taskPropertiesRegistry,
                                    TaskSchemeRepository taskSchemeRepository,
-                                   TaskAppEvenets taskAppEvenets,
+                                   TaskDomainEvenets taskDomainEvenets,
                                    List<IssueConstraint> issueConstraints) {
         this.taskRepository = taskRepository;
         this.taskSchemeRepository = taskSchemeRepository;
-        this.taskAppEvenets = taskAppEvenets;
+        this.taskDomainEvenets = taskDomainEvenets;
         this.issueConstraints = issueConstraints;
     }
 
     @Override
     public UUID issueTask(String taskSchemeName, Map<String, String> params, String creatorIdenifier) {
 
+
         final TaskScheme taskScheme = taskSchemeRepository.findTaskScheme(taskSchemeName);
 
         final Task task;
 
+        // TODO: add aggregate instant for this
         try {
             task = taskScheme.createTask(params, creatorIdenifier);
         } catch (TaskSchemeException e) {
@@ -56,7 +62,12 @@ public class DefaultTaskIssueService implements TaskIssueService {
         task.addProperty(new TaskProperty(Task.CREATOR_PROPERTY_NAME, creatorIdenifier));
 
         taskRepository.saveTask(task);
-        taskAppEvenets.taskIssued(task.entityId());
+        taskDomainEvenets.taskIssued(task.entityId());
+
+        if (logger.isDebugEnabled()) {
+            logger.debug("New task created using scheme:{}, task id: {}, creator id: {}",
+                    taskScheme, task.entityId().toString(), creatorIdenifier);
+        }
 
         return task.entityId();
     }

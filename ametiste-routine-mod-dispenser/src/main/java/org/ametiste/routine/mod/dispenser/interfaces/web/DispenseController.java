@@ -38,7 +38,7 @@ public class DispenseController {
 
         final List<ReservedTaskDTO> collect = executionLines
                 .stream()
-                .map(l -> new ReservedTaskDTO(l.operationId().toString(), l.line(), l.properties())
+                .map(l -> new ReservedTaskDTO(l.operationId().toString(), l.operationName(), l.properties())
                 ).collect(Collectors.toList());
 
         return new ReservationOrderDTO(collect);

@@ -7,9 +7,7 @@ import org.ametiste.routine.domain.task.reflect.TaskReflection;
 import org.ametiste.routine.infrastructure.persistency.jpa.data.*;
 
 import java.time.Instant;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -90,9 +88,9 @@ public class JPATaskReflection implements TaskReflection {
 
     @Override
     public void flareTaskTimes(Instant creationTime, Instant executionStartTime, Instant completionTime) {
-        taskData.creationTime = creationTime;
-        taskData.executionStartTime = executionStartTime;
-        taskData.completionTime = completionTime;
+        taskData.creationTime = mapInstantToDate(creationTime);
+        taskData.executionStartTime = mapInstantToDate(executionStartTime);
+        taskData.completionTime = mapInstantToDate(completionTime);
     }
 
     @Override
@@ -107,8 +105,10 @@ public class JPATaskReflection implements TaskReflection {
     public void reflect(TaskReflection reflection) {
 
         reflection.flareTaskId(taskData.id);
-        reflection.flareTaskTimes(taskData.creationTime,
-                taskData.executionStartTime, taskData.completionTime);
+        reflection.flareTaskTimes(
+                mapDateToInstant(taskData.creationTime),
+                mapDateToInstant(taskData.executionStartTime),
+                mapDateToInstant(taskData.completionTime));
         reflection.flareTaskState(Task.State.valueOf(taskData.state));
 
         taskData.operationData.forEach((operation) -> {
@@ -139,5 +139,14 @@ public class JPATaskReflection implements TaskReflection {
     public TaskData reflectedTaskData() {
         return taskData;
     }
+
+    private Date mapInstantToDate(Instant instant) {
+        return Optional.ofNullable(instant).map(Date::from).orElse(null);
+    }
+
+    private Instant mapDateToInstant(Date date) {
+        return Optional.ofNullable(date).map(Date::toInstant).orElse(null);
+    }
+
 
 }

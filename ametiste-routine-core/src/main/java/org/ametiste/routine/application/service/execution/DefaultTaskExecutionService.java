@@ -1,7 +1,7 @@
 package org.ametiste.routine.application.service.execution;
 
 import org.ametiste.domain.AggregateInstant;
-import org.ametiste.routine.application.service.TaskAppEvenets;
+import org.ametiste.routine.application.service.TaskDomainEvenets;
 import org.ametiste.routine.domain.task.Task;
 import org.ametiste.routine.domain.task.TaskRepository;
 import org.slf4j.Logger;
@@ -13,37 +13,43 @@ import java.util.UUID;
  *
  * @since
  */
+// NOTE: this class methods may throw IllegalStateException,
+// since tasks state are eventualy consisten, that is asssumed
+// as okay for this version to control tasks state through
+// exceptions.
+
+
+// TODO: Extract ExecutionFeedback implementation as separate class
 public class DefaultTaskExecutionService implements TaskExecutionService, ExecutionFeedback {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private TaskRepository taskRepository;
 
-    private final TaskAppEvenets taskAppEvenets;
-    private OperationExecutionGateway operationExecutionGateway;
+    private final TaskDomainEvenets taskDomainEvenets;
 
     public DefaultTaskExecutionService(TaskRepository taskRepository,
-                                       TaskAppEvenets taskAppEvenets,
-                                       OperationExecutionGateway operationExecutionGateway) {
+                                       TaskDomainEvenets taskDomainEvenets) {
         this.taskRepository = taskRepository;
-        this.taskAppEvenets = taskAppEvenets;
-        this.operationExecutionGateway = operationExecutionGateway;
+        this.taskDomainEvenets = taskDomainEvenets;
     }
 
     @Override
-    public void executeTask(UUID taskId) {
+    public void pendTaskForExecution(UUID taskId) {
         AggregateInstant.create(taskId, taskRepository::findTask, taskRepository::saveTask)
                 .action(t -> { logger.debug("Executing task : {} ", t.entityId()); })
                 .action(Task::prepareExecution)
-                .consume(taskAppEvenets::taskPended)
+                .consume(taskDomainEvenets::taskPended)
                 .consume(o -> logger.debug("Pass execution order to operations service: {}", o.executionLines()))
                 .done();
     }
 
     @Override
-    public void completeTask(UUID taskId, String withMessage) {
-         // TODO: implement, Task need to support complete operation too, this operation
-         // required for task timeouts and termination implementation
+    public void terminateTask(UUID taskId, String withMessage) {
+        AggregateInstant.create(taskId, taskRepository::findTask, taskRepository::saveTask)
+                .action(t -> { return t.terminate(withMessage); })
+                .consume(taskDomainEvenets::taskTerminated)
+                .done();
     }
 
     @Override
@@ -87,7 +93,8 @@ public class DefaultTaskExecutionService implements TaskExecutionService, Execut
     public void operationFailed(UUID operationId, String withMessage) {
         taskInstantForOperation(operationId)
                 .action(Task::noticeOperation, operationId, withMessage)
-                .action(Task::terminateOperation, operationId)
+                .action(t -> { return t.terminateOperation(operationId); })
+                .consume(taskDomainEvenets::operationTerminated)
                 .done();
     }
 

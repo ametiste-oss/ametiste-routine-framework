@@ -35,7 +35,7 @@ public class StartupCleanAction implements Runnable {
         while(true) {
 
             final List<Task> tasks =
-                    taskRepository.findTasksByState(Task.State.activeStatesList, 100);
+                    taskRepository.findTasksByState(Task.State.activeState, 100);
 
             if (tasks.size() == 0) {
                 break;

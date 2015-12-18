@@ -10,13 +10,13 @@ import java.util.Optional;
  *
  * @since
  */
-public class DirectModDataProtocol implements ModDataProtocol, DirectModDataProtocolMetrics {
+public class DirectModDataConnection implements ModDataProtocol, DirectModDataConnectionMetrics {
 
     private final String clientId;
 
     private final ModRepository modRepository;
 
-    public DirectModDataProtocol(String clientId, ModRepository modRepository) {
+    public DirectModDataConnection(String clientId, ModRepository modRepository) {
         this.clientId = clientId;
         this.modRepository = modRepository;
     }

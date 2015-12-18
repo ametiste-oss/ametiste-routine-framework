@@ -51,6 +51,7 @@ dependencies {
 
     compile project(":ametiste-routine-core")
 
+    compile ("org.ametiste.gte:ametiste-gte-starter:${ameGTEVersion}")
     compile ("org.ametiste.lambda-platform:lambda-platform-pgw-spring-starter:${ameLaPlatformVersion}")
     compile ("org.ametiste.metrics:metrics-default-starter:${ameMetricsVersion}");
 

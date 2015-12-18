@@ -1,11 +1,14 @@
 package org.ametiste.routine.configuration;
 
 import org.ametiste.laplatform.protocol.gateway.ProtocolGatewayService;
-import org.ametiste.routine.application.service.TaskAppEvenets;
+import org.ametiste.routine.application.service.TaskDomainEvenets;
 import org.ametiste.routine.application.service.execution.DefaultTaskExecutionService;
-import org.ametiste.routine.application.service.execution.OperationExecutionGateway;
+import org.ametiste.routine.application.service.execution.LineExecutionGateway;
+import org.ametiste.routine.application.service.execution.OrderExecutionGateway;
 import org.ametiste.routine.domain.task.TaskRepository;
-import org.ametiste.routine.infrastructure.execution.DefaultOperationExecutionGateway;
+import org.ametiste.routine.infrastructure.execution.BoundedExecutor;
+import org.ametiste.routine.infrastructure.execution.LocalLineExecutionGateway;
+import org.ametiste.routine.infrastructure.execution.LocalOrderExecutionGateway;
 import org.ametiste.routine.infrastructure.messaging.JmsTaskEventsListener;
 import org.ametiste.routine.sdk.operation.OperationExecutor;
 import org.ametiste.routine.sdk.operation.OperationExecutorFactory;
@@ -18,6 +21,7 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Executors;
 
 /**
  *
@@ -40,14 +44,14 @@ public class OperationExecutionConfiguration {
     private TaskRepository taskRepository;
 
     @Autowired
-    private TaskAppEvenets taskAppEvenets;
+    private TaskDomainEvenets taskDomainEvenets;
 
     @Autowired
     private ProtocolGatewayService protocolGatewayservice;
 
     @Bean
     @ConditionalOnMissingBean
-    public OperationExecutionGateway operationExecutionGateway() {
+    public LineExecutionGateway lineExecutionGateway() {
 
         final HashMap<String, OperationExecutorFactory> factories = new HashMap<>();
         factories.putAll(operationExecutorFactories);
@@ -74,22 +78,35 @@ public class OperationExecutionConfiguration {
                 k -> factories.put(k.getKey(), () -> k.getValue())
         );
 
-        return new DefaultOperationExecutionGateway(factories, protocolGatewayservice);
+        return new LocalLineExecutionGateway(factories,
+                protocolGatewayservice,
+                taskExecutionService() // NOTE: execution feedback implementation
+        );
     }
 
     @Bean
     @ConditionalOnMissingBean
     // NOTE: DefaultTaskExecutionService implements ExecutionFeedback interface also, so we need it as type
     public DefaultTaskExecutionService taskExecutionService() {
-        return new DefaultTaskExecutionService(taskRepository, taskAppEvenets, operationExecutionGateway());
+        return new DefaultTaskExecutionService(taskRepository, taskDomainEvenets);
+    }
+
+    @Bean
+    public OrderExecutionGateway localOrderExecutionGateway() {
+        return new LocalOrderExecutionGateway(
+            lineExecutionGateway(),
+            new BoundedExecutor(
+                Executors.newFixedThreadPool(props.getInitialExecutionConcurrency()),
+                props.getInitialExecutionConcurrency()
+            )
+        );
     }
 
     @Bean
     @ConditionalOnMissingBean
     public JmsTaskEventsListener issuedTaskEventListener() {
         return new JmsTaskEventsListener(taskExecutionService(),
-                taskExecutionService(),  // NOTE: DefaultTaskExecutionService implements ExecutionFeedback interface
-                operationExecutionGateway(),
+                localOrderExecutionGateway(),
                 props.getInitialExecutionConcurrency()
         );
     }

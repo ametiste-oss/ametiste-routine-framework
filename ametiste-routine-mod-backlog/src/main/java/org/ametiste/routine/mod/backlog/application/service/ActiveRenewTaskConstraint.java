@@ -28,7 +28,7 @@ public class ActiveRenewTaskConstraint implements BacklogRenewConstraint {
     public boolean isApplicable(Backlog backlog) {
 
         final long activeCount = taskLogRepository.countByTaskState(
-                Task.State.activeStatesList,
+                Task.State.activeState,
                 Arrays.asList(
                         new TaskProperty(Task.SCHEME_PROPERTY_NAME, BacklogRenewTaskScheme.NAME)
                 )

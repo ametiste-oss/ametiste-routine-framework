@@ -50,7 +50,9 @@ configurations {
 dependencies {
 
     compile project(":ametiste-routine-core-starter")
+    compile project(":ametiste-routine-mod-tasklog-starter")
     compile project(":ametiste-routine-mod-backlog-starter")
+    compile project(":ametiste-routine-mod-task-timeout")
 
     compile("org.springframework.boot:spring-boot")
     compile("org.springframework.boot:spring-boot-starter-web")

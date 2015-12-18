@@ -2,17 +2,16 @@ package org.ametiste.routine.infrastructure.protocol.moddata;
 
 import org.ametiste.metrics.annotations.markers.MetricsInterface;
 import org.ametiste.routine.sdk.mod.ModDataProtocol;
-import org.ametiste.routine.sdk.mod.TaskPoolProtocol;
 
 /**
  * <p>
- *     Set of metrics for {@link DirectModDataProtocol} implementation of {@link ModDataProtocol}.
+ *     Set of metrics for {@link DirectModDataConnection} implementation of {@link ModDataProtocol}.
  * </p>
  *
  * @since 0.1.0
  */
 @MetricsInterface
-public interface DirectModDataProtocolMetrics {
+public interface DirectModDataConnectionMetrics {
 
     String __PREFIX = "core.infrastructure.protocol.direct-mod-data";
 

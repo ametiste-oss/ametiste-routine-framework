@@ -8,8 +8,8 @@ import java.util.UUID;
  */
 public interface TaskExecutionService {
 
-    void executeTask(UUID taskId);
+    void pendTaskForExecution(UUID taskId);
 
-    void completeTask(UUID taskId, String withMessage);
+    void terminateTask(UUID taskId, String withMessage);
 
 }

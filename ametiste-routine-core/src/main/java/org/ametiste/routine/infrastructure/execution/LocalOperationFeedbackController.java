@@ -9,14 +9,13 @@ import java.util.UUID;
  *
  * @since
  */
-// TODO: rename to LocalOperationFeedbackController
-class DefaultOperationFeedbackController implements OperationFeedback {
+class LocalOperationFeedbackController implements OperationFeedback {
 
     private final UUID operationId;
 
     private final ExecutionFeedback feedback;
 
-    DefaultOperationFeedbackController(ExecutionFeedback feedback, UUID operationId) {
+    LocalOperationFeedbackController(ExecutionFeedback feedback, UUID operationId) {
         this.feedback = feedback;
         this.operationId = operationId;
     }

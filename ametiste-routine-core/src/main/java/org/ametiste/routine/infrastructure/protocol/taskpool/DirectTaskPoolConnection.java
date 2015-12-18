@@ -11,12 +11,12 @@ import java.util.UUID;
  *
  * @since
  */
-public class DirectTaskPoolProtocol implements TaskPoolProtocol, DirectTaskPoolProtocolMetrics {
+public class DirectTaskPoolConnection implements TaskPoolProtocol, DirectTaskPoolConnectionMetrics {
 
     private final String clientId;
     private final TaskIssueService taskIssueService;
 
-    public DirectTaskPoolProtocol(String clientId, TaskIssueService taskIssueService) {
+    public DirectTaskPoolConnection(String clientId, TaskIssueService taskIssueService) {
         this.clientId = clientId;
         this.taskIssueService = taskIssueService;
     }

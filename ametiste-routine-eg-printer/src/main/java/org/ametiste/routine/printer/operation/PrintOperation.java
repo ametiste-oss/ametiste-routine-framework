@@ -30,11 +30,15 @@ public final class PrintOperation implements OperationExecutor {
 
         feedback.operationNotice("Delay time is: " + any);
 
+        logger.error("Start operation: " + operationId);
+
         try {
-            Thread.sleep(any);
+            Thread.sleep(500000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+
+        logger.error("Done operation: " + operationId);
 
     }
 

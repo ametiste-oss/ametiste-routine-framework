@@ -4,8 +4,6 @@ import org.ametiste.routine.domain.task.Task;
 import org.ametiste.routine.domain.task.properties.TaskProperty;
 import org.ametiste.routine.mod.backlog.domain.Backlog;
 import org.ametiste.routine.mod.tasklog.domain.TaskLogRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Arrays;
 
@@ -28,7 +26,7 @@ public class ActiveBacklogTasksConstraint implements BacklogRenewConstraint {
     public boolean isApplicable(Backlog backlog) {
 
         final long activeCount = taskLogRepository.countByTaskState(
-                Task.State.activeStatesList,
+                Task.State.activeState,
                 Arrays.asList(
                         // TODO: this properties are required and installed by core services,
                         // TODO Need some kind of constants or something like this

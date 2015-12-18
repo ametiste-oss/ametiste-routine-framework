@@ -9,6 +9,6 @@ import org.ametiste.metrics.annotations.markers.MetricsInterface;
 @MetricsInterface
 public interface ExecutionMetrics {
 
-    String TASK_EXECUTION_TIMING = "core.infrastructure.execution.local-gateway.timing";
+    String GATEWAY_EXECUTION_TIMING = "core.infrastructure.execution.local-gateway.timing";
 
 }

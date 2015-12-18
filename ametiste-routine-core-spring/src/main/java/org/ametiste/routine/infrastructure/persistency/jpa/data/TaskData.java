@@ -5,6 +5,7 @@ import org.springframework.data.domain.Persistable;
 import javax.persistence.*;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -41,13 +42,13 @@ public class TaskData implements Persistable<UUID> {
     public String schemeId;
 
     @Column(name = "cr_time")
-    public Instant creationTime;
+    public Date creationTime;
 
     @Column(name = "execs_time")
-    public Instant executionStartTime;
+    public Date executionStartTime;
 
     @Column(name = "co_time")
-    public Instant completionTime;
+    public Date completionTime;
 
     @Override
     public UUID getId() {
