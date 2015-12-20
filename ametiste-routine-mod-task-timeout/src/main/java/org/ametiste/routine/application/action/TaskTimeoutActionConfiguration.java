@@ -33,7 +33,7 @@ public class TaskTimeoutActionConfiguration {
     public ActionFactory taskTimeoutActionFactory() {
          return new ActionFactory() {
 
-             // TODO: I need the way to redefine GTE execution service, need to have ability to
+             // TODO: I need the way to redefine GTE termination service, need to have ability to
              // pass some kind of context to actions
              @Override
              public Action createAction(ActionActuatorDelegate actionActuatorDelegate) {

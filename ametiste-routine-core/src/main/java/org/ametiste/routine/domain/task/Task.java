@@ -42,7 +42,7 @@ public class Task implements DomainStateReflector<TaskReflection> {
 
             @Override
             void canUpdateOperation() {
-                // NOTE: operations can be updated only during execution or pending phase.
+                // NOTE: operations can be updated only during termination or pending phase.
             }
 
             @Override
@@ -312,11 +312,11 @@ public class Task implements DomainStateReflector<TaskReflection> {
 
     /**
      * <p>
-     * Prepares task execution and seals that task to further modification.
+     * Prepares task termination and seals that task to further modification.
      * Once task is prepared for executin its operations can't be modified, added or removed
      * </p>
      *
-     * @return execution order of this class.
+     * @return termination order of this class.
      */
     public ExecutionOrder prepareExecution() {
 
@@ -352,7 +352,7 @@ public class Task implements DomainStateReflector<TaskReflection> {
         inState.canUpdateOperation();
         invokeOnOperation(operationId, Operation::execute);
 
-        // NOTE: after first operation execution started, the task is moved to execution state
+        // NOTE: after first operation termination started, the task is moved to termination state
         if (inState != State.EXECUTION) {
             inState = State.EXECUTION;
         }

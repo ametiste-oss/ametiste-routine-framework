@@ -3,6 +3,8 @@ package org.ametiste.routine.configuration;
 import org.ametiste.routine.application.service.TaskDomainEvenetsGateway;
 import org.ametiste.routine.application.service.issue.DefaultTaskIssueService;
 import org.ametiste.routine.application.service.issue.TaskIssueService;
+import org.ametiste.routine.application.service.termination.DefaultTaskTerminationService;
+import org.ametiste.routine.application.service.termination.TaskTerminationService;
 import org.ametiste.routine.domain.ModRepository;
 import org.ametiste.routine.domain.scheme.TaskSchemeRepository;
 import org.ametiste.routine.domain.task.TaskRepository;
@@ -70,9 +72,15 @@ public class AmetisteRoutineCoreConfiguration {
     }
 
     @Bean
+    @ConditionalOnMissingBean
+    public TaskTerminationService taskExecutionService() {
+        return new DefaultTaskTerminationService(taskRepository, domainEventsGateway());
+    }
+
+    @Bean
     public TaskIssueService taskIssueService() {
         return new DefaultTaskIssueService(taskRepository, taskPropertiesRegistry,
-                taskSchemeRepository, taskAppEvenets(), issueConstraints);
+                taskSchemeRepository, domainEventsGateway(), issueConstraints);
     }
 
     @Bean
@@ -82,7 +90,7 @@ public class AmetisteRoutineCoreConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public TaskDomainEvenetsGateway taskAppEvenets() {
+    public TaskDomainEvenetsGateway domainEventsGateway() {
         return new JmsTaskDomainEventsGateway(jmsTemplate);
     }
 

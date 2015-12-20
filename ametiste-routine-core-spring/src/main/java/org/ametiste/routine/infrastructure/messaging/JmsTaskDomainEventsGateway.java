@@ -22,34 +22,18 @@ public class JmsTaskDomainEventsGateway implements TaskDomainEvenetsGateway {
 
     @Override
     public void taskIssued(final UUID taskId) {
-       /*
-
-           TODO: note, atm doing nothing, unused event that just blowing the broker
-
-           jmsTemplate.send("task-issued", (s) -> {
-               return s.createObjectMessage(taskId);
-           }
-       ); */
-    }
-
-    @Override
-    public void taskExecutionPrepared(ExecutionOrder executionOrder) {
-        jmsTemplate.send("task-prepared", (s) -> {
-            return s.createObjectMessage(executionOrder);
-        });
+        jmsTemplate.send("task-issued", s -> s.createObjectMessage(taskId));
     }
 
     @Override
     public void operationTerminated(OperationTerminatedEvent event) {
-        jmsTemplate.send("task-op-terminated", (s) -> {
-            return s.createObjectMessage(event);
-        });
+        // NOTE: atm there is no listener for this event, so is not required to be sent
+        // jmsTemplate.send("task-op-terminated", s -> s.createObjectMessage(event));
     }
 
     @Override
     public void taskTerminated(TaskTerminatedEvent event) {
-        jmsTemplate.send("task-terminated", (s) -> {
-            return s.createObjectMessage(event);
-        });
+        jmsTemplate.send("task-terminated", s -> s.createObjectMessage(event));
     }
+
 }

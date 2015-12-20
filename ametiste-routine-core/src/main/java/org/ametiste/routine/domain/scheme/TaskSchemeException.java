@@ -2,7 +2,7 @@ package org.ametiste.routine.domain.scheme;
 
 /**
  * <p>
- *     Base class for all exceptions that may be thrown during TaskScheme execution.
+ *     Base class for all exceptions that may be thrown during TaskScheme termination.
  * </p>
  *
  * @since 0.1.0

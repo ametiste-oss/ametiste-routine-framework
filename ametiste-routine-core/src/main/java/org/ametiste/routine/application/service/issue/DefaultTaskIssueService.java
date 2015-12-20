@@ -62,11 +62,8 @@ public class DefaultTaskIssueService implements TaskIssueService {
         task.addProperty(new TaskProperty(Task.SCHEME_PROPERTY_NAME, taskSchemeName));
         task.addProperty(new TaskProperty(Task.CREATOR_PROPERTY_NAME, creatorIdenifier));
 
-        final ExecutionOrder executionOrder = task.prepareExecution();
-
         taskRepository.saveTask(task);
         taskDomainEvenetsGateway.taskIssued(task.entityId());
-        taskDomainEvenetsGateway.taskExecutionPrepared(executionOrder);
 
         if (logger.isDebugEnabled()) {
             logger.debug("New task created using scheme:{}, task id: {}, creator id: {}",

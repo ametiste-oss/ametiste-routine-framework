@@ -1,4 +1,4 @@
-package org.ametiste.routine.application.service.execution;
+package org.ametiste.routine.infrastructure.execution;
 
 import org.ametiste.routine.domain.task.ExecutionOrder;
 
@@ -11,7 +11,7 @@ import java.util.UUID;
  *
  * <p>
  *     Note, order execiton gateway implementation is fully responsible to
- *     organize order execution process.
+ *     organize order termination process.
  * </p>
  *
  * <p>
@@ -21,20 +21,20 @@ import java.util.UUID;
  *
  * @since 0.1.0
  */
-public interface OrderExecutionGateway {
+public interface TaskExecutionGateway {
 
     /**
      *  <p>
-     *      Starts execution of the execution order.
+     *      Starts termination of the task.
      *  </p>
      */
-    void executeOrder(ExecutionOrder executionOrder);
+    void startTaskExecution(UUID taskId);
 
     /**
      *  <p>
-     *      Terminates execution of the order bound to the given task.
+     *      Terminates termination of the order bound to the given task.
      *  </p>
      */
-    void terminateOrderExecution(UUID boundTaskId);
+    void terminateTaskExecution(UUID taskId);
 
 }

@@ -1,6 +1,5 @@
-package org.ametiste.routine.infrastructure.execution;
+package org.ametiste.routine.infrastructure.execution.local;
 
-import org.ametiste.routine.application.service.execution.ExecutionFeedback;
 import org.ametiste.routine.sdk.operation.OperationFeedback;
 
 import java.util.UUID;
@@ -13,9 +12,9 @@ class LocalOperationFeedbackController implements OperationFeedback {
 
     private final UUID operationId;
 
-    private final ExecutionFeedback feedback;
+    private final TaskExecutionController feedback;
 
-    LocalOperationFeedbackController(ExecutionFeedback feedback, UUID operationId) {
+    LocalOperationFeedbackController(TaskExecutionController feedback, UUID operationId) {
         this.feedback = feedback;
         this.operationId = operationId;
     }

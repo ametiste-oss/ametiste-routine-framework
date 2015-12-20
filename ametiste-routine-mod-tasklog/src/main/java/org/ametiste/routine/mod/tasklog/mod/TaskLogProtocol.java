@@ -11,8 +11,8 @@ import java.util.function.Consumer;
 /**
  * <p>
  *  Protocol defines queries to task log, clients may use this protocol
- *  to retrieve access to tasks execution history and other log data related to
- *  tasks execution and lifecycle.
+ *  to retrieve access to tasks termination history and other log data related to
+ *  tasks termination and lifecycle.
  * </p>
  *
  * @since 0.1.0

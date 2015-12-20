@@ -1,4 +1,6 @@
-package org.ametiste.routine.application.service.execution;
+package org.ametiste.routine.infrastructure.execution.local;
+
+import org.ametiste.routine.domain.task.ExecutionOrder;
 
 import java.util.UUID;
 
@@ -6,7 +8,9 @@ import java.util.UUID;
  *
  * @since
  */
-public interface ExecutionFeedback {
+public interface TaskExecutionController {
+
+    ExecutionOrder startTaskExecution(UUID taskId);
 
     void operationStarted(UUID operationId);
 

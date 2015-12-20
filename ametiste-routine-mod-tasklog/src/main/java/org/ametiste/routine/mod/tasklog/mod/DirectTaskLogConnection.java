@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
  *
  * <p>
  *      Direct {@link TaskLogProtocol} implementation that use {@link JPATaskLogDataRepository}
- *      as backend to provide access to task execution log.
+ *      as backend to provide access to task termination log.
  * </p>
  *
  * @since 0.1.0

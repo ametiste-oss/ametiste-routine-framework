@@ -8,11 +8,11 @@ import java.util.function.Consumer;
 
 /**
  * <p>
- *     Defines protocol to control tasks execution lifecycle.
+ *     Defines protocol to control tasks termination lifecycle.
  * </p>
  *
  * <p>
- *     Note, clients of this protocol may affect execution of tasks, so
+ *     Note, clients of this protocol may affect termination of tasks, so
  *     if it is required, setup access grants for this protocol usage.
  * </p>
  *

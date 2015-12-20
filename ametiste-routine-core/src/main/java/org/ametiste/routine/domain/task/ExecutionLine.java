@@ -6,8 +6,8 @@ import java.util.UUID;
 
 /**
  * <p>
- *   Describes ne operationName from execution order, this operationName defines what shuld be done and
- *   conveys paramters for this execution process.
+ *   Describes operation execition line from execution order of the tasks,
+ *   the line defines what shuld be done and conveys paramters for this operation process.
  * </p>
  *
  * @since 0.-1.0

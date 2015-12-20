@@ -1,21 +1,23 @@
-package org.ametiste.routine.application.service.execution;
+package org.ametiste.routine.infrastructure.execution.local;
 
 import org.ametiste.domain.AggregateInstant;
 import org.ametiste.routine.application.service.TaskDomainEvenetsGateway;
+import org.ametiste.routine.domain.task.ExecutionOrder;
 import org.ametiste.routine.domain.task.Task;
 import org.ametiste.routine.domain.task.TaskRepository;
+import org.ametiste.routine.infrastructure.execution.TaskExecutionGateway;
 
 import java.util.UUID;
 
 /**
  *
  * <p>
- *     Default implementation of {@link ExecutionFeedback} protocol.
+ *     Implementation of {@link TaskExecutionController} protocol that designed to be used
+ *     with local {@link TaskExecutionGateway} implementation.
  * </p>
  *
  * <p>
- *     Just allows send feedback messages about task execution process,
- *     usually will be used by {@link OrderExecutionGateway} implementations.
+ *     This class implements termination control directly on domain objects.
  * </p>
  *
  * @since 0.1.0
@@ -24,15 +26,23 @@ import java.util.UUID;
 // since tasks state are eventualy consisten, that is asssumed
 // as okay for this version to control tasks state through
 // exceptions.
-public class DefaultTaskExecutionFeedbackController implements ExecutionFeedback {
+// TODO: hmm, should I define app-layer services for this operations and use controller only as a proxy for this?
+public class LocalTaskExecutionController implements TaskExecutionController {
 
     private final TaskRepository taskRepository;
     private final TaskDomainEvenetsGateway taskDomainEvenetsGateway;
 
-    public DefaultTaskExecutionFeedbackController(TaskRepository taskRepository,
-                                                  TaskDomainEvenetsGateway taskDomainEvenetsGateway) {
+    public LocalTaskExecutionController(TaskRepository taskRepository,
+                                        TaskDomainEvenetsGateway taskDomainEvenetsGateway) {
         this.taskRepository = taskRepository;
         this.taskDomainEvenetsGateway = taskDomainEvenetsGateway;
+    }
+
+    @Override
+    public ExecutionOrder startTaskExecution(UUID taskId) {
+        return AggregateInstant.create(taskId, taskRepository::findTask, taskRepository::saveTask)
+                .action(Task::prepareExecution)
+                .done();
     }
 
     @Override

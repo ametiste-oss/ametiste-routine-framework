@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * <p>
- *     Defines interface to do task's operation reservation for execution.
+ *     Defines interface to do task's operation reservation for termination.
  * </p>
  *
  * @see DefaultOperationReservationService
@@ -16,7 +16,7 @@ public interface OperationReservationService {
 
     /**
      * <p>
-     *      Reserv the number of 'NEW' task's operations for next execution, provides information about
+     *      Reserv the number of 'NEW' task's operations for next termination, provides information about
      *      operations reserved.
      * </p>
      *
@@ -35,7 +35,7 @@ public interface OperationReservationService {
      *
      * @param reservationCount maximu reservated operations count
      *
-     * @return list of execution lines of operations that was reserved
+     * @return list of termination lines of operations that was reserved
      */
     List<ExecutionLine> reserveOperationsExecution(int reservationCount);
 

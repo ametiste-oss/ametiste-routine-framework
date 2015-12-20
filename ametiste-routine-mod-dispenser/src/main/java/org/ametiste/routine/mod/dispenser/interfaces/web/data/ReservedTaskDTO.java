@@ -4,7 +4,7 @@ import java.util.Map;
 
 /**
  * <p>
- *     Represents task's data which execution was reserved by the external worker.
+ *     Represents task's data which termination was reserved by the external worker.
  * </p>
  *
  * <p>

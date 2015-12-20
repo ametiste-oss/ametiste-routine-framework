@@ -1,11 +1,10 @@
-package org.ametiste.routine.infrastructure.execution;
+package org.ametiste.routine.infrastructure.execution.local;
 
 import org.ametiste.laplatform.protocol.ProtocolGateway;
 import org.ametiste.laplatform.protocol.gateway.ProtocolGatewayService;
 import org.ametiste.metrics.annotations.Timeable;
-import org.ametiste.routine.application.service.execution.ExecutionFeedback;
-import org.ametiste.routine.application.service.execution.LineExecutionGateway;
 import org.ametiste.routine.domain.task.ExecutionLine;
+import org.ametiste.routine.infrastructure.execution.LineExecutionGateway;
 import org.ametiste.routine.sdk.operation.OperationExecutorFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,17 +27,17 @@ public class LocalLineExecutionGateway implements LineExecutionGateway {
 
     private final Map<String, OperationExecutorFactory> operationExecutors;
 
-    private final ExecutionFeedback feedback;
+    private final TaskExecutionController feedback;
 
     private final ProtocolGatewayService protocolGatewayservice;
 
     public LocalLineExecutionGateway(
             Map<String, OperationExecutorFactory> operationExecutors,
             ProtocolGatewayService protocolGatewayservice,
-            ExecutionFeedback executionFeedback) {
+            TaskExecutionController taskExecutionController) {
         this.operationExecutors = operationExecutors;
         this.protocolGatewayservice = protocolGatewayservice;
-        this.feedback = executionFeedback;
+        this.feedback = taskExecutionController;
     }
 
     @Override
@@ -69,9 +68,9 @@ public class LocalLineExecutionGateway implements LineExecutionGateway {
                     );
         } catch (Exception e) {
             if (logger.isDebugEnabled()) {
-                logger.error("Error during task operation execution.", e);
+                logger.error("Error during task operation termination.", e);
             }
-            feedback.operationFailed(executionLine.operationId(), "Operation failed on execution.");
+            feedback.operationFailed(executionLine.operationId(), "Operation failed on termination.");
             return;
         }
 

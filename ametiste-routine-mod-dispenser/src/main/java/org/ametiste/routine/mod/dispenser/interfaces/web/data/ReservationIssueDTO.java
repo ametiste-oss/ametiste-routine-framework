@@ -15,7 +15,7 @@ import java.net.URI;
 public class ReservationIssueDTO {
 
     /**
-     * Defines maximum of tasks count that a worker wants to reserv for execution.
+     * Defines maximum of tasks count that a worker wants to reserv for termination.
      */
     private final int maxReservationCount;
 

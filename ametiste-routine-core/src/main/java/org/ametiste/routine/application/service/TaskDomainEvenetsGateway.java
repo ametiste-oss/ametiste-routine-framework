@@ -17,8 +17,6 @@ public interface TaskDomainEvenetsGateway {
 
     void taskIssued(UUID taskId);
 
-    void taskExecutionPrepared(ExecutionOrder executionOrder);
-
     void operationTerminated(OperationTerminatedEvent event);
 
     void taskTerminated(TaskTerminatedEvent taskTerminatedEvent);

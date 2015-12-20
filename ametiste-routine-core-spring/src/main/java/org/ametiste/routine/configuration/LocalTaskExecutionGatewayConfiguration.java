@@ -2,12 +2,10 @@ package org.ametiste.routine.configuration;
 
 import org.ametiste.laplatform.protocol.gateway.ProtocolGatewayService;
 import org.ametiste.routine.application.service.TaskDomainEvenetsGateway;
-import org.ametiste.routine.application.service.execution.*;
 import org.ametiste.routine.domain.task.TaskRepository;
-import org.ametiste.routine.infrastructure.execution.BoundedExecutor;
-import org.ametiste.routine.infrastructure.execution.LocalLineExecutionGateway;
-import org.ametiste.routine.infrastructure.execution.LocalOrderExecutionGateway;
-import org.ametiste.routine.infrastructure.messaging.JmsOrderExecutionGatewayListener;
+import org.ametiste.routine.infrastructure.execution.*;
+import org.ametiste.routine.infrastructure.execution.local.*;
+import org.ametiste.routine.infrastructure.messaging.JmsTaskExecutionGatewayListener;
 import org.ametiste.routine.sdk.operation.OperationExecutor;
 import org.ametiste.routine.sdk.operation.OperationExecutorFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +25,7 @@ import java.util.concurrent.Executors;
  */
 @Configuration
 @EnableConfigurationProperties(AmetisteRoutineCoreProperties.class)
-public class OperationExecutionConfiguration {
+public class LocalTaskExecutionGatewayConfiguration {
 
     @Autowired
     private AmetisteRoutineCoreProperties props;
@@ -48,8 +46,7 @@ public class OperationExecutionConfiguration {
     private ProtocolGatewayService protocolGatewayservice;
 
     @Bean
-    @ConditionalOnMissingBean
-    public LineExecutionGateway lineExecutionGateway() {
+    public LineExecutionGateway localLineExecutionGateway() {
 
         final HashMap<String, OperationExecutorFactory> factories = new HashMap<>();
         factories.putAll(operationExecutorFactories);
@@ -59,7 +56,7 @@ public class OperationExecutionConfiguration {
         //
         // OperationExecutorFactory allows to control process of OperationExecutor creation,
         // that may be useful when OperationExecutor is stateful or require additional configuration.
-        // Also it may be used if new executor instance required for each operation execution.
+        // Also it may be used if new executor instance required for each operation termination.
         //
         // Registered OperationExecutor beans will be adopted to OperationExecutorFactory.
         //
@@ -78,38 +75,30 @@ public class OperationExecutionConfiguration {
 
         return new LocalLineExecutionGateway(factories,
                 protocolGatewayservice,
-                defaultExecutionFeedbackController()
+                localTaskExecutionController()
         );
     }
 
     @Bean
-    @ConditionalOnMissingBean
-    public ExecutionFeedback defaultExecutionFeedbackController() {
-        return new DefaultTaskExecutionFeedbackController(taskRepository, taskDomainEvenetsGateway);
+    public TaskExecutionController localTaskExecutionController() {
+        return new LocalTaskExecutionController(taskRepository, taskDomainEvenetsGateway);
     }
 
     @Bean
-    @ConditionalOnMissingBean
-    // NOTE: DefaultTaskTerminationService implements ExecutionFeedback interface also, so we need it as type
-    public DefaultTaskTerminationService taskExecutionService() {
-        return new DefaultTaskTerminationService(taskRepository, taskDomainEvenetsGateway);
-    }
-
-    @Bean
-    public OrderExecutionGateway localOrderExecutionGateway() {
-        return new LocalOrderExecutionGateway(
-            lineExecutionGateway(),
+    public TaskExecutionGateway localTaskExecutionGateway() {
+        return new LocalTaskExecutionGateway(
+            localLineExecutionGateway(),
             new BoundedExecutor(
                 Executors.newFixedThreadPool(props.getInitialExecutionConcurrency()),
                 props.getInitialExecutionConcurrency()
-            )
+            ),
+            localTaskExecutionController()
         );
     }
 
     @Bean
-    @ConditionalOnMissingBean
-    public JmsOrderExecutionGatewayListener jmsOrderExecutionGatewayEventsListener() {
-        return new JmsOrderExecutionGatewayListener(localOrderExecutionGateway());
+    public JmsTaskExecutionGatewayListener jmsTaskExecutionGatewayListener() {
+        return new JmsTaskExecutionGatewayListener(localTaskExecutionGateway());
     }
 
 }

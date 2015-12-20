@@ -1,8 +1,7 @@
-package org.ametiste.routine.application.service.execution;
+package org.ametiste.routine.application.service.termination;
 
 import org.ametiste.domain.AggregateInstant;
 import org.ametiste.routine.application.service.TaskDomainEvenetsGateway;
-import org.ametiste.routine.domain.task.Task;
 import org.ametiste.routine.domain.task.TaskRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,16 +28,6 @@ public class DefaultTaskTerminationService implements TaskTerminationService {
         this.repository = repository;
         this.evenetsGateway = evenetsGateway;
     }
-
-//    @Override
-//    public void prepareTaskExecution(UUID taskId) {
-//        AggregateInstant.create(taskId, repository::findTask, repository::saveTask)
-//                .action(t -> { logger.debug("Prepare task execution: {} ", t.entityId()); })
-//                .action(Task::prepareExecution)
-//                .consume(evenetsGateway::taskExecutionPrepared)
-//                .consume(o -> { logger.debug("Task execution prepared: {}", o.executionLines()); })
-//                .done();
-//    }
 
     @Override
     public void terminateTask(UUID taskId, String withMessage) {

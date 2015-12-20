@@ -53,7 +53,7 @@ public class TaskTimeoutAction {
                             .terminateTask(taskId, String.format("Timedout for %s minutes.", defaultTimeout));
                 } catch (Exception e) {
                     // NOTE: should try to terminate all timedout tasks.
-                    logger.debug("Exception during task timeout execution : " + taskId, e);
+                    logger.debug("Exception during task timeout termination : " + taskId, e);
                 }
         });
 

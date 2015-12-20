@@ -2,7 +2,7 @@ package org.ametiste.routine.domain.scheme;
 
 /**
  * <p>
- *    This exception indicates violation of a constraint during TaskScheme execution.
+ *    This exception indicates violation of a constraint during TaskScheme termination.
  * </p>
  *
  * <p>
