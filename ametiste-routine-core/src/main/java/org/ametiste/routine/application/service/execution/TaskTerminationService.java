@@ -6,9 +6,7 @@ import java.util.UUID;
  *
  * @since
  */
-public interface TaskExecutionService {
-
-    void pendTaskForExecution(UUID taskId);
+public interface TaskTerminationService {
 
     void terminateTask(UUID taskId, String withMessage);
 

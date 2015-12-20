@@ -1,9 +1,10 @@
 package org.ametiste.routine.application.service.issue;
 
-import org.ametiste.routine.application.service.TaskDomainEvenets;
+import org.ametiste.routine.application.service.TaskDomainEvenetsGateway;
 import org.ametiste.routine.domain.scheme.TaskScheme;
 import org.ametiste.routine.domain.scheme.TaskSchemeException;
 import org.ametiste.routine.domain.scheme.TaskSchemeRepository;
+import org.ametiste.routine.domain.task.ExecutionOrder;
 import org.ametiste.routine.domain.task.Task;
 import org.ametiste.routine.domain.task.TaskRepository;
 import org.ametiste.routine.domain.task.properties.TaskPropertiesRegistry;
@@ -25,7 +26,7 @@ public class DefaultTaskIssueService implements TaskIssueService {
 
     private TaskSchemeRepository taskSchemeRepository;
 
-    private final TaskDomainEvenets taskDomainEvenets;
+    private final TaskDomainEvenetsGateway taskDomainEvenetsGateway;
 
     private final List<IssueConstraint> issueConstraints;
 
@@ -34,11 +35,11 @@ public class DefaultTaskIssueService implements TaskIssueService {
     public DefaultTaskIssueService(TaskRepository taskRepository,
                                    TaskPropertiesRegistry taskPropertiesRegistry,
                                    TaskSchemeRepository taskSchemeRepository,
-                                   TaskDomainEvenets taskDomainEvenets,
+                                   TaskDomainEvenetsGateway taskDomainEvenetsGateway,
                                    List<IssueConstraint> issueConstraints) {
         this.taskRepository = taskRepository;
         this.taskSchemeRepository = taskSchemeRepository;
-        this.taskDomainEvenets = taskDomainEvenets;
+        this.taskDomainEvenetsGateway = taskDomainEvenetsGateway;
         this.issueConstraints = issueConstraints;
     }
 
@@ -61,8 +62,11 @@ public class DefaultTaskIssueService implements TaskIssueService {
         task.addProperty(new TaskProperty(Task.SCHEME_PROPERTY_NAME, taskSchemeName));
         task.addProperty(new TaskProperty(Task.CREATOR_PROPERTY_NAME, creatorIdenifier));
 
+        final ExecutionOrder executionOrder = task.prepareExecution();
+
         taskRepository.saveTask(task);
-        taskDomainEvenets.taskIssued(task.entityId());
+        taskDomainEvenetsGateway.taskIssued(task.entityId());
+        taskDomainEvenetsGateway.taskExecutionPrepared(executionOrder);
 
         if (logger.isDebugEnabled()) {
             logger.debug("New task created using scheme:{}, task id: {}, creator id: {}",

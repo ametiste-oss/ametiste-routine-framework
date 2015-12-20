@@ -57,25 +57,6 @@ public class Task implements DomainStateReflector<TaskReflection> {
 
         },
 
-        PENDING {
-
-            @Override
-            void canBeModified() {
-                throw new IllegalStateException("Task already pending and can't be modified.");
-            }
-
-            @Override
-            void canUpdateOperation() {
-                // NOTE: operations can be updated only during execution or pending phase.
-            }
-
-            @Override
-            void canBeExecuted() {
-                throw new IllegalStateException("Task already executing.");
-            }
-
-        },
-
         TERMINATED {
 
             @Override
@@ -148,25 +129,25 @@ public class Task implements DomainStateReflector<TaskReflection> {
          * </p>
          * */
         public static final List<State> activeState = Arrays.asList(new State[]{
-                NEW, PENDING, EXECUTION
+                NEW, EXECUTION
         });
 
         /**
          * <p>
          *   Defines 'executing' superstate as composition of
          *   states in which task may be treated as 'executing', it means
-         *   that task not done and can already executing or pended for.
+         *   that task not done and can already executing.
          * </p>
          * */
         public static final List<State> executionState = Arrays.asList(new State[]{
-                EXECUTION, PENDING
+                EXECUTION
         });
 
         /**
          * <p>
          *   Defines 'complete' superstate as composition of
          *   states in which task may be treated as 'complete', it means
-         *   that task is done or terminated and can't executed nor pended for.
+         *   that task is done or terminated and can't executed.
          * </p>
          * */
         public static final List<State> completeState = Arrays.asList(new State[]{
@@ -329,6 +310,14 @@ public class Task implements DomainStateReflector<TaskReflection> {
                 false : taskProperty.equalsTo(property);
     }
 
+    /**
+     * <p>
+     * Prepares task execution and seals that task to further modification.
+     * Once task is prepared for executin its operations can't be modified, added or removed
+     * </p>
+     *
+     * @return execution order of this class.
+     */
     public ExecutionOrder prepareExecution() {
 
         prepareTaskExecution();
@@ -436,7 +425,7 @@ public class Task implements DomainStateReflector<TaskReflection> {
 
     private void prepareTaskExecution() {
         inState.canBeExecuted();
-        inState = State.PENDING;
+        inState = State.EXECUTION;
         executionStartTime = Instant.now();
     }
 

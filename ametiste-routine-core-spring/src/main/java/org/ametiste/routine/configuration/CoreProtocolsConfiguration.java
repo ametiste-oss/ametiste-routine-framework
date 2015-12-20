@@ -2,7 +2,7 @@ package org.ametiste.routine.configuration;
 
 import org.ametiste.laplatform.protocol.GatewayContext;
 import org.ametiste.laplatform.protocol.ProtocolFactory;
-import org.ametiste.routine.application.service.execution.TaskExecutionService;
+import org.ametiste.routine.application.service.execution.TaskTerminationService;
 import org.ametiste.routine.application.service.issue.TaskIssueService;
 import org.ametiste.routine.domain.ModRepository;
 import org.ametiste.routine.infrastructure.protocol.moddata.DirectModDataConnection;
@@ -30,7 +30,7 @@ public class CoreProtocolsConfiguration {
     private ModRepository modRepository;
 
     @Autowired
-    private TaskExecutionService taskExecutionService;
+    private TaskTerminationService taskTerminationService;
 
     @Bean
     @Scope(scopeName = "prototype")
@@ -46,7 +46,7 @@ public class CoreProtocolsConfiguration {
     public TaskControlProtocol taskControlProtocol(GatewayContext c) {
         return new DirectTaskControlConnection(
                 c.lookupAttribute("clientId"),
-                taskExecutionService
+                taskTerminationService
         );
     }
 

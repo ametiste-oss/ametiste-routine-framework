@@ -1,6 +1,6 @@
 package org.ametiste.routine.infrastructure.protocol.taskcontrol;
 
-import org.ametiste.routine.application.service.execution.TaskExecutionService;
+import org.ametiste.routine.application.service.execution.TaskTerminationService;
 import org.ametiste.routine.sdk.mod.TaskControlProtocol;
 
 import java.util.Optional;
@@ -14,17 +14,17 @@ import java.util.function.Consumer;
 public class DirectTaskControlConnection implements TaskControlProtocol {
 
     private final String clientId;
-    private TaskExecutionService taskExecutionService;
+    private TaskTerminationService taskTerminationService;
 
-    public DirectTaskControlConnection(String clientId, TaskExecutionService taskExecutionService) {
+    public DirectTaskControlConnection(String clientId, TaskTerminationService taskTerminationService) {
         this.clientId = clientId;
-        this.taskExecutionService = taskExecutionService;
+        this.taskTerminationService = taskTerminationService;
     }
 
     @Override
     public void terminateTask(UUID taskId, Optional<String> message, Optional<Consumer<Exception>> failure) {
         try {
-            taskExecutionService.terminateTask(taskId,
+            taskTerminationService.terminateTask(taskId,
                     message.orElse("Completed using DirectTaskControlConnection by: " + clientId)
             );
         } catch (Exception e) {

@@ -1,15 +1,13 @@
 package org.ametiste.routine.configuration;
 
 import org.ametiste.laplatform.protocol.gateway.ProtocolGatewayService;
-import org.ametiste.routine.application.service.TaskDomainEvenets;
-import org.ametiste.routine.application.service.execution.DefaultTaskExecutionService;
-import org.ametiste.routine.application.service.execution.LineExecutionGateway;
-import org.ametiste.routine.application.service.execution.OrderExecutionGateway;
+import org.ametiste.routine.application.service.TaskDomainEvenetsGateway;
+import org.ametiste.routine.application.service.execution.*;
 import org.ametiste.routine.domain.task.TaskRepository;
 import org.ametiste.routine.infrastructure.execution.BoundedExecutor;
 import org.ametiste.routine.infrastructure.execution.LocalLineExecutionGateway;
 import org.ametiste.routine.infrastructure.execution.LocalOrderExecutionGateway;
-import org.ametiste.routine.infrastructure.messaging.JmsTaskEventsListener;
+import org.ametiste.routine.infrastructure.messaging.JmsOrderExecutionGatewayListener;
 import org.ametiste.routine.sdk.operation.OperationExecutor;
 import org.ametiste.routine.sdk.operation.OperationExecutorFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +42,7 @@ public class OperationExecutionConfiguration {
     private TaskRepository taskRepository;
 
     @Autowired
-    private TaskDomainEvenets taskDomainEvenets;
+    private TaskDomainEvenetsGateway taskDomainEvenetsGateway;
 
     @Autowired
     private ProtocolGatewayService protocolGatewayservice;
@@ -80,15 +78,21 @@ public class OperationExecutionConfiguration {
 
         return new LocalLineExecutionGateway(factories,
                 protocolGatewayservice,
-                taskExecutionService() // NOTE: execution feedback implementation
+                defaultExecutionFeedbackController()
         );
     }
 
     @Bean
     @ConditionalOnMissingBean
-    // NOTE: DefaultTaskExecutionService implements ExecutionFeedback interface also, so we need it as type
-    public DefaultTaskExecutionService taskExecutionService() {
-        return new DefaultTaskExecutionService(taskRepository, taskDomainEvenets);
+    public ExecutionFeedback defaultExecutionFeedbackController() {
+        return new DefaultTaskExecutionFeedbackController(taskRepository, taskDomainEvenetsGateway);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    // NOTE: DefaultTaskTerminationService implements ExecutionFeedback interface also, so we need it as type
+    public DefaultTaskTerminationService taskExecutionService() {
+        return new DefaultTaskTerminationService(taskRepository, taskDomainEvenetsGateway);
     }
 
     @Bean
@@ -104,11 +108,8 @@ public class OperationExecutionConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public JmsTaskEventsListener issuedTaskEventListener() {
-        return new JmsTaskEventsListener(taskExecutionService(),
-                localOrderExecutionGateway(),
-                props.getInitialExecutionConcurrency()
-        );
+    public JmsOrderExecutionGatewayListener jmsOrderExecutionGatewayEventsListener() {
+        return new JmsOrderExecutionGatewayListener(localOrderExecutionGateway());
     }
 
 }

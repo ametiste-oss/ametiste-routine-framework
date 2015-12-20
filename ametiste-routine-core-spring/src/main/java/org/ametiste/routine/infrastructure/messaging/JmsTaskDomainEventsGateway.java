@@ -1,6 +1,6 @@
 package org.ametiste.routine.infrastructure.messaging;
 
-import org.ametiste.routine.application.service.TaskDomainEvenets;
+import org.ametiste.routine.application.service.TaskDomainEvenetsGateway;
 import org.ametiste.routine.domain.task.ExecutionOrder;
 import org.ametiste.routine.domain.task.OperationTerminatedEvent;
 import org.ametiste.routine.domain.task.TaskTerminatedEvent;
@@ -12,25 +12,29 @@ import java.util.UUID;
  *
  * @since
  */
-public class JmsTaskDomainEvents implements TaskDomainEvenets {
+public class JmsTaskDomainEventsGateway implements TaskDomainEvenetsGateway {
 
     private final JmsTemplate jmsTemplate;
 
-    public JmsTaskDomainEvents(JmsTemplate jmsTemplate) {
+    public JmsTaskDomainEventsGateway(JmsTemplate jmsTemplate) {
         this.jmsTemplate = jmsTemplate;
     }
 
     @Override
     public void taskIssued(final UUID taskId) {
-       jmsTemplate.send("task-issued", (s) -> {
+       /*
+
+           TODO: note, atm doing nothing, unused event that just blowing the broker
+
+           jmsTemplate.send("task-issued", (s) -> {
                return s.createObjectMessage(taskId);
            }
-       );
+       ); */
     }
 
     @Override
-    public void taskPended(ExecutionOrder executionOrder) {
-        jmsTemplate.send("task-pended", (s) -> {
+    public void taskExecutionPrepared(ExecutionOrder executionOrder) {
+        jmsTemplate.send("task-prepared", (s) -> {
             return s.createObjectMessage(executionOrder);
         });
     }

@@ -13,11 +13,11 @@ import java.util.UUID;
  *
  * @since 0.1.0
  */
-public interface TaskDomainEvenets {
+public interface TaskDomainEvenetsGateway {
 
     void taskIssued(UUID taskId);
 
-    void taskPended(ExecutionOrder executionOrder);
+    void taskExecutionPrepared(ExecutionOrder executionOrder);
 
     void operationTerminated(OperationTerminatedEvent event);
 

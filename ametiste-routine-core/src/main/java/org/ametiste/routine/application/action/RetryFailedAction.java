@@ -1,6 +1,5 @@
 package org.ametiste.routine.application.action;
 
-import org.ametiste.routine.application.service.execution.TaskExecutionService;
 import org.ametiste.routine.application.service.issue.TaskIssueService;
 import org.ametiste.routine.domain.task.Task;
 import org.ametiste.routine.domain.task.TaskRepository;

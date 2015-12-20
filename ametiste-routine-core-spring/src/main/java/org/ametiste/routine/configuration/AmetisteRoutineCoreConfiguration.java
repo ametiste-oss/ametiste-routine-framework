@@ -1,6 +1,6 @@
 package org.ametiste.routine.configuration;
 
-import org.ametiste.routine.application.service.TaskDomainEvenets;
+import org.ametiste.routine.application.service.TaskDomainEvenetsGateway;
 import org.ametiste.routine.application.service.issue.DefaultTaskIssueService;
 import org.ametiste.routine.application.service.issue.TaskIssueService;
 import org.ametiste.routine.domain.ModRepository;
@@ -8,7 +8,7 @@ import org.ametiste.routine.domain.scheme.TaskSchemeRepository;
 import org.ametiste.routine.domain.task.TaskRepository;
 import org.ametiste.routine.domain.task.properties.TaskPropertiesRegistry;
 import org.ametiste.routine.domain.task.properties.TaskProperty;
-import org.ametiste.routine.infrastructure.messaging.JmsTaskDomainEvents;
+import org.ametiste.routine.infrastructure.messaging.JmsTaskDomainEventsGateway;
 import org.ametiste.routine.infrastructure.mod.ModRegistry;
 import org.ametiste.routine.infrastructure.mod.SpringDataModRepository;
 import org.ametiste.routine.infrastructure.mod.jpa.JPAModDataRepository;
@@ -63,7 +63,9 @@ public class AmetisteRoutineCoreConfiguration {
     @Bean
     public ModRegistry modRegistry() {
         final ModRegistry modRegistry = new ModRegistry();
-        modGateways.forEach(modRegistry::addMod);
+        modGateways.forEach(
+                modRegistry::addMod
+        );
         return modRegistry;
     }
 
@@ -80,8 +82,8 @@ public class AmetisteRoutineCoreConfiguration {
 
     @Bean
     @ConditionalOnMissingBean
-    public TaskDomainEvenets taskAppEvenets() {
-        return new JmsTaskDomainEvents(jmsTemplate);
+    public TaskDomainEvenetsGateway taskAppEvenets() {
+        return new JmsTaskDomainEventsGateway(jmsTemplate);
     }
 
     @Bean
