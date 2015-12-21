@@ -3,7 +3,7 @@ package org.ametiste.routine.printer.operation;
 import org.ametiste.laplatform.protocol.ProtocolGateway;
 import org.ametiste.routine.sdk.operation.OperationExecutor;
 import org.ametiste.routine.sdk.operation.OperationFeedback;
-import org.ametiste.routine.sdk.protocol.HttpProtocol;
+import org.ametiste.routine.sdk.protocol.http.HttpProtocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;

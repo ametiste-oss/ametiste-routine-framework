@@ -1,7 +1,7 @@
 package org.ametiste.routine.infrastructure.protocol.taskpool;
 
 import org.ametiste.metrics.annotations.markers.MetricsInterface;
-import org.ametiste.routine.sdk.mod.TaskPoolProtocol;
+import org.ametiste.routine.sdk.protocol.taskpool.TaskPoolProtocol;
 
 /**
  * <p>

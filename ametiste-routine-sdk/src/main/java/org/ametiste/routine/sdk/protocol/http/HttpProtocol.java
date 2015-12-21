@@ -1,4 +1,4 @@
-package org.ametiste.routine.sdk.protocol;
+package org.ametiste.routine.sdk.protocol.http;
 
 import org.ametiste.laplatform.protocol.Protocol;
 

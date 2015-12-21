@@ -1,6 +1,8 @@
-package org.ametiste.routine.sdk.mod;
+package org.ametiste.routine.sdk.protocol.taskpool;
 
 import org.ametiste.laplatform.protocol.ProtocolGateway;
+import org.ametiste.routine.sdk.mod.TaskGateway;
+import org.ametiste.routine.sdk.protocol.taskpool.TaskPoolProtocol;
 
 import java.util.Map;
 

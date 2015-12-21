@@ -1,7 +1,7 @@
 package org.ametiste.routine.infrastructure.protocol.taskcontrol;
 
 import org.ametiste.routine.application.service.termination.TaskTerminationService;
-import org.ametiste.routine.sdk.mod.TaskControlProtocol;
+import org.ametiste.routine.sdk.protocol.taskcontrol.TaskControlProtocol;
 
 import java.util.Optional;
 import java.util.UUID;

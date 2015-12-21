@@ -3,7 +3,7 @@ package org.ametiste.routine.configuration;
 import org.ametiste.laplatform.protocol.GatewayContext;
 import org.ametiste.laplatform.protocol.ProtocolFactory;
 import org.ametiste.routine.infrastructure.protocol.http.RestTemplateHttpConnection;
-import org.ametiste.routine.sdk.protocol.HttpProtocol;
+import org.ametiste.routine.sdk.protocol.http.HttpProtocol;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -2,7 +2,7 @@ package org.ametiste.routine.infrastructure.protocol.moddata;
 
 import org.ametiste.metrics.annotations.Timeable;
 import org.ametiste.routine.domain.ModRepository;
-import org.ametiste.routine.sdk.mod.ModDataProtocol;
+import org.ametiste.routine.sdk.protocol.moddata.ModDataProtocol;
 
 import java.util.Optional;
 

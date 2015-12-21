@@ -5,20 +5,16 @@ import org.ametiste.laplatform.protocol.ProtocolFactory;
 import org.ametiste.routine.application.service.issue.TaskIssueService;
 import org.ametiste.routine.application.service.termination.TaskTerminationService;
 import org.ametiste.routine.domain.ModRepository;
-import org.ametiste.routine.infrastructure.protocol.http.RestTemplateHttpConnection;
 import org.ametiste.routine.infrastructure.protocol.moddata.DirectModDataConnection;
 import org.ametiste.routine.infrastructure.protocol.taskcontrol.DirectTaskControlConnection;
 import org.ametiste.routine.infrastructure.protocol.taskpool.DirectTaskPoolConnection;
-import org.ametiste.routine.sdk.mod.ModDataProtocol;
-import org.ametiste.routine.sdk.mod.TaskControlProtocol;
-import org.ametiste.routine.sdk.mod.TaskPoolProtocol;
-import org.ametiste.routine.sdk.protocol.HttpProtocol;
+import org.ametiste.routine.sdk.protocol.moddata.ModDataProtocol;
+import org.ametiste.routine.sdk.protocol.taskcontrol.TaskControlProtocol;
+import org.ametiste.routine.sdk.protocol.taskpool.TaskPoolProtocol;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
-import org.springframework.web.client.RestTemplate;
 
 /**
  *

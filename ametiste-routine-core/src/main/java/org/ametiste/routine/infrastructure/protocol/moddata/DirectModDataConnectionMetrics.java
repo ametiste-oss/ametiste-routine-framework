@@ -1,7 +1,7 @@
 package org.ametiste.routine.infrastructure.protocol.moddata;
 
 import org.ametiste.metrics.annotations.markers.MetricsInterface;
-import org.ametiste.routine.sdk.mod.ModDataProtocol;
+import org.ametiste.routine.sdk.protocol.moddata.ModDataProtocol;
 
 /**
  * <p>

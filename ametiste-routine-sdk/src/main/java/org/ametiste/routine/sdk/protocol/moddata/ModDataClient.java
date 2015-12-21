@@ -1,6 +1,8 @@
-package org.ametiste.routine.sdk.mod;
+package org.ametiste.routine.sdk.protocol.moddata;
 
 import org.ametiste.laplatform.protocol.ProtocolGateway;
+import org.ametiste.routine.sdk.mod.ModDataGateway;
+import org.ametiste.routine.sdk.protocol.moddata.ModDataProtocol;
 
 import java.util.Optional;
 

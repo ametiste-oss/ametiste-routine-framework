@@ -1,6 +1,6 @@
 package org.ametiste.routine.infrastructure.protocol.http;
 
-import org.ametiste.routine.sdk.protocol.HttpProtocol;
+import org.ametiste.routine.sdk.protocol.http.HttpProtocol;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Map;

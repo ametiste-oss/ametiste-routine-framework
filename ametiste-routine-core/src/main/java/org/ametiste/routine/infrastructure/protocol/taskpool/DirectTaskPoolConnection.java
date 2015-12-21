@@ -2,7 +2,7 @@ package org.ametiste.routine.infrastructure.protocol.taskpool;
 
 import org.ametiste.metrics.annotations.Timeable;
 import org.ametiste.routine.application.service.issue.TaskIssueService;
-import org.ametiste.routine.sdk.mod.TaskPoolProtocol;
+import org.ametiste.routine.sdk.protocol.taskpool.TaskPoolProtocol;
 
 import java.util.Map;
 import java.util.UUID;

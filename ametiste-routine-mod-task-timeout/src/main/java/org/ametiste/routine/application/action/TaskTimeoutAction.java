@@ -3,7 +3,7 @@ package org.ametiste.routine.application.action;
 import org.ametiste.laplatform.protocol.ProtocolGateway;
 import org.ametiste.routine.domain.task.Task;
 import org.ametiste.routine.mod.tasklog.mod.TaskLogProtocol;
-import org.ametiste.routine.sdk.mod.TaskControlProtocol;
+import org.ametiste.routine.sdk.protocol.taskcontrol.TaskControlProtocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
