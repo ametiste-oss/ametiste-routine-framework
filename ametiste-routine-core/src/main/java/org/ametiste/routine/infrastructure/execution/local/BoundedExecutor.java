@@ -1,6 +1,7 @@
 package org.ametiste.routine.infrastructure.execution.local;
 
 import java.util.concurrent.*;
+import java.util.function.Consumer;
 
 public class BoundedExecutor {
 
@@ -12,19 +13,18 @@ public class BoundedExecutor {
         this.semaphore = new Semaphore(bound);
     }
 
-    public Future<?> submitTask(final Runnable command)
+    public Future<?> submitTask(final Runnable command, final Runnable callback)
             throws InterruptedException, RejectedExecutionException {
 
         semaphore.acquire();
 
         try {
-            return exec.submit(new Runnable() {
-                public void run() {
-                    try {
-                        command.run();
-                    } finally {
-                        semaphore.release();
-                    }
+            return exec.submit(() -> {
+                try {
+                    command.run();
+                } finally {
+                    callback.run();
+                    semaphore.release();
                 }
             });
         } catch (RejectedExecutionException e) {

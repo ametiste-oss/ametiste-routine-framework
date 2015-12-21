@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
+import java.util.concurrent.RejectedExecutionException;
 
 /**
  * <p>
@@ -45,48 +46,41 @@ public class LocalTaskExecutionGateway implements TaskExecutionGateway {
     }
 
     @Override
-    public void startTaskExecution(UUID taskId) {
+    public void startTaskExecution(final UUID taskId) throws RejectedExecutionException {
+
+        // TODO: native timeouts support
+
+        final Future<?> future;
 
         try {
-
-            final Future<?> submitedExecution = boundedExecutor.submitTask(() -> {
-
-                final ExecutionOrder order =
-                        taskExecutionController.startTaskExecution(taskId);
-
-                for (ExecutionLine line : order.executionLines()) {
-
-                    if (logger.isDebugEnabled()) {
-                        logger.debug("Pass termination operationName to operations service: {}", line.operationName());
-                    }
-
-                    // TODO: timeouts?
+            future = boundedExecutor.submitTask(() -> {
                     try {
-                        lineExecutionGateway.executeOperation(line);
+                        taskExecutionController
+                                .startTaskExecution(taskId)
+                                .executionLines(lineExecutionGateway::executeOperation);
                     } catch (Exception e) {
-                        logger.error("Error during termination order.", e);
+                        logger.error("Error during task order execution.", e);
                         // TODO: custom exception
                         throw new RuntimeException("Can't execute order.", e);
-                    } finally {
-                        executingOrders.remove(order.boundTaskId());
                     }
-                }
-
-            });
-
-            // TODO: ffs
-            executingOrders.put(taskId, submitedExecution);
-
+                },
+                () -> executingOrders.remove(taskId)
+            );
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            terminateTaskExecution(taskId);
+            return;
         }
+
+        executingOrders.put(taskId, future);
 
     }
 
     @Override
     public void terminateTaskExecution(UUID taskId) {
-        executingOrders.get(taskId).cancel(true);
-        executingOrders.remove(taskId);
+        if (executingOrders.containsKey(taskId)) {
+            executingOrders.get(taskId).cancel(true);
+            executingOrders.remove(taskId);
+        }
     }
 
 }

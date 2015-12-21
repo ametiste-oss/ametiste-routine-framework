@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 /**
  *
@@ -24,7 +25,13 @@ public class ExecutionOrder implements Serializable {
         return taskId;
     }
 
+    @Deprecated
     public Collection<ExecutionLine> executionLines() {
         return executionLines;
     }
+
+    public void executionLines(Consumer<ExecutionLine> lineConsumer) {
+        executionLines.forEach(lineConsumer::accept);
+    }
+
 }

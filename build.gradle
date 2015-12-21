@@ -19,7 +19,7 @@ subprojects {
         slf4jVersion = "1.7.12"
         ameMetricsVersion = "0.2.0-b2-RC"
         ameLaPlatformVersion = "0.0.1-b3"
-        ameGTEVersion = "0.0.1-b2"
+        ameGTEVersion = "0.0.1-b3"
         ameDomainVersion = "0.3.0-RELEASE"
         bintray_vcsUrl = 'https://github.com/ametiste-oss/ametiste-routine-framework.git'
     }
