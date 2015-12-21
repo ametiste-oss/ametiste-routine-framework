@@ -2,26 +2,30 @@ package org.ametiste.routine.configuration;
 
 import org.ametiste.laplatform.protocol.GatewayContext;
 import org.ametiste.laplatform.protocol.ProtocolFactory;
-import org.ametiste.routine.application.service.termination.TaskTerminationService;
 import org.ametiste.routine.application.service.issue.TaskIssueService;
+import org.ametiste.routine.application.service.termination.TaskTerminationService;
 import org.ametiste.routine.domain.ModRepository;
+import org.ametiste.routine.infrastructure.protocol.http.RestTemplateHttpConnection;
 import org.ametiste.routine.infrastructure.protocol.moddata.DirectModDataConnection;
 import org.ametiste.routine.infrastructure.protocol.taskcontrol.DirectTaskControlConnection;
 import org.ametiste.routine.infrastructure.protocol.taskpool.DirectTaskPoolConnection;
 import org.ametiste.routine.sdk.mod.ModDataProtocol;
 import org.ametiste.routine.sdk.mod.TaskControlProtocol;
 import org.ametiste.routine.sdk.mod.TaskPoolProtocol;
+import org.ametiste.routine.sdk.protocol.HttpProtocol;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
+import org.springframework.web.client.RestTemplate;
 
 /**
  *
  * @since
  */
 @Configuration
-public class CoreProtocolsConfiguration {
+public class LPCoreProtocolsConfiguration {
 
     @Autowired
     private TaskIssueService taskIssueService;
@@ -60,17 +64,17 @@ public class CoreProtocolsConfiguration {
     }
 
     @Bean
-    public ProtocolFactory<TaskPoolProtocol> taskPoolProtocolFactory() {
+    public ProtocolFactory<TaskPoolProtocol> taskPoolProtocolConnectionFactory() {
         return c -> taskPoolProtocol(c);
     }
 
     @Bean
-    public ProtocolFactory<ModDataProtocol> modDataProtocolFactory() {
+    public ProtocolFactory<ModDataProtocol> modDataProtocolConnectionFactory() {
         return c -> modDataProtocol(c);
     }
 
     @Bean
-    public ProtocolFactory<TaskControlProtocol> taskControlProtocolFactory() {
+    public ProtocolFactory<TaskControlProtocol> taskControlProtocolConnectionFactory() {
         return c -> taskControlProtocol(c);
     }
 

@@ -3,6 +3,7 @@ package org.ametiste.routine.printer.operation;
 import org.ametiste.laplatform.protocol.ProtocolGateway;
 import org.ametiste.routine.sdk.operation.OperationExecutor;
 import org.ametiste.routine.sdk.operation.OperationFeedback;
+import org.ametiste.routine.sdk.protocol.HttpProtocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -32,11 +33,14 @@ public final class PrintOperation implements OperationExecutor {
 
         logger.debug("Start operation: " + operationId);
 
-        try {
-            Thread.sleep(any);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Thread.sleep(any);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+
+        System.out.println(protocolGateway.session(HttpProtocol.class)
+                .getObject("http://example.com", String.class));
 
         logger.debug("Done operation: " + operationId);
 

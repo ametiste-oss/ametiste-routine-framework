@@ -16,6 +16,9 @@ spring:
 org:
   ametiste:
     routine:
+      protocol:
+        http:
+          enabled: true
       action:
         task-timeout:
           enabled: false
@@ -25,7 +28,7 @@ org:
       eg:
         printer:
           delayTime: 2000
-          populationCount: 100
+          populationCount: 10
       mod:
         backlog:
           enabled: true
