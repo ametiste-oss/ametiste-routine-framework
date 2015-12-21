@@ -7,6 +7,7 @@ import org.ametiste.laplatform.protocol.gateway.ProtocolGatewayService;
 import org.ametiste.routine.configuration.AmetisteRoutineCoreProperties;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,16 +18,20 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 @ConditionalOnProperty(prefix = AmetisteRoutineCoreProperties.PREFIX,
         name = "action.task-timeout.enabled", matchIfMissing = false)
+@EnableConfigurationProperties(TaskTimeoutActionProperties.class)
 public class TaskTimeoutActionConfiguration {
 
     public static final String TIMEOUT_ACTION_ID = "mod-task-timeout:timeout-action";
+
+    @Autowired
+    private TaskTimeoutActionProperties props;
 
     @Autowired
     private ProtocolGatewayService protocolGatewayService;
 
     @Bean
     public TaskTimeoutAction taskTimeoutAction() {
-        return new TaskTimeoutAction(1);
+        return new TaskTimeoutAction(props.getDefaultTimeout());
     }
 
     @Bean

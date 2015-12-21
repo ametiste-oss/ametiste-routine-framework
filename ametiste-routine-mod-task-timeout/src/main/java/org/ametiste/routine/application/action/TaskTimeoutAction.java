@@ -40,7 +40,7 @@ public class TaskTimeoutAction {
         protocolGateway.session(TaskLogProtocol.class)
             .findIdentifiers(f -> {
                 f.stateIn(Task.State.executionState);
-                f.execStartTimeAfter(Instant.now().minus(defaultTimeout, ChronoUnit.MINUTES));
+                f.execStartTimeAfter(Instant.now().minus(defaultTimeout, ChronoUnit.SECONDS));
             }, 0, 100)
             .forEach(taskId -> {
 
