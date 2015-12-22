@@ -19,7 +19,7 @@ while getopts ":g:m:v:b:" opt; do
   esac
 done
 
-printf "Installing %s:%s:%s to %s\n" "$MOD_GROUP" "$MOD_NAME" "$MOD_VERSION" "$BUNDLES_DIRECTORY"
+printf "Installing %s:%s:%s to %s ...\n" "$MOD_GROUP" "$MOD_NAME" "$MOD_VERSION" "$BUNDLES_DIRECTORY"
 
 mvn org.apache.maven.plugins:maven-dependency-plugin:2.10:get \
         -DrepoUrl=$MOD_REPO \
@@ -31,4 +31,4 @@ mvn org.apache.maven.plugins:maven-dependency-plugin:2.10:copy-dependencies \
         -DoutputDirectory=$BUNDLES_DIRECTORY \
         -DexcludeTransitive=true
 
-print "Mod installation done."
+printf "Mod installation done."
