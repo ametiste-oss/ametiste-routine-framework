@@ -6,7 +6,6 @@ application-local.yml
 !.travis.yml
 *.class
 *.war
-bin/
 classes/
 target/
 target/*
