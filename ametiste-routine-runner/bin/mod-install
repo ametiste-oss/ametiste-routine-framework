@@ -21,14 +21,14 @@ done
 
 printf "Installing %s:%s:%s to %s ...\n" "$MOD_GROUP" "$MOD_NAME" "$MOD_VERSION" "$BUNDLES_DIRECTORY"
 
-mvn org.apache.maven.plugins:maven-dependency-plugin:2.10:get \
+mvn -q org.apache.maven.plugins:maven-dependency-plugin:2.10:get \
         -DrepoUrl=$MOD_REPO \
         -Dartifact=$MOD_GROUP:$MOD_NAME:$MOD_VERSION \
         -Dtype=pom
 
-mvn org.apache.maven.plugins:maven-dependency-plugin:2.10:copy-dependencies \
+mvn -q org.apache.maven.plugins:maven-dependency-plugin:2.10:copy-dependencies \
         -f ~/.m2/repository/${MOD_GROUP//./\/}/$MOD_NAME/$MOD_VERSION/$MOD_NAME-${MOD_VERSION}.pom \
         -DoutputDirectory=$BUNDLES_DIRECTORY \
         -DexcludeTransitive=true
 
-printf "Mod installation done."
+printf "Mod installation done.\n"
