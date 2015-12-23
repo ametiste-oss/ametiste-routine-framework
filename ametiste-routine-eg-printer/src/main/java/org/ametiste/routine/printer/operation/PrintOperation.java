@@ -31,18 +31,15 @@ public final class PrintOperation implements OperationExecutor {
 
         feedback.operationNotice("Delay time is: " + any);
 
-        logger.debug("Start operation: " + operationId);
+        logger.trace("Start operation: " + operationId);
 
-//        try {
-//            Thread.sleep(any);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            Thread.sleep(any);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-        System.out.println(protocolGateway.session(HttpProtocol.class)
-                .getObject("http://example.com", String.class));
-
-        logger.debug("Done operation: " + operationId);
+        logger.trace("Done operation: " + operationId);
 
     }
 

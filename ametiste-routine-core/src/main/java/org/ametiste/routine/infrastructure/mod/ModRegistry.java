@@ -17,6 +17,8 @@ public class ModRegistry {
     }
 
     public void addMod(ModGateway modGateway) {
+        // TODO: some validation required, for example "mod::blabla::id" is invalid name
+        // I guess only [a-z0-9-] should be allowed to be mod identifiers
         modGateway.provideModInfo((n, v) -> {
             registeredMods.put(n, new RegisteredMod(n, v, modGateway));
         });

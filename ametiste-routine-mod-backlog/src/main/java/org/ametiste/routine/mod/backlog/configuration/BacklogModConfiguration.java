@@ -11,7 +11,7 @@ import org.ametiste.routine.mod.backlog.application.service.BacklogRenewService;
 import org.ametiste.routine.mod.backlog.domain.Backlog;
 import org.ametiste.routine.mod.backlog.domain.BacklogRepository;
 import org.ametiste.routine.mod.backlog.infrastructure.*;
-import org.ametiste.routine.mod.backlog.mod.BacklogModGateway;
+import org.ametiste.routine.mod.backlog.mod.ModBacklog;
 import org.ametiste.routine.mod.tasklog.domain.TaskLogRepository;
 import org.ametiste.routine.sdk.operation.OperationExecutor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,8 +66,8 @@ public class BacklogModConfiguration {
     }
 
     @Bean
-    public BacklogModGateway backlogModGateway() {
-         return new BacklogModGateway();
+    public ModBacklog backlogModGateway() {
+         return new ModBacklog();
     }
 
     @Bean

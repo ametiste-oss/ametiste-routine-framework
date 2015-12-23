@@ -3,8 +3,10 @@ package org.ametiste.routine.configuration;
 import org.ametiste.laplatform.protocol.GatewayContext;
 import org.ametiste.laplatform.protocol.ProtocolFactory;
 import org.ametiste.routine.application.service.issue.TaskIssueService;
+import org.ametiste.routine.application.service.removing.TaskRemovingService;
 import org.ametiste.routine.application.service.termination.TaskTerminationService;
 import org.ametiste.routine.domain.ModRepository;
+import org.ametiste.routine.domain.task.TaskRepository;
 import org.ametiste.routine.infrastructure.protocol.moddata.DirectModDataConnection;
 import org.ametiste.routine.infrastructure.protocol.taskcontrol.DirectTaskControlConnection;
 import org.ametiste.routine.infrastructure.protocol.taskpool.DirectTaskPoolConnection;
@@ -32,12 +34,19 @@ public class LPCoreProtocolsConfiguration {
     @Autowired
     private TaskTerminationService taskTerminationService;
 
+    @Autowired
+    private TaskRemovingService taskRemovingService;
+
+    @Autowired
+    private TaskRepository taskRepository;
+
     @Bean
     @Scope(scopeName = "prototype")
     public TaskPoolProtocol taskPoolProtocol(GatewayContext c) {
         return new DirectTaskPoolConnection(
                 c.lookupAttribute("clientId"),
-                taskIssueService
+                taskIssueService,
+                taskRemovingService
         );
     }
 

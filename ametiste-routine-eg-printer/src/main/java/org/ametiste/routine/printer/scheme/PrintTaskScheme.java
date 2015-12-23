@@ -4,6 +4,7 @@ import org.ametiste.routine.domain.scheme.AbstractTaskScheme;
 import org.ametiste.routine.domain.scheme.TaskCreationRejectedBySchemeException;
 import org.ametiste.routine.domain.task.Task;
 import org.ametiste.routine.domain.task.properties.TaskProperty;
+import org.ametiste.routine.mod.backlog.mod.ModBacklog;
 import org.ametiste.routine.printer.operation.PrintOperation;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +16,7 @@ public class PrintTaskScheme extends AbstractTaskScheme {
 
     public static final String NAME = "printer-eg-task";
 
-    public static final String ALLOWED_CREATOR = "mod-backlog";
+    public static final String ALLOWED_CREATOR = ModBacklog.MOD_ID;
 
     @Override
     protected void verifyCreationRequest(Map<String, String> schemeParams, String creatorIdentifier) throws TaskCreationRejectedBySchemeException {

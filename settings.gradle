@@ -15,4 +15,5 @@ include 'ametiste-routine-bundle-starter'
 include 'ametiste-routine-mod-backlog'
 include 'ametiste-routine-mod-backlog-starter'
 include 'ametiste-routine-mod-task-timeout'
+include 'ametiste-routine-mod-shredder'
 

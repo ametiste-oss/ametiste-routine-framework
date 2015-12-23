@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.stream.Collectors;
 
 /**
  * <p>
@@ -35,11 +36,10 @@ public class TaskTimeoutAction {
             logger.debug("Trying to execute timeouts.");
         }
 
-
         // TODO: full scan, not only first 100?
         protocolGateway.session(TaskLogProtocol.class)
             .findIdentifiers(f -> {
-                f.stateIn(Task.State.executionState);
+                f.stateIn(Task.State.executionState.stream().map(Task.State::name).collect(Collectors.toList()));
                 f.execStartTimeAfter(Instant.now().minus(defaultTimeout, ChronoUnit.SECONDS));
             }, 0, 100)
             .forEach(taskId -> {

@@ -1,5 +1,9 @@
 package org.ametiste.routine.domain.task;
 
+import org.ametiste.routine.sdk.domain.TaskFilter;
+
+import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.BiConsumer;
@@ -38,4 +42,12 @@ public interface TaskRepository {
 
     Task findTaskByOperationId(UUID operationId);
 
+    List<Task> findTasks(Consumer<TaskFilter> filterBuilder);
+
+    long countTasks(Consumer<TaskFilter> filterBuilder);
+
+    // TODO: add metrics
+    void deleteTask(UUID taskId);
+
+    void deleteTasks(List<Task.State> states, Instant after);
 }

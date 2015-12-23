@@ -3,7 +3,11 @@ package org.ametiste.routine.mod.tasklog.infrastructure.persistency.jpa;
 import org.ametiste.metrics.annotations.Timeable;
 import org.ametiste.routine.domain.task.Task;
 import org.ametiste.routine.domain.task.properties.TaskProperty;
-import org.ametiste.routine.infrastructure.persistency.jpa.data.*;
+import org.ametiste.routine.infrastructure.persistency.jpa.TaskDataSpecifications;
+import org.ametiste.routine.infrastructure.persistency.jpa.data.OperationNoticeData;
+import org.ametiste.routine.infrastructure.persistency.jpa.data.TaskData;
+import org.ametiste.routine.infrastructure.persistency.jpa.data.TaskNoticeData;
+import org.ametiste.routine.infrastructure.persistency.jpa.data.TaskPropertyData;
 import org.ametiste.routine.mod.tasklog.domain.NoticeEntry;
 import org.ametiste.routine.mod.tasklog.domain.OperationLog;
 import org.ametiste.routine.mod.tasklog.domain.TaskLogEntry;
@@ -14,8 +18,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.domain.Specifications;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.criteria.*;
-import java.sql.Date;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
@@ -27,68 +33,6 @@ import java.util.stream.Collectors;
  * @since
  */
 public class SpringDataTaskLogRepository implements TaskLogRepository {
-
-    public static class TaskDataSpecifications {
-
-        public static Specification<TaskData> hasScheme(String schemeId) {
-            return (root, query, cb) -> {
-                return cb.equal(root.get(TaskData_.schemeId), schemeId);
-            };
-        }
-
-        public static Specification<TaskData> hasCreator(String creatorId) {
-            return (root, query, cb) -> {
-                return cb.equal(root.get(TaskData_.creatorId), creatorId);
-            };
-        }
-
-        public static Specification<TaskData> hasProperty(TaskProperty taskProperty) {
-            return (root, query, cb) -> {
-
-                final ListJoin<TaskData, TaskPropertyData> join =
-                        root.join(TaskData_.properties);
-
-                final Path<String> stringPath = root.get(TaskData_.state);
-
-                return cb.and(
-                    cb.equal(join.get(TaskPropertyData_.name), taskProperty.name()),
-                    cb.equal(join.get(TaskPropertyData_.value), taskProperty.value())
-                );
-            };
-        }
-
-        public static Specification<TaskData> hasState(final List<Task.State> states) {
-            return (root, query, cb) -> {
-                return root.get(TaskData_.state)
-                        .in(states.stream()
-                                .map(Task.State::name)
-                                .collect(Collectors.toList())
-                        );
-            };
-        }
-
-        public static Specification<TaskData> afterCreationTime(Instant crTime) {
-            return (root, criteriaQuery, criteriaBuilder) -> {
-                return criteriaBuilder
-                        .lessThan(root.get(TaskData_.creationTime), Date.from(crTime));
-            };
-        }
-
-        public static Specification<TaskData> afterExecStartTime(Instant execTime) {
-            return (root, criteriaQuery, criteriaBuilder) -> {
-                return criteriaBuilder
-                        .lessThan(root.get(TaskData_.executionStartTime), Date.from(execTime));
-            };
-        }
-
-        public static Specification<TaskData> afterCompletionTime(Instant coTime) {
-            return (root, criteriaQuery, criteriaBuilder) -> {
-                return criteriaBuilder.
-                        lessThan(root.get(TaskData_.completionTime), Date.from(coTime));
-            };
-        }
-
-    }
 
     // TODO: extract me
     private static class SpecificationAccumulator<T> implements Supplier<Specification<T>>, Specification<T> {
@@ -152,6 +96,8 @@ public class SpringDataTaskLogRepository implements TaskLogRepository {
     @Override
     @Transactional
     @Timeable(name = PersistencyMetrics.FIND_ACTIVE_AFTER_DATE_TIMING)
+    // TODO: remove it
+    @Deprecated
     public List<UUID> findActiveTasksAfterDate(Instant timePoint) {
         return null;
     }
@@ -195,7 +141,6 @@ public class SpringDataTaskLogRepository implements TaskLogRepository {
     public long countByTaskState(List<Task.State> states, List<TaskProperty> properties) {
         return jpaTaskLogDataRepository.count(createStateAndPropsSpec(states, properties));
     }
-
 
     /* Helper methods section */
 

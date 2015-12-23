@@ -1,5 +1,6 @@
 package org.ametiste.routine;
 
+import org.ametiste.routine.mod.shredder.configuration.ModShredderConfiguration;
 import org.ametiste.routine.printer.scheme.PrintTaskScheme;
 import org.ametiste.routine.mod.backlog.configuration.BacklogModConfiguration;
 import org.ametiste.routine.mod.backlog.domain.Backlog;
@@ -14,6 +15,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
  * @since
  */
 @SpringBootApplication
+@Import(ModShredderConfiguration.class)
 public class RoutineExamplePrinterApp {
 
     public static void main(String[] args) {

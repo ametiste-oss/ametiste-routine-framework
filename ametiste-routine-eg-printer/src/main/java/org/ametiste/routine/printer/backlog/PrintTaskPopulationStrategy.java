@@ -46,26 +46,4 @@ public class PrintTaskPopulationStrategy implements BacklogPopulationStrategy {
 
     }
 
-//    @Override
-//    public void populate(TaskGateway taskGateway, ModDataGateway modDataGateway) {
-//
-//        logger.debug("Create task entries from backlog.");
-//
-//        int issuedTasksCount = modDataGateway
-//                .loadModDataInt("backlog-print-tasks-count")
-//                .orElse(0);
-//
-//        for (int i = 0; i < populationCount; i++, issuedTasksCount++) {
-//
-//            final HashMap<String, String> params = new HashMap<>();
-//            params.put("task.number", Integer.toString(issuedTasksCount));
-//            params.put("task.out", "I am task #" + issuedTasksCount);
-//
-//            taskGateway.issueTask(PrintTaskScheme.NAME, params);
-//        }
-//
-//        modDataGateway.storeModData("backlog-print-tasks-count", issuedTasksCount);
-//
-//    }
-
 }

@@ -1,10 +1,11 @@
 logging:
   level:
-    org.ametiste: WARN
+    org.ametiste: DEBUG
+    org.ametiste.metrics: ERROR
     org.ametiste.routine.printer.backlog.PrintTaskPopulationStrategy: DEBUG
     org.ametiste.routine.mod.backlog.application.service.BacklogRenewService: DEBUG
     org.ametiste.routine.application.action.TaskTimeoutAction: DEBUG
-    org.ametiste.routine.application.service.issue.DefaultTaskIssueService: DEBUG
+    org.ametiste.routine.application.service.removing.DefaultTaskRemovingService: DEBUG
 
 spring:
   jpa:
@@ -16,23 +17,40 @@ spring:
 org:
   ametiste:
     routine:
+
+### Protocols Configuration
+
       protocol:
         http:
           enabled: true
+
+# Actions Configuration
+
       action:
         task-timeout:
-          enabled: false
+          enabled: true
       startup:
         cleanup:
           enabled: true
-      eg:
-        printer:
-          delayTime: 2000
-          populationCount: 10
+
+### Mods Configuration
+
       mod:
         backlog:
           enabled: true
           renewRate: 5000
+        shredder:
+          shreddingRate: 10000
+          staleThreshold:
+            value: 10
+            unit: SECONDS
+
+### App Configuration
+
+      eg:
+        printer:
+          delayTime: 2000
+          populationCount: 1
 
 server:
   port: 8081

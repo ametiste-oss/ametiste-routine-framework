@@ -7,11 +7,13 @@ import org.ametiste.routine.sdk.mod.ModGateway;
  *
  * @since
  */
-public class BacklogModGateway implements ModGateway {
+public class ModBacklog implements ModGateway {
+
+    public static final String MOD_ID = "mod-backlog";
 
     @Override
     public void provideModInfo(ModInfoConsumer modInfoConsumer) {
-        modInfoConsumer.baseInfo("mod-backlog", "0.0.1-SNAPSHOT");
+        modInfoConsumer.baseInfo(MOD_ID, "0.0.1-SNAPSHOT");
     }
 
 }

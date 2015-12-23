@@ -3,6 +3,8 @@ package org.ametiste.routine.configuration;
 import org.ametiste.routine.application.service.TaskDomainEvenetsGateway;
 import org.ametiste.routine.application.service.issue.DefaultTaskIssueService;
 import org.ametiste.routine.application.service.issue.TaskIssueService;
+import org.ametiste.routine.application.service.removing.DefaultTaskRemovingService;
+import org.ametiste.routine.application.service.removing.TaskRemovingService;
 import org.ametiste.routine.application.service.termination.DefaultTaskTerminationService;
 import org.ametiste.routine.application.service.termination.TaskTerminationService;
 import org.ametiste.routine.domain.ModRepository;
@@ -59,18 +61,6 @@ public class AmetisteRoutineCoreConfiguration {
     @Autowired
     private AmetisteRoutineCoreProperties props;
 
-    @Autowired
-    private List<ModGateway> modGateways;
-
-    @Bean
-    public ModRegistry modRegistry() {
-        final ModRegistry modRegistry = new ModRegistry();
-        modGateways.forEach(
-                modRegistry::addMod
-        );
-        return modRegistry;
-    }
-
     @Bean
     @ConditionalOnMissingBean
     public TaskTerminationService taskExecutionService() {
@@ -81,6 +71,11 @@ public class AmetisteRoutineCoreConfiguration {
     public TaskIssueService taskIssueService() {
         return new DefaultTaskIssueService(taskRepository, taskPropertiesRegistry,
                 taskSchemeRepository, domainEventsGateway(), issueConstraints);
+    }
+
+    @Bean
+    public TaskRemovingService taskRemovingService() {
+        return new DefaultTaskRemovingService(taskRepository, domainEventsGateway());
     }
 
     @Bean

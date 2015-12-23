@@ -5,13 +5,17 @@ import org.ametiste.routine.domain.task.Task;
 import org.ametiste.routine.domain.task.TaskRepository;
 import org.ametiste.routine.infrastructure.persistency.PersistencyMetrics;
 import org.ametiste.routine.infrastructure.persistency.jpa.data.TaskData;
+import org.ametiste.routine.sdk.domain.TaskFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -72,6 +76,40 @@ public class SpringDataTaskRepository implements TaskRepository {
     @Timeable(name = PersistencyMetrics.FIND_TASK_BY_OP_ID)
     public Task findTaskByOperationId(UUID operationId) {
         return reflectDataAsTask(jpaTaskDataRepository.findByOperationDataId(operationId));
+    }
+
+    @Override
+    @Transactional
+    // TODO: add metrics
+    public List<Task> findTasks(final Consumer<TaskFilter> filterBuilder) {
+        return jpaTaskDataRepository.findAll(JPATaskFilter.buildBy(filterBuilder))
+                .stream()
+                .map(this::reflectDataAsTask)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    @Transactional
+    // TODO: add metrics
+    public long countTasks(final Consumer<TaskFilter> filterBuilder) {
+        return jpaTaskDataRepository.count(JPATaskFilter.buildBy(filterBuilder));
+    }
+
+    @Override
+    @Transactional
+    // TODO: add metrics
+    public void deleteTask(final UUID taskId) {
+        jpaTaskDataRepository.delete(taskId);
+    }
+
+    @Override
+    @Transactional
+    // TODO: add metrics
+    public void deleteTasks(final List<Task.State> states, final Instant after) {
+        jpaTaskDataRepository.deleteByStateAndCompletionDate(
+                states.stream().map(Task.State::name).collect(Collectors.toList()),
+                Date.from(after)
+        );
     }
 
     private Task reflectDataAsTask(TaskData taskData) {

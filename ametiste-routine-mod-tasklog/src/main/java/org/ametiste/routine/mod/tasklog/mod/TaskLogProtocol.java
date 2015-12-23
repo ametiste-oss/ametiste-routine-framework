@@ -1,9 +1,8 @@
 package org.ametiste.routine.mod.tasklog.mod;
 
 import org.ametiste.laplatform.protocol.Protocol;
-import org.ametiste.routine.domain.task.Task;
+import org.ametiste.routine.sdk.domain.TaskFilter;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -20,27 +19,6 @@ import java.util.function.Consumer;
 public interface TaskLogProtocol extends Protocol {
 
     /**
-     *  <p>
-     *      Filter that must be applied to limit task log query. Note,
-     *      each preducate is incremental, "AND" semantic must be used to build
-     *      filter based on the given predicates.
-     *  </p>
-     *
-     *  @since 0.1.0
-     */
-    interface LogFilter {
-
-        void stateIn(List<Task.State> state);
-
-        void creationTimeAfter(Instant crTime);
-
-        void execStartTimeAfter(Instant exTime);
-
-        void completionTimeAfter(Instant exTime);
-
-    }
-
-    /**
      * <p>
      *  Queries task log for entries identifiers list using given filter and page parameters.
      * </p>
@@ -51,6 +29,6 @@ public interface TaskLogProtocol extends Protocol {
      *
      * @return list of entries identifiers, may be empty.
      */
-    List<UUID> findIdentifiers(Consumer<LogFilter> filter, int offset, int limit);
+    List<UUID> findIdentifiers(Consumer<TaskFilter> filter, int offset, int limit);
 
 }
