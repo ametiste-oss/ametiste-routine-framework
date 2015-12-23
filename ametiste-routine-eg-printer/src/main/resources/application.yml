@@ -40,6 +40,7 @@ org:
           enabled: true
           renewRate: 5000
         shredder:
+          enabled: true
           shreddingRate: 10000
           staleThreshold:
             value: 10

@@ -13,6 +13,10 @@ public class OperationNoticeData {
     @GeneratedValue
     public int id;
 
+    @ManyToOne
+    @JoinColumn(name = "operation_id")
+    public OperationData operationData;
+
     @Column(name = "cr_time")
     public Instant creationTime;
 

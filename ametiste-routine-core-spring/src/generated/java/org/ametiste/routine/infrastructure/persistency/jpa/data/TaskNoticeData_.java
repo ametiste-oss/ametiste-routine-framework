@@ -9,6 +9,7 @@ import javax.persistence.metamodel.StaticMetamodel;
 @StaticMetamodel(TaskNoticeData.class)
 public abstract class TaskNoticeData_ {
 
+	public static volatile SingularAttribute<TaskNoticeData, TaskData> task;
 	public static volatile SingularAttribute<TaskNoticeData, Instant> creationTime;
 	public static volatile SingularAttribute<TaskNoticeData, Integer> id;
 	public static volatile SingularAttribute<TaskNoticeData, String> text;

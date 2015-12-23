@@ -12,6 +12,10 @@ public class TaskPropertyData {
     @GeneratedValue
     public int id;
 
+    @ManyToOne
+    @JoinColumn(name = "task_id")
+    public TaskData task;
+
     public String name;
 
     public String value;

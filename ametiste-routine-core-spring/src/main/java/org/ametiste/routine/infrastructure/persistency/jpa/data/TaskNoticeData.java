@@ -13,6 +13,10 @@ public class TaskNoticeData {
     @GeneratedValue
     public int id;
 
+    @ManyToOne
+    @JoinColumn(name = "task_id")
+    public TaskData task;
+
     @Column(name = "cr_time")
     public Instant creationTime;
 

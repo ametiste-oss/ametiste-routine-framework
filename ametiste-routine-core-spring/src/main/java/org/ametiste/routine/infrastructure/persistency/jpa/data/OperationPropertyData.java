@@ -12,6 +12,10 @@ public class OperationPropertyData {
     @GeneratedValue
     public int id;
 
+    @ManyToOne
+    @JoinColumn(name = "operation_id")
+    public OperationData operationData;
+
     public String name;
 
     public String value;

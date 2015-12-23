@@ -11,6 +11,7 @@ import javax.persistence.metamodel.StaticMetamodel;
 public abstract class OperationData_ {
 
 	public static volatile ListAttribute<OperationData, OperationNoticeData> notices;
+	public static volatile SingularAttribute<OperationData, TaskData> task;
 	public static volatile SingularAttribute<OperationData, UUID> id;
 	public static volatile SingularAttribute<OperationData, String> label;
 	public static volatile SingularAttribute<OperationData, String> state;
