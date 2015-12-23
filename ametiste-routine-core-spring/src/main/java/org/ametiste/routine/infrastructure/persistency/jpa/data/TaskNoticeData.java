@@ -1,5 +1,8 @@
 package org.ametiste.routine.infrastructure.persistency.jpa.data;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 import java.time.Instant;
 
@@ -13,8 +16,8 @@ public class TaskNoticeData {
     @GeneratedValue
     public int id;
 
-    @ManyToOne
-    @JoinColumn(name = "task_id")
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "task_id", foreignKey = @ForeignKey(name = "fk_task_notice_task_id"))
     public TaskData task;
 
     @Column(name = "cr_time")

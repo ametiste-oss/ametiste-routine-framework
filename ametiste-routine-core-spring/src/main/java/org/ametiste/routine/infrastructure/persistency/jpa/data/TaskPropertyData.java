@@ -1,5 +1,8 @@
 package org.ametiste.routine.infrastructure.persistency.jpa.data;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 
 @Entity
@@ -12,8 +15,8 @@ public class TaskPropertyData {
     @GeneratedValue
     public int id;
 
-    @ManyToOne
-    @JoinColumn(name = "task_id")
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "task_id", foreignKey = @ForeignKey(name = "fk_task_prop_task_id"))
     public TaskData task;
 
     public String name;

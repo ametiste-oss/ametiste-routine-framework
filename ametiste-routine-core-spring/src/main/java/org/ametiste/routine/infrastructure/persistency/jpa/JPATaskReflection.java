@@ -44,6 +44,7 @@ public class JPATaskReflection implements TaskReflection {
         operationData.id = operationFlare.flashId();
         operationData.label = operationFlare.flashLabel();
         operationData.state = operationFlare.flashState();
+        operationData.task = taskData;
 
         operationFlare.flashNotices().forEach(
                 (notice) -> {
@@ -82,6 +83,7 @@ public class JPATaskReflection implements TaskReflection {
         final TaskPropertyData taskPropertyData = new TaskPropertyData();
         taskPropertyData.name = name;
         taskPropertyData.value = value;
+        taskPropertyData.task = taskData;
 
         taskData.properties.add(taskPropertyData);
     }
@@ -98,6 +100,8 @@ public class JPATaskReflection implements TaskReflection {
         final TaskNoticeData noticeData = new TaskNoticeData();
         noticeData.text = notice.text();
         noticeData.creationTime = notice.creationTime();
+        noticeData.task = taskData;
+
         this.taskData.notices.add(noticeData);
     }
 

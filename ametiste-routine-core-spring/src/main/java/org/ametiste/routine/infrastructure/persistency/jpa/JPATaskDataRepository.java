@@ -30,7 +30,7 @@ public interface JPATaskDataRepository extends CrudRepository<TaskData, UUID>,
     long countByState(String state);
 
     @Modifying
-    @Query("DELETE FROM TaskData t WHERE t.state IN (?1) AND t.completionTime < ?2")
+    @Query("DELETE FROM TaskData WHERE state IN (?1) AND completionTime < ?2")
     void deleteByStateAndCompletionDate(List<String> states, Date afterCompletion);
 
 }

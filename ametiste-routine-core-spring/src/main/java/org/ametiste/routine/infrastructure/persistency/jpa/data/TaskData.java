@@ -1,5 +1,7 @@
 package org.ametiste.routine.infrastructure.persistency.jpa.data;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.data.domain.Persistable;
 
 import javax.persistence.*;
@@ -25,13 +27,13 @@ public class TaskData implements Persistable<UUID> {
 
     public String state;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "task")
     public List<OperationData> operationData = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "task")
     public List<TaskPropertyData> properties = new ArrayList<>();
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "task")
     public List<TaskNoticeData> notices = new ArrayList<>();
 
     public String creatorId;

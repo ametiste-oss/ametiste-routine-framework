@@ -2,8 +2,8 @@ logging:
   level:
     org.ametiste: DEBUG
     org.ametiste.metrics: ERROR
-    org.ametiste.routine.printer.backlog.PrintTaskPopulationStrategy: DEBUG
-    org.ametiste.routine.mod.backlog.application.service.BacklogRenewService: DEBUG
+    # org.ametiste.routine.printer.backlog.PrintTaskPopulationStrategy: DEBUG
+    # org.ametiste.routine.mod.backlog.application.service.BacklogRenewService: DEBUG
     org.ametiste.routine.application.action.TaskTimeoutAction: DEBUG
     org.ametiste.routine.application.service.removing.DefaultTaskRemovingService: DEBUG
 
@@ -11,8 +11,13 @@ spring:
   jpa:
     show-sql: false
     generate-ddl: true
+    properties:
+      hibernate.hbm2ddl.import_files: update.sql
+      hibernate.hbm2ddl.auto: create-drop
+#    hibernate:
+#      ddl-auto: create-drop
   datasource:
-    url: jdbc:h2:mem:ame_routine;MODE=MySQL;DB_CLOSE_DELAY=-1
+     url: jdbc:h2:mem:ame_routine;MODE=MySQL;DB_CLOSE_DELAY=-1
 
 org:
   ametiste:
@@ -28,10 +33,10 @@ org:
 
       action:
         task-timeout:
-          enabled: true
+          enabled: false
       startup:
         cleanup:
-          enabled: true
+          enabled: false
 
 ### Mods Configuration
 
@@ -40,7 +45,7 @@ org:
           enabled: true
           renewRate: 5000
         shredder:
-          enabled: true
+          enabled: false
           shreddingRate: 10000
           staleThreshold:
             value: 10

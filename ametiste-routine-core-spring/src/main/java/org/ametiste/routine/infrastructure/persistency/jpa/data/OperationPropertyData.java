@@ -1,5 +1,8 @@
 package org.ametiste.routine.infrastructure.persistency.jpa.data;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import javax.persistence.*;
 
 @Entity
@@ -12,9 +15,9 @@ public class OperationPropertyData {
     @GeneratedValue
     public int id;
 
-    @ManyToOne
-    @JoinColumn(name = "operation_id")
-    public OperationData operationData;
+//    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @JoinColumn(name = "operation_id", foreignKey = @ForeignKey(name = "fk_op_prop_op_id"))
+//    public OperationData operation;
 
     public String name;
 
