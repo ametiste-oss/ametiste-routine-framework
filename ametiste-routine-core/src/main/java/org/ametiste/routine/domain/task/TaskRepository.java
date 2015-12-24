@@ -46,8 +46,5 @@ public interface TaskRepository {
 
     long countTasks(Consumer<TaskFilter> filterBuilder);
 
-    // TODO: add metrics
-    void deleteTask(UUID taskId);
-
     void deleteTasks(List<Task.State> states, Instant after);
 }

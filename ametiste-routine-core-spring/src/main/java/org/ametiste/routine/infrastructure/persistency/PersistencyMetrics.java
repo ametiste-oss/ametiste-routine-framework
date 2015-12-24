@@ -11,6 +11,14 @@ public interface PersistencyMetrics {
 
     String TASK_REPO_PREFIX = "core.infrastructure.persistency.task-repository.";
 
+
+    String COUNT_TASKS_WITH_FILTER = TASK_REPO_PREFIX +
+            "count-with-filter.timing";
+
+
+    String FIND_TASKS_WITH_FILTER = TASK_REPO_PREFIX +
+            "find-with-filter.timing";
+
     String FIND_TASK_BY_ID_TIMING = TASK_REPO_PREFIX +
             "find-by-id.timing";
 
@@ -23,7 +31,12 @@ public interface PersistencyMetrics {
     String FIND_TASK_BY_OP_ID = TASK_REPO_PREFIX +
             "find-by-op-id.timing";
 
+
     String SAVE_TASK_TIMING = TASK_REPO_PREFIX +
             "save.timing";
+
+
+    String DELETE_TASKS_TIMING = TASK_REPO_PREFIX +
+            "delete.timing";
 
 }

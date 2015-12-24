@@ -13,9 +13,7 @@ spring:
     generate-ddl: true
     properties:
       hibernate.hbm2ddl.import_files: update.sql
-      hibernate.hbm2ddl.auto: create-drop
-#    hibernate:
-#      ddl-auto: create-drop
+#      hibernate.hbm2ddl.auto: create-drop
   datasource:
      url: jdbc:h2:mem:ame_routine;MODE=MySQL;DB_CLOSE_DELAY=-1
 
@@ -45,7 +43,7 @@ org:
           enabled: true
           renewRate: 5000
         shredder:
-          enabled: false
+          enabled: true
           shreddingRate: 10000
           staleThreshold:
             value: 10

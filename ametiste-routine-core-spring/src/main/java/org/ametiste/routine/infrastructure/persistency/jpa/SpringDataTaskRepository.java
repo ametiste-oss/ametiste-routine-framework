@@ -80,7 +80,7 @@ public class SpringDataTaskRepository implements TaskRepository {
 
     @Override
     @Transactional
-    // TODO: add metrics
+    @Timeable(name = PersistencyMetrics.FIND_TASKS_WITH_FILTER)
     public List<Task> findTasks(final Consumer<TaskFilter> filterBuilder) {
         return jpaTaskDataRepository.findAll(JPATaskFilter.buildBy(filterBuilder))
                 .stream()
@@ -90,21 +90,14 @@ public class SpringDataTaskRepository implements TaskRepository {
 
     @Override
     @Transactional
-    // TODO: add metrics
+    @Timeable(name = PersistencyMetrics.COUNT_TASKS_WITH_FILTER)
     public long countTasks(final Consumer<TaskFilter> filterBuilder) {
         return jpaTaskDataRepository.count(JPATaskFilter.buildBy(filterBuilder));
     }
 
     @Override
     @Transactional
-    // TODO: add metrics
-    public void deleteTask(final UUID taskId) {
-        jpaTaskDataRepository.delete(taskId);
-    }
-
-    @Override
-    @Transactional
-    // TODO: add metrics
+    @Timeable(name = PersistencyMetrics.DELETE_TASKS_TIMING)
     public void deleteTasks(final List<Task.State> states, final Instant after) {
         jpaTaskDataRepository.deleteByStateAndCompletionDate(
                 states.stream().map(Task.State::name).collect(Collectors.toList()),
