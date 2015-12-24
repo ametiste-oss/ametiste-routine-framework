@@ -30,6 +30,10 @@ public class DefaultTaskRemovingService implements TaskRemovingService {
     @Override
     public void removeTasks(final List<Task.State> states, final Instant after) {
 
+        if (!Task.State.completeState.containsAll(states)) {
+             throw new IllegalArgumentException("Only completed task can be romved using this service.");
+        }
+
         final long removingTasksCount = taskRepository.countTasks(c -> {
                     c.stateIn(states.stream().map(Task.State::name).collect(Collectors.toList()));
                     c.completionTimeAfter(after);
@@ -41,10 +45,6 @@ public class DefaultTaskRemovingService implements TaskRemovingService {
         if (removingTasksCount > 0) {
             taskRepository.deleteTasks(states, after);
         }
-
-//        removingTasksCount.stream()
-//                .map(Task::entityId)
-//                .forEach(taskRepository::deleteTask);
 
     }
 

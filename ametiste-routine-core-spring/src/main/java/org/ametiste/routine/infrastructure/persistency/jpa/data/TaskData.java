@@ -57,6 +57,7 @@ public class TaskData implements Persistable<UUID> {
             indexes = @Index(name = "task_prop_task_id_idx", columnList = "task_id", unique = false)
     )
     @org.hibernate.annotations.ForeignKey(name = "fk_task_prop_task_id")
+    // NOTE: see resources/update.sql for foreign key replacement details
     public List<TaskPropertyData> getProperties() {
         return properties;
     }
@@ -68,6 +69,7 @@ public class TaskData implements Persistable<UUID> {
             indexes = @Index(name = "task_notice_task_id_idx", columnList = "task_id", unique = false)
     )
     @org.hibernate.annotations.ForeignKey(name = "fk_task_notice_task_id")
+    // NOTE: see resources/update.sql for foreign key replacement details
     public List<TaskNoticeData> getNotices() {
         return notices;
     }

@@ -30,6 +30,7 @@ public class OperationData implements Persistable<UUID> {
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "task_id", foreignKey = @ForeignKey(name = "fk_task_op_task_id"))
+    // NOTE: see resources/update.sql for foreign key replacement details
     public TaskData getTask() {
         return task;
     }
@@ -41,6 +42,7 @@ public class OperationData implements Persistable<UUID> {
             indexes = @Index(name = "op_prop_op_id_idx", columnList = "operation_id", unique = false)
     )
     @org.hibernate.annotations.ForeignKey(name = "fk_op_prop_op_id")
+    // NOTE: see resources/update.sql for foreign key replacement details
     public List<OperationPropertyData> getProperties() {
         return properties;
     }
@@ -53,6 +55,7 @@ public class OperationData implements Persistable<UUID> {
         indexes = @Index(name = "op_notice_op_id_idx", columnList = "operation_id", unique = false)
     )
     @org.hibernate.annotations.ForeignKey(name = "fk_op_notice_op_id")
+    // NOTE: see resources/update.sql for foreign key replacement details
     public List<OperationNoticeData> getNotices() {
         return notices;
     }

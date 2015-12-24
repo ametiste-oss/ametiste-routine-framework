@@ -26,6 +26,8 @@ public class ModShredderConfiguration {
     @Value("${org.ametiste.routine.mod.shredder.staleThreshold.unit:HOURS}")
     private String staleThresholdUnit;
 
+    // TODO: add list of states to shredding
+
     @Autowired
     private ProtocolGatewayService protocolGatewayService;
 
