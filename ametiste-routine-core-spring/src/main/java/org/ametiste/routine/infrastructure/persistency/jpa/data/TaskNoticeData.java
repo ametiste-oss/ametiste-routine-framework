@@ -7,9 +7,6 @@ import javax.persistence.*;
 import java.time.Instant;
 
 @Embeddable
-@Table(name = "ame_routine_task_notice", indexes = {
-        @Index(name = "task_notice_task_id_idx", columnList = "task_id", unique = false)
-})
 public class TaskNoticeData {
 
     private Instant creationTime;

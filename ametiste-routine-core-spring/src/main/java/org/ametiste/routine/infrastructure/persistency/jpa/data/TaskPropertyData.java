@@ -6,9 +6,6 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.*;
 
 @Embeddable
-@Table(name = "ame_routine_task_property", indexes = {
-        @Index(name = "task_prop_task_id_idx", columnList = "task_id", unique = false)
-})
 public class TaskPropertyData {
 
     private String name;

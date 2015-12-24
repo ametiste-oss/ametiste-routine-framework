@@ -52,8 +52,9 @@ public class TaskData implements Persistable<UUID> {
 
     @ElementCollection
     @CollectionTable(
-        name = "ame_routine_task_property",
-        joinColumns = @JoinColumn(name = "task_id")
+            name = "ame_routine_task_property",
+            joinColumns = @JoinColumn(name = "task_id"),
+            indexes = @Index(name = "task_prop_task_id_idx", columnList = "task_id", unique = false)
     )
     @org.hibernate.annotations.ForeignKey(name = "fk_task_prop_task_id")
     public List<TaskPropertyData> getProperties() {
@@ -62,8 +63,9 @@ public class TaskData implements Persistable<UUID> {
 
     @ElementCollection
     @CollectionTable(
-        name = "ame_routine_task_notice",
-        joinColumns = @JoinColumn(name = "task_id")
+            name = "ame_routine_task_notice",
+            joinColumns = @JoinColumn(name = "task_id"),
+            indexes = @Index(name = "task_notice_task_id_idx", columnList = "task_id", unique = false)
     )
     @org.hibernate.annotations.ForeignKey(name = "fk_task_notice_task_id")
     public List<TaskNoticeData> getNotices() {

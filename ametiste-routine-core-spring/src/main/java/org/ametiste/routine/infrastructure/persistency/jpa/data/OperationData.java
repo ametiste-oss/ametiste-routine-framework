@@ -36,8 +36,9 @@ public class OperationData implements Persistable<UUID> {
 
     @ElementCollection
     @CollectionTable(
-        name = "ame_routine_task_operation_property",
-        joinColumns = @JoinColumn(name = "operation_id")
+            name = "ame_routine_task_operation_property",
+            joinColumns = @JoinColumn(name = "operation_id"),
+            indexes = @Index(name = "op_prop_op_id_idx", columnList = "operation_id", unique = false)
     )
     @org.hibernate.annotations.ForeignKey(name = "fk_op_prop_op_id")
     public List<OperationPropertyData> getProperties() {
@@ -48,7 +49,8 @@ public class OperationData implements Persistable<UUID> {
     @CollectionTable(
         name = "ame_routine_task_operation_notice",
         joinColumns = @JoinColumn(name = "operation_id"),
-        foreignKey = @ForeignKey(name = "fk_op_notice_op_id")
+        foreignKey = @ForeignKey(name = "fk_op_notice_op_id"),
+        indexes = @Index(name = "op_notice_op_id_idx", columnList = "operation_id", unique = false)
     )
     @org.hibernate.annotations.ForeignKey(name = "fk_op_notice_op_id")
     public List<OperationNoticeData> getNotices() {
