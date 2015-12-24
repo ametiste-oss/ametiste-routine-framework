@@ -6,23 +6,30 @@ import org.hibernate.annotations.OnDeleteAction;
 import javax.persistence.*;
 import java.time.Instant;
 
-@Entity
+@Embeddable
 @Table(name = "ame_routine_task_notice", indexes = {
         @Index(name = "task_notice_task_id_idx", columnList = "task_id", unique = false)
 })
 public class TaskNoticeData {
 
-    @Id
-    @GeneratedValue
-    public int id;
+    private Instant creationTime;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "task_id", foreignKey = @ForeignKey(name = "fk_task_notice_task_id"))
-    public TaskData task;
+    private String text;
 
     @Column(name = "cr_time")
-    public Instant creationTime;
+    public Instant getCreationTime() {
+        return creationTime;
+    }
 
-    public String text;
+    public String getText() {
+        return text;
+    }
 
+    public void setCreationTime(final Instant creationTime) {
+        this.creationTime = creationTime;
+    }
+
+    public void setText(final String text) {
+        this.text = text;
+    }
 }

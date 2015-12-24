@@ -75,7 +75,7 @@ public class SpringDataTaskRepository implements TaskRepository {
     @Transactional
     @Timeable(name = PersistencyMetrics.FIND_TASK_BY_OP_ID)
     public Task findTaskByOperationId(UUID operationId) {
-        return reflectDataAsTask(jpaTaskDataRepository.findByOperationDataId(operationId));
+        return reflectDataAsTask(jpaTaskDataRepository.findByOperationsId(operationId));
     }
 
     @Override

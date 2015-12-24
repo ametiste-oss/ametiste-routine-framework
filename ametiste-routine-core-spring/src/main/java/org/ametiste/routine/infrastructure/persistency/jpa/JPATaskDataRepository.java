@@ -21,7 +21,7 @@ import java.util.UUID;
 public interface JPATaskDataRepository extends CrudRepository<TaskData, UUID>,
         JpaSpecificationExecutor<TaskData> {
 
-    TaskData findByOperationDataId(UUID operationId);
+    TaskData findByOperationsId(UUID operationId);
 
     List<TaskData> findByState(Task.State state);
 

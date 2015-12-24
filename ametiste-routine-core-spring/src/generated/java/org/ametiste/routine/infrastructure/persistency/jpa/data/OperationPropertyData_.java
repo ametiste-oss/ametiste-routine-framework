@@ -9,7 +9,6 @@ import javax.persistence.metamodel.StaticMetamodel;
 public abstract class OperationPropertyData_ {
 
 	public static volatile SingularAttribute<OperationPropertyData, String> name;
-	public static volatile SingularAttribute<OperationPropertyData, Integer> id;
 	public static volatile SingularAttribute<OperationPropertyData, String> value;
 
 }

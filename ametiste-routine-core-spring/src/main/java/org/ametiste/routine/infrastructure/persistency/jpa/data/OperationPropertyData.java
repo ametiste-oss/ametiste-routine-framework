@@ -5,22 +5,48 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 
-@Entity
+@Embeddable
 @Table(name = "ame_routine_task_operation_property", indexes = {
         @Index(name = "op_prop_op_id_idx", columnList = "operation_id", unique = false)
 })
 public class OperationPropertyData {
 
-    @Id
-    @GeneratedValue
-    public int id;
+    private String name;
 
-//    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    @JoinColumn(name = "operation_id", foreignKey = @ForeignKey(name = "fk_op_prop_op_id"))
-//    public OperationData operation;
+    private String value;
 
-    public String name;
+    public String getName() {
+        return name;
+    }
 
-    public String value;
+    public void setName(final String name) {
+        this.name = name;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(final String value) {
+        this.value = value;
+    }
+
+    public boolean equals(Object other) {
+        if (this == other) return true;
+        if ( !(other instanceof OperationPropertyData) ) return false;
+
+        final OperationPropertyData prop = (OperationPropertyData) other;
+
+        if ( !prop.getValue().equals( getValue() ) ) return false;
+        if ( !prop.getName().equals( getName() ) ) return false;
+
+        return true;
+    }
+
+    public int hashCode() {
+        int result;
+        result = 29 * getValue().hashCode() + getName().hashCode();
+        return result;
+    }
 
 }

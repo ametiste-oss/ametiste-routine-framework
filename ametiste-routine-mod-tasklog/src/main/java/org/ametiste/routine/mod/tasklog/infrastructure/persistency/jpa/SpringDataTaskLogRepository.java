@@ -150,42 +150,42 @@ public class SpringDataTaskLogRepository implements TaskLogRepository {
 
     private TaskPropertyData propsToData(TaskProperty p) {
         final TaskPropertyData data = new TaskPropertyData();
-        data.name = p.name();
-        data.value = p.value();
+        data.setName(p.name());
+        data.setValue(p.value());
         return data;
     }
 
     private NoticeEntry createNoticeEntry(OperationNoticeData notice) {
-        return new NoticeEntry(notice.creationTime, notice.text);
+        return new NoticeEntry(notice.getCreationTime(), notice.getText());
     }
 
     private NoticeEntry createNoticeEntry(TaskNoticeData notice) {
-        return new NoticeEntry(notice.creationTime, notice.text);
+        return new NoticeEntry(notice.getCreationTime(), notice.getText());
     }
 
     private TaskLogEntry processReflectedEntry(TaskData reflectedData) {
         return new TaskLogEntry(
-                reflectedData.id,
-                reflectedData.creationTime.toInstant(),
-                reflectedData.executionStartTime.toInstant(),
-                reflectedData.completionTime.toInstant(),
-                reflectedData.notices.stream()
+                reflectedData.getId(),
+                reflectedData.getCreationTime().toInstant(),
+                reflectedData.getExecutionStartTime().toInstant(),
+                reflectedData.getCompletionTime().toInstant(),
+                reflectedData.getNotices().stream()
                         .map(this::createNoticeEntry)
                         .collect(Collectors.toList()),
-                reflectedData.state,
-                reflectedData.properties.stream()
-                        .collect(Collectors.toMap(p -> p.name, p -> p.value)),
-                reflectedData.operationData.stream()
+                reflectedData.getState(),
+                reflectedData.getProperties().stream()
+                        .collect(Collectors.toMap(p -> p.getName(), p -> p.getValue())),
+                reflectedData.getOperations().stream()
                         .map((x) -> {
                             return new OperationLog(
-                                    x.id,
-                                    x.label,
-                                    x.state,
-                                    x.notices.stream()
+                                    x.getId(),
+                                    x.getLabel(),
+                                    x.getState(),
+                                    x.getNotices().stream()
                                             .map(this::createNoticeEntry)
                                             .collect(Collectors.toList()),
-                                    x.properties.stream()
-                                            .collect(Collectors.toMap(v -> v.name, v -> v.value)));
+                                    x.getProperties().stream()
+                                            .collect(Collectors.toMap(v -> v.getName(), v -> v.getValue())));
                         })
                         .collect(Collectors.toList())
         );

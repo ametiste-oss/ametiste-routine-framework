@@ -28,12 +28,12 @@ public class JPATaskReflection implements TaskReflection {
 
     @Override
     public void flareTaskId(UUID taskId) {
-        taskData.id = taskId;
+        taskData.setId(taskId);
     }
 
     @Override
     public void flareTaskState(Task.State state) {
-        taskData.state = state.name();
+        taskData.setState(state.name());
     }
 
     @Override
@@ -41,103 +41,98 @@ public class JPATaskReflection implements TaskReflection {
 
         final OperationData operationData = new OperationData();
 
-        operationData.id = operationFlare.flashId();
-        operationData.label = operationFlare.flashLabel();
-        operationData.state = operationFlare.flashState();
-        operationData.task = taskData;
+        operationData.setId(operationFlare.flashId());
+        operationData.setLabel(operationFlare.flashLabel());
+        operationData.setState(operationFlare.flashState());
 
-        operationFlare.flashNotices().forEach(
-                (notice) -> {
-                    final OperationNoticeData noticeData = new OperationNoticeData();
-                    noticeData.creationTime = notice.creationTime();
-                    noticeData.text = notice.text();
-                    operationData.notices.add(noticeData);
-                }
-        );
+        operationFlare.flashNotices().stream().map(n -> {
+            final OperationNoticeData noticeData = new OperationNoticeData();
+            noticeData.setCreationTime(n.creationTime());
+            noticeData.setText(n.text());
+            return noticeData;
+        }).forEach(operationData::addNoticeData);
 
-        operationFlare.flashProperties().forEach(
-                (n, v) -> {
-                    final OperationPropertyData propertyData= new OperationPropertyData();
-                    propertyData.name = n;
-                    propertyData.value = v;
-                    operationData.properties.add(propertyData);
-                }
-        );
+        operationFlare.flashProperties().entrySet().stream().map(e -> {
+            final OperationPropertyData propertyData= new OperationPropertyData();
+            propertyData.setName(e.getKey());
+            propertyData.setValue(e.getValue());
+            return propertyData;
+        }).forEach(operationData::addPropertyData);
 
-        this.taskData.operationData.add(operationData);
+        taskData.addOperationData(operationData);
+
     }
 
     @Override
     public void flareProperty(String name, String value) {
 
         if (name.equals(Task.SCHEME_PROPERTY_NAME))  {
-            taskData.schemeId = value;
+            taskData.setSchemeId(value);
             return;
         }
 
         if (name.equals(Task.CREATOR_PROPERTY_NAME)) {
-            taskData.creatorId = value;
+            taskData.setCreatorId(value);
             return;
         }
 
         final TaskPropertyData taskPropertyData = new TaskPropertyData();
-        taskPropertyData.name = name;
-        taskPropertyData.value = value;
-        taskPropertyData.task = taskData;
+        taskPropertyData.setName(name);
+        taskPropertyData.setValue(value);
+        taskData.addPropertyData(taskPropertyData);
 
-        taskData.properties.add(taskPropertyData);
     }
 
     @Override
     public void flareTaskTimes(Instant creationTime, Instant executionStartTime, Instant completionTime) {
-        taskData.creationTime = mapInstantToDate(creationTime);
-        taskData.executionStartTime = mapInstantToDate(executionStartTime);
-        taskData.completionTime = mapInstantToDate(completionTime);
+        taskData.setCreationTime(mapInstantToDate(creationTime));
+        taskData.setExecutionStartTime(mapInstantToDate(executionStartTime));
+        taskData.setCompletionTime(mapInstantToDate(completionTime));
     }
 
     @Override
     public void flareNotice(Notice notice) {
         final TaskNoticeData noticeData = new TaskNoticeData();
-        noticeData.text = notice.text();
-        noticeData.creationTime = notice.creationTime();
-        noticeData.task = taskData;
-
-        this.taskData.notices.add(noticeData);
+        noticeData.setText(notice.text());
+        noticeData.setCreationTime(notice.creationTime());
+        taskData.addNoticeData(noticeData);
     }
 
     @Override
     public void reflect(TaskReflection reflection) {
 
-        reflection.flareTaskId(taskData.id);
+        reflection.flareTaskId(taskData.getId());
         reflection.flareTaskTimes(
-                mapDateToInstant(taskData.creationTime),
-                mapDateToInstant(taskData.executionStartTime),
-                mapDateToInstant(taskData.completionTime));
-        reflection.flareTaskState(Task.State.valueOf(taskData.state));
+                mapDateToInstant(taskData.getCreationTime()),
+                mapDateToInstant(taskData.getExecutionStartTime()),
+                mapDateToInstant(taskData.getCompletionTime()));
 
-        taskData.operationData.forEach((operation) -> {
+        reflection.flareTaskState(Task.State.valueOf(taskData.getState()));
 
-            final List<Notice> notices = operation.notices.stream()
-                    .map(notice -> new Notice(notice.text)).collect(Collectors.toList());
+        taskData.getOperations().forEach((operation) -> {
 
-            final Map<String, String> properties = operation.properties.stream()
-                    .collect(Collectors.toMap(p -> p.name, p -> p.value));
+            final List<Notice> notices = operation.getNotices().stream()
+                    .map(notice -> new Notice(notice.getText())).collect(Collectors.toList());
+
+            final Map<String, String> properties = operation.getProperties().stream()
+                    .collect(Collectors.toMap(OperationPropertyData::getName, OperationPropertyData::getValue));
 
             reflection.flareOperation(
-                new OperationFlare(operation.id, operation.label, properties, operation.state, notices)
+                new OperationFlare(operation.getId(),
+                        operation.getLabel(), properties, operation.getState(), notices)
             );
         });
 
-        taskData.notices.forEach((d) -> {
-            reflection.flareNotice(new Notice(d.text));
+        taskData.getNotices().forEach((d) -> {
+            reflection.flareNotice(new Notice(d.getText()));
         });
 
-        taskData.properties.forEach((p) -> {
-            reflection.flareProperty(p.name, p.value);
+        taskData.getProperties().forEach((p) -> {
+            reflection.flareProperty(p.getName(), p.getValue());
         });
 
-        reflection.flareProperty(Task.SCHEME_PROPERTY_NAME, taskData.schemeId);
-        reflection.flareProperty(Task.CREATOR_PROPERTY_NAME, taskData.creatorId);
+        reflection.flareProperty(Task.SCHEME_PROPERTY_NAME, taskData.getSchemeId());
+        reflection.flareProperty(Task.CREATOR_PROPERTY_NAME, taskData.getCreatorId());
     }
 
     public TaskData reflectedTaskData() {

@@ -16,32 +16,95 @@ import java.util.UUID;
 })
 public class OperationData implements Persistable<UUID> {
 
-    @Id
-    public UUID id;
+    private UUID id;
 
-    public String label;
+    private String label;
 
-    public String state;
+    private String state;
+
+    private TaskData task;
+
+    private List<OperationPropertyData> properties = new ArrayList<>();
+
+    private List<OperationNoticeData> notices = new ArrayList<>();
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "task_id", foreignKey = @ForeignKey(name = "fk_task_op_task_id"))
-    public TaskData task;
+    public TaskData getTask() {
+        return task;
+    }
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "operation_id")
-    public List<OperationPropertyData> properties = new ArrayList<>();
+    @ElementCollection
+    @CollectionTable(
+        name = "ame_routine_task_operation_property",
+        joinColumns = @JoinColumn(name = "operation_id")
+    )
+    @org.hibernate.annotations.ForeignKey(name = "fk_op_prop_op_id")
+    public List<OperationPropertyData> getProperties() {
+        return properties;
+    }
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "operation_id")
-    public List<OperationNoticeData> notices = new ArrayList<>();
+    @ElementCollection
+    @CollectionTable(
+        name = "ame_routine_task_operation_notice",
+        joinColumns = @JoinColumn(name = "operation_id"),
+        foreignKey = @ForeignKey(name = "fk_op_notice_op_id")
+    )
+    @org.hibernate.annotations.ForeignKey(name = "fk_op_notice_op_id")
+    public List<OperationNoticeData> getNotices() {
+        return notices;
+    }
 
+    @Id
     @Override
     public UUID getId() {
         return id;
     }
 
     @Override
+    @Transient
     public boolean isNew() {
         return state.equals("NEW");
     }
+
+    public void setNotices(final List<OperationNoticeData> notices) {
+        this.notices = notices;
+    }
+
+    public void addNoticeData(OperationNoticeData operationNoticeData) {
+        notices.add(operationNoticeData);
+    }
+
+    public void addPropertyData(OperationPropertyData operationPropertyData) {
+        properties.add(operationPropertyData);
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public void setLabel(final String label) {
+        this.label = label;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(final String state) {
+        this.state = state;
+    }
+
+    public void setId(final UUID id) {
+        this.id = id;
+    }
+
+    public void setTask(final TaskData task) {
+        this.task = task;
+    }
+
+    public void setProperties(final List<OperationPropertyData> properties) {
+        this.properties = properties;
+    }
+
 }

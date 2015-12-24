@@ -10,7 +10,6 @@ import javax.persistence.metamodel.StaticMetamodel;
 public abstract class OperationNoticeData_ {
 
 	public static volatile SingularAttribute<OperationNoticeData, Instant> creationTime;
-	public static volatile SingularAttribute<OperationNoticeData, Integer> id;
 	public static volatile SingularAttribute<OperationNoticeData, String> text;
 
 }

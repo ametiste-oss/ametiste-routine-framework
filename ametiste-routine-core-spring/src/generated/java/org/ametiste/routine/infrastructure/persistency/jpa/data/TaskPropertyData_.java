@@ -8,9 +8,7 @@ import javax.persistence.metamodel.StaticMetamodel;
 @StaticMetamodel(TaskPropertyData.class)
 public abstract class TaskPropertyData_ {
 
-	public static volatile SingularAttribute<TaskPropertyData, TaskData> task;
 	public static volatile SingularAttribute<TaskPropertyData, String> name;
-	public static volatile SingularAttribute<TaskPropertyData, Integer> id;
 	public static volatile SingularAttribute<TaskPropertyData, String> value;
 
 }
