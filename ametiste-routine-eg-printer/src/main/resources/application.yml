@@ -45,6 +45,7 @@ org:
         shredder:
           enabled: true
           shreddingRate: 10000
+          staleStates: TERMINATED
           staleThreshold:
             value: 10
             unit: SECONDS

@@ -1,6 +1,7 @@
 package org.ametiste.routine.mod.shredder.application.operation;
 
 import org.ametiste.laplatform.protocol.ProtocolGateway;
+import org.ametiste.routine.domain.task.Task;
 import org.ametiste.routine.mod.shredder.mod.ModShredder;
 import org.ametiste.routine.sdk.operation.OperationExecutor;
 import org.ametiste.routine.sdk.operation.OperationFeedback;
@@ -9,12 +10,8 @@ import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  *
@@ -29,7 +26,11 @@ public class ShreddingStaleTaskOperationExecutor implements OperationExecutor {
 
     public static final String PARAM_STALE_THRESHOLD_UNIT = "mod-shredding.op.shredding.staleThresholdUnit";
 
-    public static final int DEFAULT_STALE_THRESHOLD_VALUE = 30;
+    public static final String PARAM_STALE_STATES = "mod-shredding.op.shredding.staleStates";
+
+    public static final List<String> DEFAULT_STALE_STATES = Arrays.asList(Task.State.DONE.name());
+
+    public static final int DEFAULT_STALE_THRESHOLD_VALUE = 12;
 
     public static final ChronoUnit DEFAULT_STALE_THRESHOLD_UNIT = ChronoUnit.HOURS;
 
@@ -43,8 +44,11 @@ public class ShreddingStaleTaskOperationExecutor implements OperationExecutor {
         final ChronoUnit unit = mayBe(PARAM_STALE_THRESHOLD_UNIT,
                 properties, ChronoUnit::valueOf, DEFAULT_STALE_THRESHOLD_UNIT);
 
+        final List<String> staleStates = mayBe(PARAM_STALE_STATES, properties,
+                      this::splitAsCSList, DEFAULT_STALE_STATES);
+
         protocolGateway.session(TaskPoolProtocol.class).removeTasks(
-            Collections.singletonList("DONE"),
+            staleStates,
             Instant.now().minus(threshold, unit)
         );
     }
@@ -55,6 +59,10 @@ public class ShreddingStaleTaskOperationExecutor implements OperationExecutor {
 
     private static <K, V, T> T mayBe(K key, Map<K, V> in, Function<V, T> as, T else_) {
         return mayBe(key, in).map(as).orElse(else_);
+    }
+
+    private List<String> splitAsCSList(String s) {
+        return Arrays.asList(s.split(","));
     }
 
 }

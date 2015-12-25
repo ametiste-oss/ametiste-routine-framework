@@ -8,32 +8,38 @@ import org.ametiste.routine.mod.shredder.mod.ModShredder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  *
  * @since
  */
 @Configuration
-@ConditionalOnProperty(prefix = AmetisteRoutineCoreProperties.PREFIX,
-        name = "mod.shredder.enabled", matchIfMissing = false)
+@ConditionalOnProperty(prefix = ModShredderConfiguration.PREFIX, name = "enabled", matchIfMissing = false)
+@EnableConfigurationProperties(ModShredderProperties.class)
 public class ModShredderConfiguration {
 
-    @Value("${org.ametiste.routine.mod.shredder.staleThreshold.value:12}")
-    private String staleThresholdValue;
+    public static final String PREFIX = AmetisteRoutineCoreProperties.PREFIX + ".mod.shredder";
 
-    @Value("${org.ametiste.routine.mod.shredder.staleThreshold.unit:HOURS}")
-    private String staleThresholdUnit;
-
-    // TODO: add list of states to shredding
+    @Autowired
+    private ModShredderProperties props;
 
     @Autowired
     private ProtocolGatewayService protocolGatewayService;
 
     @Bean
     public ShreddingTaskService shreddingTaskService() {
-        return new ShreddingTaskService(protocolGatewayService, staleThresholdValue, staleThresholdUnit);
+        return new ShreddingTaskService(protocolGatewayService,
+            props.getStaleStates(),
+            props.getStaleThreshold().getValue(),
+            props.getStaleThreshold().getUnit()
+        );
     }
 
     @Bean
