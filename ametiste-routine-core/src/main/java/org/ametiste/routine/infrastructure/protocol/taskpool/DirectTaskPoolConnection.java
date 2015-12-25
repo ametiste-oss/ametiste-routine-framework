@@ -38,7 +38,8 @@ public class DirectTaskPoolConnection implements TaskPoolProtocol, DirectTaskPoo
     }
 
     @Override
-    // TODO: add metrics
+    @Timeable(name = OVERAL_REMOVE_TASKS_TIMING)
+    @Timeable(name = CLIENTS_PREFIX, nameSuffixExpression = CLIENT_REMOVE_TASKS_TIMING)
     public void removeTasks(List<String> states, Instant afterDate) {
         taskRemovingService.removeTasks(
             states.stream().map(Task.State::valueOf).collect(Collectors.toList()),

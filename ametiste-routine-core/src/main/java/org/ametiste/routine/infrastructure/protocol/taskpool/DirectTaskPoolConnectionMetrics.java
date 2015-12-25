@@ -23,6 +23,10 @@ public interface DirectTaskPoolConnectionMetrics {
 
     String CLIENT_ISSUE_TASK_TIMING = "target.clientId + '.issue-task.timing'";
 
+    String OVERAL_REMOVE_TASKS_TIMING = __OVERALL_PREFIX + ".remove-tasks.timing";
+
+    String CLIENT_REMOVE_TASKS_TIMING = "target.clientId + '.remove-tasks.timing'";
+
     /**
      * <p>
      *     Returns current protocol client identifier.
