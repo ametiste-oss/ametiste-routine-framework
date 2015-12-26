@@ -7,12 +7,14 @@ import org.ametiste.routine.application.service.removing.DefaultTaskRemovingServ
 import org.ametiste.routine.application.service.removing.TaskRemovingService;
 import org.ametiste.routine.application.service.termination.DefaultTaskTerminationService;
 import org.ametiste.routine.application.service.termination.TaskTerminationService;
+import org.ametiste.routine.domain.ModReportRepository;
 import org.ametiste.routine.domain.ModRepository;
 import org.ametiste.routine.domain.scheme.TaskSchemeRepository;
 import org.ametiste.routine.domain.task.TaskRepository;
 import org.ametiste.routine.domain.task.properties.TaskPropertiesRegistry;
 import org.ametiste.routine.domain.task.properties.TaskProperty;
 import org.ametiste.routine.infrastructure.messaging.JmsTaskDomainEventsGateway;
+import org.ametiste.routine.infrastructure.mod.InMemoryModReportRepository;
 import org.ametiste.routine.infrastructure.mod.ModRegistry;
 import org.ametiste.routine.infrastructure.mod.SpringDataModRepository;
 import org.ametiste.routine.infrastructure.mod.jpa.JPAModDataRepository;
@@ -81,6 +83,11 @@ public class AmetisteRoutineCoreConfiguration {
     @Bean
     public ModRepository modDataRepository() {
         return new SpringDataModRepository(modDataRepository);
+    }
+
+    @Bean
+    public ModReportRepository modReportRepository() {
+        return new InMemoryModReportRepository();
     }
 
     @Bean

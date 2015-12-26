@@ -1,12 +1,9 @@
 package org.ametiste.routine.application.service.removing;
 
 import org.ametiste.routine.domain.task.Task;
-import org.ametiste.routine.sdk.domain.TaskFilter;
 
 import java.time.Instant;
-import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 /**
  *
@@ -27,7 +24,10 @@ public interface TaskRemovingService {
      *
      * @param states list of states, tasks in which must be removed
      * @param after completion date threshold
+     *
+     * @param clientId
+     * @return count of tasks removedthis way
      */
-    void removeTasks(List<Task.State> states, Instant after);
+    long removeTasks(List<Task.State> states, Instant after, final String clientId);
 
 }

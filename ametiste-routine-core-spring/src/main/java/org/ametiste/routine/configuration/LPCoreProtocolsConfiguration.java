@@ -5,12 +5,15 @@ import org.ametiste.laplatform.protocol.ProtocolFactory;
 import org.ametiste.routine.application.service.issue.TaskIssueService;
 import org.ametiste.routine.application.service.removing.TaskRemovingService;
 import org.ametiste.routine.application.service.termination.TaskTerminationService;
+import org.ametiste.routine.domain.ModReportRepository;
 import org.ametiste.routine.domain.ModRepository;
 import org.ametiste.routine.domain.task.TaskRepository;
 import org.ametiste.routine.infrastructure.protocol.moddata.DirectModDataConnection;
+import org.ametiste.routine.infrastructure.protocol.modreport.DirectModReportConnection;
 import org.ametiste.routine.infrastructure.protocol.taskcontrol.DirectTaskControlConnection;
 import org.ametiste.routine.infrastructure.protocol.taskpool.DirectTaskPoolConnection;
 import org.ametiste.routine.sdk.protocol.moddata.ModDataProtocol;
+import org.ametiste.routine.sdk.protocol.modreport.ModReportProtocol;
 import org.ametiste.routine.sdk.protocol.taskcontrol.TaskControlProtocol;
 import org.ametiste.routine.sdk.protocol.taskpool.TaskPoolProtocol;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +33,9 @@ public class LPCoreProtocolsConfiguration {
 
     @Autowired
     private ModRepository modRepository;
+
+    @Autowired
+    private ModReportRepository modReportRepository;
 
     @Autowired
     private TaskTerminationService taskTerminationService;
@@ -69,6 +75,15 @@ public class LPCoreProtocolsConfiguration {
     }
 
     @Bean
+    @Scope(scopeName = "prototype")
+    public ModReportProtocol modReportProtocol(GatewayContext c) {
+        return new DirectModReportConnection(
+                c.lookupAttribute("clientId"),
+                modReportRepository
+        );
+    }
+
+    @Bean
     public ProtocolFactory<TaskPoolProtocol> taskPoolProtocolConnectionFactory() {
         return c -> taskPoolProtocol(c);
     }
@@ -81,6 +96,11 @@ public class LPCoreProtocolsConfiguration {
     @Bean
     public ProtocolFactory<TaskControlProtocol> taskControlProtocolConnectionFactory() {
         return c -> taskControlProtocol(c);
+    }
+
+    @Bean
+    public ProtocolFactory<ModReportProtocol> modReportProtocolConnectionFactory() {
+        return c -> modReportProtocol(c);
     }
 
 }

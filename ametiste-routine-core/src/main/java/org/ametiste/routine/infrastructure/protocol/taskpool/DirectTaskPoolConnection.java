@@ -10,6 +10,7 @@ import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 /**
@@ -40,10 +41,11 @@ public class DirectTaskPoolConnection implements TaskPoolProtocol, DirectTaskPoo
     @Override
     @Timeable(name = OVERAL_REMOVE_TASKS_TIMING)
     @Timeable(name = CLIENTS_PREFIX, nameSuffixExpression = CLIENT_REMOVE_TASKS_TIMING)
-    public void removeTasks(List<String> states, Instant afterDate) {
-        taskRemovingService.removeTasks(
+    public long removeTasks(List<String> states, Instant afterDate) {
+        return taskRemovingService.removeTasks(
             states.stream().map(Task.State::valueOf).collect(Collectors.toList()),
-            afterDate
+            afterDate,
+            clientId
         );
     }
 

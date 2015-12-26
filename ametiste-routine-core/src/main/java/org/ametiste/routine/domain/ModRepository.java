@@ -6,6 +6,7 @@ import java.util.Optional;
  *
  * @since
  */
+// TODO: rename to ModDataRepository
 public interface ModRepository {
 
     void saveModProperty(String modId, String name, String value);

@@ -1,10 +1,12 @@
 package org.ametiste.routine.mod.shredder.application.operation;
 
 import org.ametiste.laplatform.protocol.ProtocolGateway;
+import org.ametiste.laplatform.protocol.gateway.SessionOption;
 import org.ametiste.routine.domain.task.Task;
 import org.ametiste.routine.mod.shredder.mod.ModShredder;
 import org.ametiste.routine.sdk.operation.OperationExecutor;
 import org.ametiste.routine.sdk.operation.OperationFeedback;
+import org.ametiste.routine.sdk.protocol.modreport.ModReportProtocol;
 import org.ametiste.routine.sdk.protocol.taskpool.TaskPoolProtocol;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +22,7 @@ import java.util.function.Function;
 @Component(ShreddingStaleTaskOperationExecutor.NAME)
 public class ShreddingStaleTaskOperationExecutor implements OperationExecutor {
 
-    public static final String NAME = ModShredder.MOD_ID + "::shreddingStaleOperation";
+    public static final String NAME = ModShredder.MOD_ID + "-op-shredding-stale";
 
     public static final String PARAM_STALE_THRESHOLD_VALUE = "mod-shredding.op.shredding.staleThreshold";
 
@@ -47,10 +49,19 @@ public class ShreddingStaleTaskOperationExecutor implements OperationExecutor {
         final List<String> staleStates = mayBe(PARAM_STALE_STATES, properties,
                       this::splitAsCSList, DEFAULT_STALE_STATES);
 
-        protocolGateway.session(TaskPoolProtocol.class).removeTasks(
-            staleStates,
-            Instant.now().minus(threshold, unit)
-        );
+        final long removedTasksCount = protocolGateway
+                    .session(TaskPoolProtocol.class, SessionOption.STATS)
+                    .removeTasks(staleStates, Instant.now().minus(threshold, unit));
+
+        final long lastInvocTime = protocolGateway.sessionOption(TaskPoolProtocol.class, SessionOption.STATS)
+                .queryLong("session.last.invocation.time");
+
+        protocolGateway.session(ModReportProtocol.class).submitReport(rb -> {
+                rb.type("REMOVE_STALE_REPORT");
+                rb.data("remove.time.taken", Long.toString(lastInvocTime));
+                rb.data("remove.tasks.count", Long.toString(removedTasksCount));
+        });
+
     }
 
     private static <K,V> Optional<V> mayBe(K key, Map<K, V> in) {

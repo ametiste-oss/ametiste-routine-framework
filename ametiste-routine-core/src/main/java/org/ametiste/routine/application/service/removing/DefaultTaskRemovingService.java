@@ -28,7 +28,7 @@ public class DefaultTaskRemovingService implements TaskRemovingService {
     }
 
     @Override
-    public void removeTasks(final List<Task.State> states, final Instant after) {
+    public long removeTasks(final List<Task.State> states, final Instant after, final String clientId) {
 
         if (!Task.State.completeState.containsAll(states)) {
              throw new IllegalArgumentException("Only completed task can be romved using this service.");
@@ -40,12 +40,13 @@ public class DefaultTaskRemovingService implements TaskRemovingService {
                 }
         );
 
-        logger.debug("Tasks scheduled for removing: {}", removingTasksCount);
+        logger.debug("Tasks scheduled for removing by {} : {}", clientId, removingTasksCount);
 
         if (removingTasksCount > 0) {
             taskRepository.deleteTasks(states, after);
         }
 
+        return removingTasksCount;
     }
 
 

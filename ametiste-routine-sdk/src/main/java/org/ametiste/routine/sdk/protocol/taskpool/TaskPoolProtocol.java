@@ -29,9 +29,10 @@ public interface TaskPoolProtocol extends Protocol {
     /**
      * <p>
      *      Removes tasks that match the given state and completion time less than given.
-     * </p>
      *
+     *      @return count of removed tasks
+     * </p>
      */
-    void removeTasks(List<String> states, Instant afterDate);
+    long removeTasks(List<String> states, Instant afterDate);
 
 }
