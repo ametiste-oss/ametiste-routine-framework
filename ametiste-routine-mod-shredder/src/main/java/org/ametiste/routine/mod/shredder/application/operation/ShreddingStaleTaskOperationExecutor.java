@@ -57,7 +57,7 @@ public class ShreddingStaleTaskOperationExecutor implements OperationExecutor {
                 .queryLong("session.last.invocation.time");
 
         protocolGateway.session(ModReportProtocol.class).submitReport(rb -> {
-                rb.type("REMOVE_STALE_REPORT");
+                rb.type("SHREDDING_STALE_REPORT");
                 rb.data("remove.time.taken", Long.toString(lastInvocTime));
                 rb.data("remove.tasks.count", Long.toString(removedTasksCount));
         });
