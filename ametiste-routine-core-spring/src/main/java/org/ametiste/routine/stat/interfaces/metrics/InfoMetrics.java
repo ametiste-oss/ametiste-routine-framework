@@ -1,4 +1,4 @@
-package org.ametiste.routine.interfaces.metrics;
+package org.ametiste.routine.stat.interfaces.metrics;
 
 import org.ametiste.metrics.annotations.markers.MetricsInterface;
 

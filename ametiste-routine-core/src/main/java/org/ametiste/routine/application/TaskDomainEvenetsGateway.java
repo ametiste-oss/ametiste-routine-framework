@@ -1,4 +1,4 @@
-package org.ametiste.routine.application.service;
+package org.ametiste.routine.application;
 
 import org.ametiste.routine.domain.task.ExecutionOrder;
 import org.ametiste.routine.domain.task.OperationTerminatedEvent;

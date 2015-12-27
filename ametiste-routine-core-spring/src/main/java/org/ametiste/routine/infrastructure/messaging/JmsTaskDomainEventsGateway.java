@@ -1,7 +1,6 @@
 package org.ametiste.routine.infrastructure.messaging;
 
-import org.ametiste.routine.application.service.TaskDomainEvenetsGateway;
-import org.ametiste.routine.domain.task.ExecutionOrder;
+import org.ametiste.routine.application.TaskDomainEvenetsGateway;
 import org.ametiste.routine.domain.task.OperationTerminatedEvent;
 import org.ametiste.routine.domain.task.TaskTerminatedEvent;
 import org.springframework.jms.core.JmsTemplate;

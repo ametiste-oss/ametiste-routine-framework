@@ -1,11 +1,12 @@
 package org.ametiste.routine.application.service.issue;
 
-import org.ametiste.routine.application.service.TaskDomainEvenetsGateway;
+import org.ametiste.routine.application.CoreEventsGateway;
+import org.ametiste.routine.application.TaskDomainEvenetsGateway;
 import org.ametiste.routine.domain.scheme.TaskScheme;
 import org.ametiste.routine.domain.scheme.TaskSchemeException;
 import org.ametiste.routine.domain.scheme.TaskSchemeRepository;
-import org.ametiste.routine.domain.task.ExecutionOrder;
 import org.ametiste.routine.domain.task.Task;
+import org.ametiste.routine.application.events.TaskIssuedEvent;
 import org.ametiste.routine.domain.task.TaskRepository;
 import org.ametiste.routine.domain.task.properties.TaskPropertiesRegistry;
 import org.ametiste.routine.domain.task.properties.TaskProperty;
@@ -28,6 +29,7 @@ public class DefaultTaskIssueService implements TaskIssueService {
 
     private final TaskDomainEvenetsGateway taskDomainEvenetsGateway;
 
+    private final CoreEventsGateway coreEventsGateway;
     private final List<IssueConstraint> issueConstraints;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -36,10 +38,12 @@ public class DefaultTaskIssueService implements TaskIssueService {
                                    TaskPropertiesRegistry taskPropertiesRegistry,
                                    TaskSchemeRepository taskSchemeRepository,
                                    TaskDomainEvenetsGateway taskDomainEvenetsGateway,
+                                   CoreEventsGateway coreEventsGateway,
                                    List<IssueConstraint> issueConstraints) {
         this.taskRepository = taskRepository;
         this.taskSchemeRepository = taskSchemeRepository;
         this.taskDomainEvenetsGateway = taskDomainEvenetsGateway;
+        this.coreEventsGateway = coreEventsGateway;
         this.issueConstraints = issueConstraints;
     }
 
@@ -64,6 +68,7 @@ public class DefaultTaskIssueService implements TaskIssueService {
 
         taskRepository.saveTask(task);
         taskDomainEvenetsGateway.taskIssued(task.entityId());
+        coreEventsGateway.taskIssued(new TaskIssuedEvent(task.entityId(), creatorIdenifier));
 
         if (logger.isDebugEnabled()) {
             logger.debug("New task created using scheme:{}, task id: {}, creator id: {}",

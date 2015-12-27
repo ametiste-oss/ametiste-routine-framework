@@ -1,8 +1,9 @@
-package org.ametiste.routine.interfaces.metrics;
+package org.ametiste.routine.stat.interfaces.metrics;
 
 import org.ametiste.metrics.MetricsService;
-import org.ametiste.routine.domain.task.Task;
 import org.ametiste.routine.infrastructure.persistency.jpa.JPATaskDataRepository;
+import org.ametiste.routine.stat.CoreStatRepository;
+import org.ametiste.routine.stat.CoreStats;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -16,6 +17,9 @@ import org.springframework.stereotype.Component;
  *     <li>{@value InfoMetrics#TERMINATED_TASKS_COUNT}</li>
  *     <li>{@value InfoMetrics#DONE_TASKS_COUNT}</li>
  * </ul>
+ * <p>
+ * Metrics provided only for the current application run session, but stored tasks count is
+ * tasks stored within a database.
  * <p>
  * Note, this autoconfigured components depends on {@link JPATaskDataRepository} and
  * will be active only if this repository object is presented within the context.
@@ -42,6 +46,9 @@ public class TasksCountMetricSource {
     @Autowired(required = false)
     private JPATaskDataRepository taskDataRepository;
 
+    @Autowired
+    private CoreStatRepository coreStatRepository;
+
     // TODO: extract as property
     @Scheduled(fixedRate = 30000)
     public void countMetrics() {
@@ -56,11 +63,11 @@ public class TasksCountMetricSource {
         metricsService.gauge(InfoMetrics.STORED_TASKS_COUNT, (int) taskDataRepository
                 .count());
 
-        metricsService.gauge(InfoMetrics.TERMINATED_TASKS_COUNT, (int) taskDataRepository
-                .countByState(Task.State.TERMINATED.name()));
+        metricsService.gauge(InfoMetrics.TERMINATED_TASKS_COUNT,
+                coreStatRepository.loadStat(CoreStats.STAT_TERMINATED).intValue());
 
-        metricsService.gauge(InfoMetrics.DONE_TASKS_COUNT, (int) taskDataRepository
-                .countByState(Task.State.DONE.name()));
+        metricsService.gauge(InfoMetrics.DONE_TASKS_COUNT,
+                coreStatRepository.loadStat(CoreStats.STAT_DONE).intValue());
 
 // TODO: add active tasks count
 //        metricsService.gauge(InfoMetrics.DONE_TASKS_COUNT, (int) taskDataRepository

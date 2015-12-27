@@ -1,6 +1,7 @@
 package org.ametiste.routine.application.service.removing;
 
-import org.ametiste.routine.application.service.TaskDomainEvenetsGateway;
+import org.ametiste.routine.application.CoreEventsGateway;
+import org.ametiste.routine.application.events.TasksRemovedEvent;
 import org.ametiste.routine.domain.task.Task;
 import org.ametiste.routine.domain.task.TaskRepository;
 import org.slf4j.Logger;
@@ -17,14 +18,14 @@ import java.util.stream.Collectors;
 public class DefaultTaskRemovingService implements TaskRemovingService {
 
     private final TaskRepository taskRepository;
-    private final TaskDomainEvenetsGateway domainEvenetsGateway;
+    private final CoreEventsGateway coreEventsGateway;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     public DefaultTaskRemovingService(TaskRepository taskRepository,
-                                      TaskDomainEvenetsGateway domainEvenetsGateway) {
+                                      CoreEventsGateway coreEventsGateway) {
         this.taskRepository = taskRepository;
-        this.domainEvenetsGateway = domainEvenetsGateway;
+        this.coreEventsGateway = coreEventsGateway;
     }
 
     @Override
@@ -34,19 +35,20 @@ public class DefaultTaskRemovingService implements TaskRemovingService {
              throw new IllegalArgumentException("Only completed task can be romved using this service.");
         }
 
-        final long removingTasksCount = taskRepository.countTasks(c -> {
+        final long taskCountToRemove = taskRepository.countTasks(c -> {
                     c.stateIn(states.stream().map(Task.State::name).collect(Collectors.toList()));
                     c.completionTimeAfter(after);
                 }
         );
 
-        logger.debug("Tasks scheduled for removing by {} : {}", clientId, removingTasksCount);
+        logger.debug("Tasks scheduled for removing by {} : {}", clientId, taskCountToRemove);
 
-        if (removingTasksCount > 0) {
+        if (taskCountToRemove > 0) {
             taskRepository.deleteTasks(states, after);
+            coreEventsGateway.tasksRemoved(new TasksRemovedEvent(taskCountToRemove, clientId));
         }
 
-        return removingTasksCount;
+        return taskCountToRemove;
     }
 
 

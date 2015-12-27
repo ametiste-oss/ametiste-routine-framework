@@ -1,7 +1,8 @@
 package org.ametiste.routine.infrastructure.execution.local;
 
 import org.ametiste.domain.AggregateInstant;
-import org.ametiste.routine.application.service.TaskDomainEvenetsGateway;
+import org.ametiste.routine.application.CoreEventsGateway;
+import org.ametiste.routine.application.TaskDomainEvenetsGateway;
 import org.ametiste.routine.domain.task.ExecutionOrder;
 import org.ametiste.routine.domain.task.Task;
 import org.ametiste.routine.domain.task.TaskRepository;
@@ -31,11 +32,14 @@ public class LocalTaskExecutionController implements TaskExecutionController {
 
     private final TaskRepository taskRepository;
     private final TaskDomainEvenetsGateway taskDomainEvenetsGateway;
+    private final CoreEventsGateway coreEventsGateway;
 
     public LocalTaskExecutionController(TaskRepository taskRepository,
-                                        TaskDomainEvenetsGateway taskDomainEvenetsGateway) {
+                                        TaskDomainEvenetsGateway taskDomainEvenetsGateway,
+                                        CoreEventsGateway coreEventsGateway) {
         this.taskRepository = taskRepository;
         this.taskDomainEvenetsGateway = taskDomainEvenetsGateway;
+        this.coreEventsGateway = coreEventsGateway;
     }
 
     @Override

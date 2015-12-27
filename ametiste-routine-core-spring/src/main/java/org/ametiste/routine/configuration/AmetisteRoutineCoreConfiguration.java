@@ -1,6 +1,6 @@
 package org.ametiste.routine.configuration;
 
-import org.ametiste.routine.application.service.TaskDomainEvenetsGateway;
+import org.ametiste.routine.application.TaskDomainEvenetsGateway;
 import org.ametiste.routine.application.service.issue.DefaultTaskIssueService;
 import org.ametiste.routine.application.service.issue.TaskIssueService;
 import org.ametiste.routine.application.service.removing.DefaultTaskRemovingService;
@@ -13,21 +13,23 @@ import org.ametiste.routine.domain.scheme.TaskSchemeRepository;
 import org.ametiste.routine.domain.task.TaskRepository;
 import org.ametiste.routine.domain.task.properties.TaskPropertiesRegistry;
 import org.ametiste.routine.domain.task.properties.TaskProperty;
+import org.ametiste.routine.stat.configuration.CoreStatConfiguration;
 import org.ametiste.routine.infrastructure.messaging.JmsTaskDomainEventsGateway;
+import org.ametiste.routine.infrastructure.messaging.SpringCoreEventsGateway;
 import org.ametiste.routine.infrastructure.mod.InMemoryModReportRepository;
-import org.ametiste.routine.infrastructure.mod.ModRegistry;
 import org.ametiste.routine.infrastructure.mod.SpringDataModRepository;
 import org.ametiste.routine.infrastructure.mod.jpa.JPAModDataRepository;
-import org.ametiste.routine.interfaces.metrics.InfoMetrics;
+import org.ametiste.routine.stat.interfaces.metrics.InfoMetrics;
 import org.ametiste.routine.interfaces.web.TaskController;
 import org.ametiste.routine.sdk.application.service.issue.constraints.IssueConstraint;
-import org.ametiste.routine.sdk.mod.ModGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.jms.core.JmsTemplate;
 
 import java.util.List;
@@ -40,6 +42,7 @@ import java.util.List;
     }
 )
 @EnableConfigurationProperties(AmetisteRoutineCoreProperties.class)
+@Import(CoreStatConfiguration.class)
 public class AmetisteRoutineCoreConfiguration {
 
     @Autowired
@@ -63,21 +66,30 @@ public class AmetisteRoutineCoreConfiguration {
     @Autowired
     private AmetisteRoutineCoreProperties props;
 
+    @Autowired
+    private ApplicationEventPublisher springEventPublisher;
+
+    @Bean
+    public SpringCoreEventsGateway springCoreEventsGateway() {
+        return new SpringCoreEventsGateway(springEventPublisher);
+    }
+
     @Bean
     @ConditionalOnMissingBean
     public TaskTerminationService taskExecutionService() {
-        return new DefaultTaskTerminationService(taskRepository, domainEventsGateway());
+        return new DefaultTaskTerminationService(
+                taskRepository, domainEventsGateway(), springCoreEventsGateway());
     }
 
     @Bean
     public TaskIssueService taskIssueService() {
         return new DefaultTaskIssueService(taskRepository, taskPropertiesRegistry,
-                taskSchemeRepository, domainEventsGateway(), issueConstraints);
+                taskSchemeRepository, domainEventsGateway(), springCoreEventsGateway(), issueConstraints);
     }
 
     @Bean
     public TaskRemovingService taskRemovingService() {
-        return new DefaultTaskRemovingService(taskRepository, domainEventsGateway());
+        return new DefaultTaskRemovingService(taskRepository, springCoreEventsGateway());
     }
 
     @Bean
