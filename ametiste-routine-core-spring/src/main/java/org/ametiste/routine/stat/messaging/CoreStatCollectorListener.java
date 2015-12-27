@@ -9,7 +9,7 @@ import org.springframework.context.event.EventListener;
 
 /**
  *
- * @since
+ * @since 0.3.0
  */
 public class CoreStatCollectorListener implements
         TerminatedTasksStatCollector,
