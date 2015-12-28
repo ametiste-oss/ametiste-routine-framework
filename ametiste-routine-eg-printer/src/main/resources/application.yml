@@ -20,28 +20,29 @@ spring:
 org:
   ametiste:
     routine:
-
+      core:
+        initialExecutionConcurrency: 5
 ### Protocols Configuration
 
       protocol:
         http:
           enabled: true
 
-# Actions Configuration
-
-      action:
-        task-timeout:
-          enabled: false
-      startup:
-        cleanup:
-          enabled: false
-
 ### Mods Configuration
 
       mod:
+
+        task-timeout:
+          enabled: false
+
+        startup:
+          cleanup:
+            enabled: false
+
         backlog:
           enabled: true
           renewRate: 5000
+
         shredder:
           enabled: true
           shreddingRate: 10000

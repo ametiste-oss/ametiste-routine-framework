@@ -29,8 +29,8 @@ import java.util.List;
  */
 @Configuration
 @EnableScheduling
-@ConditionalOnProperty(prefix = AmetisteRoutineCoreProperties.PREFIX,
-        name = "mod.backlog.enabled", matchIfMissing = true)
+@ConditionalOnProperty(prefix = AmetisteRoutineCoreProperties.PREFIX_MOD,
+        name = "backlog.enabled", matchIfMissing = true)
 public class BacklogModConfiguration {
 
     @Autowired

@@ -25,7 +25,7 @@ import java.util.List;
 @EnableConfigurationProperties(ModShredderProperties.class)
 public class ModShredderConfiguration {
 
-    public static final String PREFIX = AmetisteRoutineCoreProperties.PREFIX + ".mod.shredder";
+    public static final String PREFIX = AmetisteRoutineCoreProperties.PREFIX_MOD + ".shredder";
 
     @Autowired
     private ModShredderProperties props;

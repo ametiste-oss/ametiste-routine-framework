@@ -9,10 +9,14 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  *
  * @since 0.1.0
  */
-@ConfigurationProperties(prefix = AmetisteRoutineCoreProperties.PREFIX)
+@ConfigurationProperties(prefix = AmetisteRoutineCoreProperties.PREFIX_CORE)
 public class AmetisteRoutineCoreProperties {
 
     public static final String PREFIX = "org.ametiste.routine";
+
+    public static final String PREFIX_CORE = PREFIX + ".core";
+
+    public static final String PREFIX_MOD = PREFIX + ".mod";
 
     /**
      * Defines how many workers would initialized to execute pending tasks.

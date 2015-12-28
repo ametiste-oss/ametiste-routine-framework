@@ -16,12 +16,12 @@ import org.springframework.context.annotation.Configuration;
  * @since
  */
 @Configuration
-@ConditionalOnProperty(prefix = AmetisteRoutineCoreProperties.PREFIX,
-        name = "action.task-timeout.enabled", matchIfMissing = false)
+@ConditionalOnProperty(prefix = AmetisteRoutineCoreProperties.PREFIX_MOD,
+        name = "task-timeout.enabled", matchIfMissing = false)
 @EnableConfigurationProperties(TaskTimeoutActionProperties.class)
 public class TaskTimeoutActionConfiguration {
 
-    public static final String TIMEOUT_ACTION_ID = "mod-task-timeout:timeout-action";
+    public static final String TIMEOUT_ACTION_ID = "mod-task-timeout-action-timeout";
 
     @Autowired
     private TaskTimeoutActionProperties props;

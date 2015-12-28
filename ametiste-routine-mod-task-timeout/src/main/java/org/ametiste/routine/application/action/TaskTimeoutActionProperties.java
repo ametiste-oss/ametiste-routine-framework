@@ -7,7 +7,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  *
  * @since
  */
-@ConfigurationProperties(prefix = AmetisteRoutineCoreProperties.PREFIX + ".action.task-timeout")
+@ConfigurationProperties(prefix = AmetisteRoutineCoreProperties.PREFIX_MOD + ".task-timeout")
 public class TaskTimeoutActionProperties {
 
     private int defaultTimeout = 60;
