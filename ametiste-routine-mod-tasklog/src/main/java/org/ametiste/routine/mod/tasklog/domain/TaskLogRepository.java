@@ -21,25 +21,15 @@ public interface TaskLogRepository {
      */
     long countActiveTasks();
 
-    @Deprecated
     // TODO: replace by limited version
     List<TaskLogEntry> findEntries();
 
     TaskLogEntry findTaskLog(UUID taskId);
 
-    List<UUID> findActiveTasksAfterDate(Instant timePoint);
-
     List<TaskLogEntry> findEntries(List<Task.State> states, int offset, int limit);
 
     List<TaskLogEntry> findEntries(List<Task.State> states, List<TaskProperty> properties, int offset, int limit);
 
-    /**
-     * @deprecated use {@link #countByTaskState(List, List)} instead.
-     * @param byStatus
-     *
-     * @return
-     */
-    @Deprecated
     int countByState(String byStatus);
 
     long countByTaskState(List<Task.State> states, List<TaskProperty> properties);

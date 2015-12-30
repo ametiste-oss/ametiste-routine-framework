@@ -12,12 +12,6 @@ import org.ametiste.routine.sdk.protocol.taskpool.TaskPoolClient;
  */
 public interface BacklogPopulationStrategy {
 
-    // TODO: remove default after depricated #populate completle removed
-    default void populate(ProtocolGateway gateway) {
-        this.populate(new TaskPoolClient(gateway), new ModDataClient(gateway));
-    }
-
-    @Deprecated
-    default void populate(TaskGateway taskGateway, ModDataGateway modDataGateway) { };
+    void populate(ProtocolGateway gateway);
 
 }

@@ -76,23 +76,7 @@ public class DefaultOperationReservationService implements OperationReservationS
     @Override
     @Transactional
     public List<ExecutionLine> reserveOperationsExecution(int reservationCount) {
-
-        final List<Task> tasks = taskRepository
-                .findTasksByState(Task.State.NEW, reservationCount);
-
-        if (logger.isDebugEnabled()) {
-            logger.debug("Reserved tasks count: " + tasks.size());
-        }
-
-        final List<ExecutionLine> executionLines = tasks.stream()
-                .map(Task::prepareExecution)
-                .map(ExecutionOrder::executionLines)
-                .flatMap(l -> l.stream())
-                .collect(Collectors.toList());
-
-        tasks.forEach(taskRepository::saveTask);
-
-        return executionLines;
+        throw new UnsupportedOperationException();
     }
 
 }

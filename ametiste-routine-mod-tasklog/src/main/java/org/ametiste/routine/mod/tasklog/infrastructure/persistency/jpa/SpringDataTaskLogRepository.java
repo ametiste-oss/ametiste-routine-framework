@@ -95,15 +95,6 @@ public class SpringDataTaskLogRepository implements TaskLogRepository {
 
     @Override
     @Transactional
-    @Timeable(name = PersistencyMetrics.FIND_ACTIVE_AFTER_DATE_TIMING)
-    // TODO: remove it
-    @Deprecated
-    public List<UUID> findActiveTasksAfterDate(Instant timePoint) {
-        return null;
-    }
-
-    @Override
-    @Transactional
     @Timeable(name = PersistencyMetrics.FIND_BY_STATE_TIMING)
     public List<TaskLogEntry> findEntries(List<Task.State> states, int offset, int limit) {
 
