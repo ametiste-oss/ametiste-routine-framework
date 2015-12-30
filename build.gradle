@@ -17,7 +17,7 @@ subprojects {
 
     ext {
         slf4jVersion = "1.7.12"
-        ameMetricsVersion = "0.2.0-b4-RC"
+        ameMetricsVersion = "0.2.0-RELEASE"
         ameLaPlatformVersion = "0.0.1-b4"
         ameGTEVersion = "0.0.1-b3"
         ameDomainVersion = "0.3.0-RELEASE"
