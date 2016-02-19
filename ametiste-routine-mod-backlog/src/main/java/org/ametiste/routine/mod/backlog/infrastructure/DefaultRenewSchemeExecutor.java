@@ -5,6 +5,8 @@ import org.ametiste.routine.mod.backlog.domain.RenewScheme;
 import org.ametiste.routine.mod.backlog.domain.RenewSchemeExecutor;
 import org.ametiste.routine.mod.backlog.mod.ModBacklog;
 
+import java.util.Collections;
+
 /**
  *
  * @since
@@ -26,7 +28,9 @@ public class DefaultRenewSchemeExecutor implements RenewSchemeExecutor {
         final BacklogPopulationStrategy populationStrategy =
                 registry.findPopulationStrategy(renewScheme.populationStrategyName());
 
-        populationStrategy.populate(protocolGatewayservice.createGateway(ModBacklog.MOD_ID));
+        populationStrategy.populate(
+                protocolGatewayservice.createGateway(ModBacklog.MOD_ID, Collections.emptyMap())
+        );
         // TODO: exceptions
     }
 

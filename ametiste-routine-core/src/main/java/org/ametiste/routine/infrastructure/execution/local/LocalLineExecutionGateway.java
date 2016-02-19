@@ -52,8 +52,10 @@ public class LocalLineExecutionGateway implements LineExecutionGateway {
         final LocalOperationFeedbackController feedbackController =
                 new LocalOperationFeedbackController(feedback, executionLine.operationId());
 
-        final ProtocolGateway protocolGateway =
-                protocolGatewayservice.createGateway(executionLine.operationName());
+        final ProtocolGateway protocolGateway = protocolGatewayservice.createGateway(
+                executionLine.operationName(),
+                executionLine.properties()
+        );
 
         feedback.operationStarted(executionLine.operationId());
 
@@ -61,8 +63,6 @@ public class LocalLineExecutionGateway implements LineExecutionGateway {
             operationExecutors.get(executionLine.operationName())
                     .createExecutor()
                     .execOperation(
-                        executionLine.operationId(),
-                        executionLine.properties(),
                         feedbackController,
                         protocolGateway
                     );

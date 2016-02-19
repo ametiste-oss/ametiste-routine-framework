@@ -1,5 +1,6 @@
 package org.ametiste.routine.mod.backlog.application.operation;
 
+import org.ametiste.laplatform.protocol.ProtocolGateway;
 import org.ametiste.routine.mod.backlog.domain.Backlog;
 import org.ametiste.routine.mod.backlog.domain.BacklogRepository;
 import org.ametiste.routine.mod.backlog.domain.RenewScheme;
@@ -28,9 +29,12 @@ public class BacklogRenewOperationExecutor implements OperationExecutor {
     private RenewSchemeExecutor renewSchemeExecutor;
 
     @Override
-    public void execOperation(UUID operationId, Map<String, String> properties, OperationFeedback feedback) {
+    public void execOperation(OperationFeedback feedback, ProtocolGateway protocolGateway) {
 
-        final Backlog backlog = backlogRepository.loadBacklogOf(properties.get("schemeName"));
+        final Backlog backlog = backlogRepository.loadBacklogOf(
+                protocolGateway.session(BacklogParams.class).schemeName()
+        );
+
         final RenewScheme renewScheme = backlog.createRenewScheme();
 
         backlogRepository.save(backlog);

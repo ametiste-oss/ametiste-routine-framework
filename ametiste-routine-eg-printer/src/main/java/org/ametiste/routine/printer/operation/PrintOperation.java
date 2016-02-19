@@ -24,14 +24,13 @@ public final class PrintOperation implements OperationExecutor {
     private long delyaTime;
 
     @Override
-    public void execOperation(UUID operationId, Map<String, String> properties, OperationFeedback feedback,
-                              ProtocolGateway protocolGateway) {
+    public void execOperation(OperationFeedback feedback, ProtocolGateway protocolGateway) {
 
         final long any = new Random().longs(50, delyaTime).findAny().getAsLong();
 
         feedback.operationNotice("Delay time is: " + any);
 
-        logger.trace("Start operation: " + operationId);
+        // logger.trace("Start operation: " + operationId);
 
         try {
             Thread.sleep(any);
@@ -39,7 +38,7 @@ public final class PrintOperation implements OperationExecutor {
             e.printStackTrace();
         }
 
-        logger.trace("Done operation: " + operationId);
+        // logger.trace("Done operation: " + operationId);
 
     }
 

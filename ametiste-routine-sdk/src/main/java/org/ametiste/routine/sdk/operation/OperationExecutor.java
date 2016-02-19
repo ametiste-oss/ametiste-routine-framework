@@ -11,20 +11,6 @@ import java.util.UUID;
  */
 public interface OperationExecutor {
 
-    // TODO: remove default after deprection complete
-    // TODO: fold operationId and properties to some value object
-    default void execOperation(UUID operationId,
-                       Map<String, String> properties,
-                       OperationFeedback feedback,
-                       ProtocolGateway protocolGateway) {
-        this.execOperation(operationId, properties, feedback);
-    };
-
-    @Deprecated
-    default void execOperation(
-            UUID operationId,
-            Map<String, String> properties,
-            OperationFeedback feedback
-    ) {};
+    void execOperation(OperationFeedback feedback, ProtocolGateway protocolGateway);
 
 }

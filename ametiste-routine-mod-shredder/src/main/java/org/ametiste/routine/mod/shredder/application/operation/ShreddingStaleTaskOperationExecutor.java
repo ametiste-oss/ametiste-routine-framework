@@ -2,7 +2,6 @@ package org.ametiste.routine.mod.shredder.application.operation;
 
 import org.ametiste.laplatform.protocol.ProtocolGateway;
 import org.ametiste.laplatform.protocol.gateway.SessionOption;
-import org.ametiste.routine.domain.task.Task;
 import org.ametiste.routine.mod.shredder.mod.ModShredder;
 import org.ametiste.routine.sdk.operation.OperationExecutor;
 import org.ametiste.routine.sdk.operation.OperationFeedback;
@@ -24,30 +23,20 @@ public class ShreddingStaleTaskOperationExecutor implements OperationExecutor {
 
     public static final String NAME = ModShredder.MOD_ID + "-op-shredding-stale";
 
-    public static final String PARAM_STALE_THRESHOLD_VALUE = "mod-shredding.op.shredding.staleThreshold";
-
-    public static final String PARAM_STALE_THRESHOLD_UNIT = "mod-shredding.op.shredding.staleThresholdUnit";
-
-    public static final String PARAM_STALE_STATES = "mod-shredding.op.shredding.staleStates";
-
-    public static final List<String> DEFAULT_STALE_STATES = Arrays.asList(Task.State.DONE.name());
-
-    public static final int DEFAULT_STALE_THRESHOLD_VALUE = 12;
-
-    public static final ChronoUnit DEFAULT_STALE_THRESHOLD_UNIT = ChronoUnit.HOURS;
-
     @Override
-    public void execOperation(final UUID operationId, final Map<String, String> properties,
-                          final OperationFeedback feedback, final ProtocolGateway protocolGateway) {
+    public void execOperation(final OperationFeedback feedback, final ProtocolGateway protocolGateway) {
 
-        final Integer threshold = mayBe(PARAM_STALE_THRESHOLD_VALUE,
-                properties, Integer::valueOf, DEFAULT_STALE_THRESHOLD_VALUE);
+        final Integer threshold = protocolGateway
+                .session(ShreddingParams.class)
+                .threshold();
 
-        final ChronoUnit unit = mayBe(PARAM_STALE_THRESHOLD_UNIT,
-                properties, ChronoUnit::valueOf, DEFAULT_STALE_THRESHOLD_UNIT);
+        final ChronoUnit unit = protocolGateway
+                .session(ShreddingParams.class)
+                .unit();
 
-        final List<String> staleStates = mayBe(PARAM_STALE_STATES, properties,
-                      this::splitAsCSList, DEFAULT_STALE_STATES);
+        final List<String> staleStates =protocolGateway
+                .session(ShreddingParams.class)
+                .staleStates();
 
         final long removedTasksCount = protocolGateway
                     .session(TaskPoolProtocol.class, SessionOption.STATS)

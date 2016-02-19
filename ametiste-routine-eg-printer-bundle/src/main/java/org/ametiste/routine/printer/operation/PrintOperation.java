@@ -1,5 +1,6 @@
 package org.ametiste.routine.printer.operation;
 
+import org.ametiste.laplatform.protocol.ProtocolGateway;
 import org.ametiste.routine.sdk.operation.OperationExecutor;
 import org.ametiste.routine.sdk.operation.OperationFeedback;
 import org.slf4j.Logger;
@@ -22,7 +23,7 @@ public final class PrintOperation implements OperationExecutor {
     private long delyaTime;
 
     @Override
-    public void execOperation(UUID operationId, Map<String, String> properties, OperationFeedback feedback) {
+    public void execOperation(OperationFeedback feedback, ProtocolGateway protocolGateway) {
 
         final long any = new Random().longs(50, delyaTime).findAny().getAsLong();
 

@@ -1,15 +1,16 @@
 package org.ametiste.routine.mod.shredder.application.service;
 
 import org.ametiste.laplatform.protocol.gateway.ProtocolGatewayService;
-import org.ametiste.routine.mod.shredder.application.operation.ShreddingStaleTaskOperationExecutor;
+import org.ametiste.routine.mod.shredder.application.operation.ShreddingParams;
 import org.ametiste.routine.mod.shredder.application.schema.ShreddingStaleTaskScheme;
 import org.ametiste.routine.mod.shredder.mod.ModShredder;
 import org.ametiste.routine.sdk.protocol.taskpool.TaskPoolProtocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -42,15 +43,12 @@ public class ShreddingTaskService {
                     staleThresholdValue, staleThresholdUnit);
         }
 
-        final HashMap<String, String> p = new HashMap<>();
-        p.put(ShreddingStaleTaskOperationExecutor.PARAM_STALE_THRESHOLD_VALUE, Integer.toString(staleThresholdValue));
-        p.put(ShreddingStaleTaskOperationExecutor.PARAM_STALE_THRESHOLD_UNIT, staleThresholdUnit);
-        p.put(ShreddingStaleTaskOperationExecutor.PARAM_STALE_STATES, String.join(",", staleStates));
+        final Map<String, String> props = ShreddingParams
+                .create(staleThresholdValue, staleThresholdUnit, staleStates);
 
-        protocolGatewayService.createGateway(ModShredder.MOD_ID)
-                .session(TaskPoolProtocol.class)
-                .issueTask(ShreddingStaleTaskScheme.NAME, p);
-
+        protocolGatewayService.createGateway(ModShredder.MOD_ID, Collections.emptyMap())
+            .session(TaskPoolProtocol.class)
+            .issueTask(ShreddingStaleTaskScheme.NAME, props);
     }
 
 }

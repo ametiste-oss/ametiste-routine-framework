@@ -1,20 +1,20 @@
 package org.ametiste.routine.mod.shredder.configuration;
 
+import org.ametiste.laplatform.protocol.GatewayContext;
+import org.ametiste.laplatform.protocol.ProtocolFactory;
 import org.ametiste.laplatform.protocol.gateway.ProtocolGatewayService;
 import org.ametiste.routine.configuration.AmetisteRoutineCoreProperties;
 import org.ametiste.routine.mod.shredder.application.action.ShreddingAction;
+import org.ametiste.routine.mod.shredder.application.operation.ShreddingParams;
 import org.ametiste.routine.mod.shredder.application.service.ShreddingTaskService;
 import org.ametiste.routine.mod.shredder.mod.ModShredder;
+import org.ametiste.routine.sdk.protocol.taskpool.TaskPoolProtocol;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import org.springframework.context.annotation.Scope;
 
 /**
  *

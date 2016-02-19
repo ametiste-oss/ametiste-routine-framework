@@ -1,13 +1,8 @@
 package org.ametiste.routine.mod.shredder.configuration;
 
-import org.ametiste.routine.configuration.AmetisteRoutineCoreProperties;
-import org.ametiste.routine.domain.task.Task;
-import org.ametiste.routine.mod.shredder.application.operation.ShreddingStaleTaskOperationExecutor;
-import org.springframework.beans.factory.annotation.Value;
+import org.ametiste.routine.mod.shredder.application.operation.ShreddingParams;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-import java.time.temporal.ChronoUnit;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -22,16 +17,13 @@ public class ModShredderProperties {
 
     private StaleThreshold staleThreshold = new StaleThreshold();
 
-    private List<String> staleStates =
-            ShreddingStaleTaskOperationExecutor.DEFAULT_STALE_STATES;
+    private List<String> staleStates = ShreddingParams.DEFAULT_STALE_STATES;
 
     public static class StaleThreshold {
 
-        private int staleThresholdValue =
-                ShreddingStaleTaskOperationExecutor.DEFAULT_STALE_THRESHOLD_VALUE;
+        private int staleThresholdValue = ShreddingParams.DEFAULT_STALE_THRESHOLD_VALUE;
 
-        private String staleThresholdUnit =
-                ShreddingStaleTaskOperationExecutor.PARAM_STALE_THRESHOLD_UNIT;
+        private String staleThresholdUnit = ShreddingParams.PARAM_STALE_THRESHOLD_UNIT;
 
         public int getValue() {
             return staleThresholdValue;
