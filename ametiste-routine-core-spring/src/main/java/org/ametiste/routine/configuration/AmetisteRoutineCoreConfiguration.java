@@ -1,5 +1,6 @@
 package org.ametiste.routine.configuration;
 
+import org.ametiste.routine.RoutineCoreSpring;
 import org.ametiste.routine.application.TaskDomainEvenetsGateway;
 import org.ametiste.routine.application.service.issue.DefaultTaskIssueService;
 import org.ametiste.routine.application.service.issue.TaskIssueService;
@@ -38,10 +39,10 @@ import java.util.List;
 @ComponentScan(basePackageClasses =
     {
         TaskController.class,   // enables scan for info web components
-        InfoMetrics.class       // enables scan for info metric source components
-    },
-    basePackages = "org.ametiste.routine" // enables scan for framework components in case when host application
-                                          // placed not in root routine package
+        InfoMetrics.class,      // enables scan for info metric source components
+        RoutineCoreSpring.class // enables scan for framework components in case when host application
+                                // placed not in root routine package
+    }
 )
 @EnableConfigurationProperties(AmetisteRoutineCoreProperties.class)
 @Import(CoreStatConfiguration.class)
