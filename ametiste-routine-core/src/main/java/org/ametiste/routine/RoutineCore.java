@@ -1,4 +1,10 @@
 package org.ametiste.routine;
 
-public class RoutineCore {
+/**
+ * {@code RoutineCore} class describes module as object and contains its basic properties such as constants used
+ * throughout the module.
+ * <p>
+ * Also class used to uniquely identify location of the module.
+ */
+public final class RoutineCore {
 }
