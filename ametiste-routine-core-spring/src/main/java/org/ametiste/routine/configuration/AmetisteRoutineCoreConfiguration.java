@@ -26,11 +26,13 @@ import org.ametiste.routine.sdk.application.service.issue.constraints.IssueConst
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jms.core.JmsTemplate;
 
 import java.util.List;
@@ -44,6 +46,8 @@ import java.util.List;
                                 // placed not in root routine package
     }
 )
+@EntityScan(basePackageClasses = RoutineCoreSpring.class)
+@EnableJpaRepositories(basePackageClasses = RoutineCoreSpring.class)
 @EnableConfigurationProperties(AmetisteRoutineCoreProperties.class)
 @Import(CoreStatConfiguration.class)
 public class AmetisteRoutineCoreConfiguration {
