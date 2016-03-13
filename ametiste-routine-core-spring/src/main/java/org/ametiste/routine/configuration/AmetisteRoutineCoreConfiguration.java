@@ -39,7 +39,9 @@ import java.util.List;
     {
         TaskController.class,   // enables scan for info web components
         InfoMetrics.class       // enables scan for info metric source components
-    }
+    },
+    basePackages = "org.ametiste.routine" // enables scan for framework components in case when host application
+                                          // placed not in root routine package
 )
 @EnableConfigurationProperties(AmetisteRoutineCoreProperties.class)
 @Import(CoreStatConfiguration.class)
