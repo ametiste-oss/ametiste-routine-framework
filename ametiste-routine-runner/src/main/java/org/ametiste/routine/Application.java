@@ -30,6 +30,10 @@ public class Application {
     private static void checkExecutors(ConfigurableApplicationContext context) {
         final Map<String, Object> executors = new HashMap<>();
 
+
+        // TODO: since 1.1 there is no OperationExecutorFactory/OperationExecutor object within the context
+        // so this check need to be reworked, I guess check for registered operations/tasks schemas may be applied as
+        // equivalent.
         executors.putAll(
                 context.getBeansOfType(OperationExecutorFactory.class));
 

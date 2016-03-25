@@ -31,12 +31,12 @@ public class LocalTaskExecutionGatewayConfiguration {
     @Autowired
     private AmetisteRoutineCoreProperties props;
 
-    @Autowired(required = false)
-    private Map<String, OperationExecutorFactory> operationExecutorFactories = Collections.emptyMap();
-
-    @Autowired(required = false)
-    private Map<String, OperationExecutor> operationExecutors = Collections.emptyMap();
-
+//    @Autowired(required = false)
+//    private Map<String, OperationExecutorFactory> operationExecutorFactories = Collections.emptyMap();
+//
+//    @Autowired(required = false)
+//    private Map<String, OperationExecutor> operationExecutors = Collections.emptyMap();
+//
     @Autowired
     private TaskRepository taskRepository;
 
@@ -55,9 +55,10 @@ public class LocalTaskExecutionGatewayConfiguration {
     @Bean
     public LineExecutionGateway localLineExecutionGateway() {
 
-        final HashMap<String, OperationExecutorFactory> factories = new HashMap<>();
-        factories.putAll(operationExecutorFactories);
-
+        // v1.1 UPDATE:
+        //
+        // Now OperationExecutorFactory is enclosed within the OperationScheme, all semantics
+        // described bellow still applicable for.
         //
         // DOCUMENTATE ME:
         //
@@ -76,9 +77,6 @@ public class LocalTaskExecutionGatewayConfiguration {
         // stateless executors, that anonymous factory will return the one instance of an executor for
         // each request.
         //
-        operationExecutors.entrySet().stream().forEach(
-                k -> factories.put(k.getKey(), () -> k.getValue())
-        );
 
         return new LocalLineExecutionGateway(taskSchemeRepository,
                 protocolGatewayservice,

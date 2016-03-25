@@ -2,7 +2,9 @@ package org.ametiste.routine;
 
 import org.ametiste.laplatform.protocol.GatewayContext;
 import org.ametiste.laplatform.protocol.ProtocolFactory;
+import org.ametiste.routine.domain.scheme.StatelessOperationScheme;
 import org.ametiste.routine.mod.shredder.configuration.ModShredderConfiguration;
+import org.ametiste.routine.printer.operation.PrintExecutor;
 import org.ametiste.routine.printer.operation.PrintOperationParams;
 import org.ametiste.routine.printer.scheme.PrintTaskSchemeParams;
 import org.ametiste.routine.printer.scheme.PrintTaskScheme;
