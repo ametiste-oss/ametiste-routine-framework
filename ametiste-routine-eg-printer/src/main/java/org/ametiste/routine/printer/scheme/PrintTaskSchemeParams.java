@@ -1,52 +1,57 @@
 package org.ametiste.routine.printer.scheme;
 
+import org.ametiste.routine.sdk.protocol.operation.AbstractParamProtocol;
 import org.ametiste.routine.sdk.protocol.operation.ParamsProtocol;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  *
  * @since
  */
-public class PrintTaskSchemeParams implements ParamsProtocol {
+public class PrintTaskSchemeParams extends AbstractParamProtocol {
 
-    private Integer taskNumber;
-    private String taskOut;
+    private static final String TASK_NUMBER = "task.number";
+    private static final String TASK_MESSAGE = "task.message";
+    private static final String TASK_MAX_DELAY = "task.maxDelay";
 
-    public void taskOut(String taskOut) {
-        this.taskOut = taskOut;
+    private static final List<String> DEFINED_PARAMS = Arrays.asList(
+        TASK_NUMBER, TASK_MESSAGE, TASK_MAX_DELAY
+    );
+
+    public PrintTaskSchemeParams() {
+        super(DEFINED_PARAMS);
     }
 
-    public void taskNumber(Integer number) {
-        this.taskNumber = number;
+    public PrintTaskSchemeParams(final Map<String, String> params) {
+        super(DEFINED_PARAMS, params);
     }
 
-    public String taskNumber() {
-        return taskNumber.toString();
+    public void delayTime(long delay) {
+        addParam(TASK_MAX_DELAY, Long.toString(delay));
     }
 
-    @Override
-    public void fromMap(final Map<String, String> params) {
-        taskOut = params.get("task.out");
-        taskNumber = Integer.parseInt(params.get("task.taskNumber"));
+    public long delayTime() {
+        return takeParam(TASK_MAX_DELAY, Long::parseLong);
     }
 
-    @Override
-    public Map<String, String> asMap() {
-        final HashMap<String, String> map = new HashMap<>();
-        map.put("task.out", taskOut);
-        map.put("task.number", taskNumber.toString());
-        return map;
+    public void taskMessage(String taskOut) {
+        addParam(TASK_MESSAGE, taskOut);
     }
 
-    public String taskOut() {
-        return taskOut;
+    public String taskMessage() {
+        return takeParam(TASK_MESSAGE);
     }
 
-    public static PrintTaskSchemeParams createFromMap(final Map<String, String> params) {
-        final PrintTaskSchemeParams operationParams = new PrintTaskSchemeParams();
-        operationParams.fromMap(params);
-        return operationParams;
+    public void taskNumber(int number) {
+        addParam(TASK_NUMBER, Integer.toString(number));
     }
+
+    public int taskNumber() {
+        return takeParam(TASK_NUMBER, Integer::parseInt);
+    }
+
 }

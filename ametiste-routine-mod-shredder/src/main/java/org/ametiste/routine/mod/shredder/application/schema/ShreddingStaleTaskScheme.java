@@ -19,11 +19,7 @@ public class ShreddingStaleTaskScheme extends AbstractTaskScheme<ShreddingParams
 
     @Override
     protected void fulfillOperations(final TaskOperationInstaller task, final ShreddingParams schemeParams) {
-        task.addOperation(ShreddingStaleTaskOperationScheme.class, p -> {
-            p.staleStates(schemeParams.staleStates());
-            p.staleThresholdValue(schemeParams.threshold());
-            p.staleThresholdUnit(schemeParams.unit());
-        });
+        task.addOperation(ShreddingStaleTaskOperationScheme.class, schemeParams::proxy);
     }
 
     // TODO: add constraint to check scheme client, only mod-shredder is allowed to use this scheme to issue tasks

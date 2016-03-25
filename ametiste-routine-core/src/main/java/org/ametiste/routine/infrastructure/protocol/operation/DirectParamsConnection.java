@@ -29,4 +29,9 @@ public class DirectParamsConnection implements ParamsProtocol {
         return null;
     }
 
+    @Override
+    public <T extends ParamsProtocol> void proxy(final T params) {
+
+    }
+
 }

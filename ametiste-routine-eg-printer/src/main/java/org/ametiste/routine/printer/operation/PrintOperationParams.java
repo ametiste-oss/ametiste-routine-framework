@@ -1,40 +1,44 @@
 package org.ametiste.routine.printer.operation;
 
-import org.ametiste.routine.sdk.protocol.operation.ParamsProtocol;
+import org.ametiste.routine.sdk.protocol.operation.AbstractParamProtocol;
 
-import java.util.Collections;
-import java.util.Map;
+import java.util.*;
 
 /**
  *
  * @since
  */
-public class PrintOperationParams implements ParamsProtocol {
+public class PrintOperationParams extends AbstractParamProtocol {
 
-    private String operationOut;
+    private static final String OPERATION_OUT = "operation.out";
+    private static final String OPERATION_DELAY = "operation.delay";
+
+    private static final List<String> DEFINED_PARAMS = Arrays.asList(
+        OPERATION_OUT, OPERATION_DELAY
+    );
+
+    public PrintOperationParams() {
+        super(DEFINED_PARAMS);
+    }
+
+    public PrintOperationParams(final Map<String, String> params) {
+        super(DEFINED_PARAMS, params);
+    }
+
+    public void delayTime(long delay) {
+        addParam(OPERATION_DELAY, Long.toString(delay));
+    }
+
+    public long delayTime() {
+        return takeParam(OPERATION_DELAY, Long::parseLong);
+    }
 
     public void printOut(String operationOut) {
-        this.operationOut = operationOut;
+        addParam(OPERATION_OUT, operationOut);
     }
 
     public String operationOut() {
-        return operationOut;
-    }
-
-    @Override
-    public void fromMap(final Map<String, String> params) {
-        operationOut = params.get("operation.out");
-    }
-
-    @Override
-    public Map<String, String> asMap() {
-        return Collections.singletonMap("operation.out", operationOut);
-    }
-
-    public static PrintOperationParams createFromMap(final Map<String, String> params) {
-        final PrintOperationParams operationParams = new PrintOperationParams();
-        operationParams.fromMap(params);
-        return operationParams;
+        return takeParam(OPERATION_OUT);
     }
 
 }

@@ -32,14 +32,22 @@ public abstract class AbstractTaskScheme<T extends ParamsProtocol> implements Ta
         verifyCreationRequest(paramsProtocol, creatorIdenifier);
 
         fulfillOperations(taskBuilder::addOperation, paramsProtocol);
+
+        // mmm.. how can I have this as default behavior,
+        // in case where fulfillOperations is not defined explicitly?
+        // note, TaskOperationInstaller iface contains feature javadoc
+        // taskBuilder.addOperation(operationScheme, c -> c.fromMap(paramsProxy.asMap()));
+
         fulfillProperties(taskBuilder::addProperty, paramsProtocol);
     }
 
     protected void verifyCreationRequest(T schemeParams, String creatorIdentifier) throws TaskCreationRejectedBySchemeException {}
 
-    protected void fulfillProperties(TaskPropertiesReceiver propertiesReceiver, T schemeParams) { }
+    protected void fulfillProperties(TaskPropertiesReceiver propertiesReceiver, T schemeParams) {}
 
-    protected void fulfillOperations(TaskOperationInstaller operationReceiver, T schemeParams) { }
+    protected void fulfillOperations(TaskOperationInstaller operationReceiver, T schemeParams) {
+
+    }
 
     @Override
     public String schemeName() {

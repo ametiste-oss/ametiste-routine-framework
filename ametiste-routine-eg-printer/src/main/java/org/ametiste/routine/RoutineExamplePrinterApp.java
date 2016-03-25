@@ -7,6 +7,7 @@ import org.ametiste.routine.printer.operation.PrintOperationParams;
 import org.ametiste.routine.printer.scheme.PrintTaskSchemeParams;
 import org.ametiste.routine.printer.scheme.PrintTaskScheme;
 import org.ametiste.routine.mod.backlog.domain.Backlog;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -33,7 +34,7 @@ public class RoutineExamplePrinterApp {
     @Bean
     @Scope(scopeName = "prototype")
     public PrintOperationParams printOperationParamsProtocol(GatewayContext c) {
-        return PrintOperationParams.createFromMap(c.lookupMap("params"));
+        return new PrintOperationParams(c.lookupMap("params"));
     }
 
     @Bean
@@ -44,7 +45,7 @@ public class RoutineExamplePrinterApp {
     @Bean
     @Scope(scopeName = "prototype")
     public PrintTaskSchemeParams printTaskSchemeParamsProtocol(GatewayContext c) {
-        return PrintTaskSchemeParams.createFromMap(c.lookupMap("params"));
+        return new PrintTaskSchemeParams(c.lookupMap("params"));
     }
 
     @Bean

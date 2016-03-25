@@ -10,26 +10,28 @@ import org.springframework.stereotype.Component;
 
 import java.util.Random;
 
+// TODO: next step - resolve operation names as class names
 @Component(PrintOperationScheme.NAME)
-public final class PrintOperation implements OperationExecutor {
+public final class PrintExecutor implements OperationExecutor {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
-
-    @Value("${org.ametiste.routine.eg.printer.delayTime:1000}")
-    private long delyaTime;
 
     @Override
     public void execOperation(OperationFeedback feedback, ProtocolGateway protocolGateway) {
 
-        final long any = new Random().longs(50, delyaTime).findAny().orElse(0);
+        final long maxDelayTime = protocolGateway
+                .session(PrintOperationParams.class).delayTime();
 
         final String operationOut = protocolGateway
                 .session(PrintOperationParams.class).operationOut();
 
-        feedback.operationNotice("Delay time is: " + any);
+        final long effectiveDelay = new Random()
+                .longs(50, maxDelayTime).findAny().orElse(0);
+
+        feedback.operationNotice("Delay time is: " + effectiveDelay);
 
         try {
-            Thread.sleep(any);
+            Thread.sleep(effectiveDelay);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

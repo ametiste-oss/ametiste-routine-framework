@@ -5,6 +5,7 @@ import org.ametiste.routine.sdk.protocol.operation.ParamsProtocol;
 
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -50,6 +51,11 @@ public class ShreddingParams implements ParamsProtocol {
     @Override
     public Map<String, String> asMap() {
         return properties;
+    }
+
+    @Override
+    public <T extends ParamsProtocol> void proxy(final T params) {
+        params.fromMap(asMap());
     }
 
     private static <K,V> Optional<V> mayBe(K key, Map<K, V> in) {

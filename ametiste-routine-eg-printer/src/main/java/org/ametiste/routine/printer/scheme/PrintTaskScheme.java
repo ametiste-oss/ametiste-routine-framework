@@ -1,15 +1,9 @@
 package org.ametiste.routine.printer.scheme;
 
 import org.ametiste.routine.domain.scheme.*;
-import org.ametiste.routine.domain.task.properties.TaskProperty;
 import org.ametiste.routine.mod.backlog.mod.ModBacklog;
-import org.ametiste.routine.printer.operation.PrintOperation;
 import org.ametiste.routine.printer.operation.PrintOperationScheme;
 import org.springframework.stereotype.Component;
-
-import java.util.Collections;
-
-import static org.ametiste.routine.infrastructure.persistency.jpa.data.OperationData_.task;
 
 @Component
 public class PrintTaskScheme extends AbstractTaskScheme<PrintTaskSchemeParams> {
@@ -23,7 +17,7 @@ public class PrintTaskScheme extends AbstractTaskScheme<PrintTaskSchemeParams> {
     }
 
     @Override
-    protected void verifyCreationRequest(PrintTaskSchemeParams schemeParams, String creatorIdentifier) throws TaskCreationRejectedBySchemeException {
+    protected void verifyCreationRequest(final PrintTaskSchemeParams schemeParams, final String creatorIdentifier) throws TaskCreationRejectedBySchemeException {
         if (!creatorIdentifier.equals(ALLOWED_CREATOR)) {
             throw new TaskCreationRejectedBySchemeException(
                     "Unexpected creator identifier for task scheme '" + NAME + "' expected '" + ALLOWED_CREATOR + "' but '" + creatorIdentifier + "' given.");
@@ -32,22 +26,25 @@ public class PrintTaskScheme extends AbstractTaskScheme<PrintTaskSchemeParams> {
 
     @Override
     protected void fulfillProperties(final TaskPropertiesReceiver task, final PrintTaskSchemeParams schemeParams) {
-        task.addProperty("printer-eg.task.number", schemeParams.taskNumber());
-        task.addProperty("printer-eg.task.out", schemeParams.taskOut());
+        task.addProperty("printer-eg.task.number", Integer.toString(schemeParams.taskNumber()));
+        task.addProperty("printer-eg.task.out", schemeParams.taskMessage());
     }
 
     @Override
-    protected void fulfillOperations(final TaskOperationInstaller task, PrintTaskSchemeParams schemeParams) {
+    protected void fulfillOperations(final TaskOperationInstaller task, final PrintTaskSchemeParams schemeParams) {
         task.addOperation(PrintOperationScheme.class, params -> {
-                params.printOut(schemeParams.taskOut()+"::operation-1");
+                params.printOut(schemeParams.taskMessage()+"::operation-1");
+                params.delayTime(schemeParams.delayTime());
             }
         );
         task.addOperation(PrintOperationScheme.class, params -> {
-                params.printOut(schemeParams.taskOut()+"::operation-2");
+                params.printOut(schemeParams.taskMessage()+"::operation-2");
+                params.delayTime(schemeParams.delayTime());
             }
         );
         task.addOperation(PrintOperationScheme.class, params -> {
-                params.printOut(schemeParams.taskOut()+"::operation-3");
+                params.printOut(schemeParams.taskMessage()+"::operation-3");
+                params.delayTime(schemeParams.delayTime());
             }
         );
     }

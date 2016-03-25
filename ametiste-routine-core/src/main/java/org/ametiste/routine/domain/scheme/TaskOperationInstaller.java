@@ -14,5 +14,4 @@ public interface TaskOperationInstaller {
 
     <S extends ParamsProtocol> void addOperation(final Class<? extends OperationScheme<S>> operationScheme,
                                                                   final Consumer<S> paramsInstaller);
-
 }

@@ -1,6 +1,5 @@
 package org.ametiste.routine.mod.backlog.application.scheme;
 
-import javafx.concurrent.Task;
 import org.ametiste.routine.domain.scheme.AbstractTaskScheme;
 import org.ametiste.routine.domain.scheme.TaskOperationInstaller;
 import org.ametiste.routine.mod.backlog.application.operation.BacklogParams;
@@ -18,8 +17,7 @@ public class BacklogRenewTaskScheme extends AbstractTaskScheme<BacklogParams> {
     }
 
     @Override
-    // TODO: may I have shortuct for these cases, where scheme params just proxied to the one operation?
     protected void fulfillOperations(final TaskOperationInstaller task, final BacklogParams schemeParams) {
-        task.addOperation(BacklogRenewOperationScheme.class, p -> p.schemeName(schemeParams.schemeName()));
+        task.addOperation(BacklogRenewOperationScheme.class, schemeParams::proxy);
     }
 }

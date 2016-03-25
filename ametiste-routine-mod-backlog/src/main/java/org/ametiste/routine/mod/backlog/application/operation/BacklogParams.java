@@ -1,41 +1,35 @@
 package org.ametiste.routine.mod.backlog.application.operation;
 
-import org.ametiste.routine.sdk.protocol.operation.ParamsProtocol;
+import org.ametiste.routine.sdk.protocol.operation.AbstractParamProtocol;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  *
- * @since
+ * @since 1.1
  */
-public class BacklogParams implements ParamsProtocol {
+public class BacklogParams extends AbstractParamProtocol {
 
-    private String schemeName;
+    private static final String BACKLOGED_SCHEME_NAME = "backlog.scheme.name";
+
+    private static final List<String> DEFINED_PARAMS = Arrays.asList(
+        BACKLOGED_SCHEME_NAME
+    );
+
+    public BacklogParams() {
+        super(DEFINED_PARAMS);
+    }
+
+    public BacklogParams(final Map<String, String> params) {
+        super(DEFINED_PARAMS, params);
+    }
 
     public void schemeName(String schemeName) {
-        this.schemeName = schemeName;
+        addParam(BACKLOGED_SCHEME_NAME, schemeName);
     }
 
     public String schemeName() {
-        return schemeName;
-    }
-
-    @Override
-    public Map<String, String> asMap() {
-        return Collections.singletonMap("schemeName", schemeName);
-    }
-
-    @Override
-    public void fromMap(Map<String, String> params) {
-        schemeName = params.get("schemeName");
-    }
-
-    public static BacklogParams createFromMap(Map<String, String> params) {
-        final BacklogParams backlogParams = new BacklogParams();
-        backlogParams.fromMap(params);
-        return backlogParams;
+        return takeParam(BACKLOGED_SCHEME_NAME);
     }
 
 }

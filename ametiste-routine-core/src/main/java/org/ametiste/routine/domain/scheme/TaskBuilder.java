@@ -42,8 +42,7 @@ public class TaskBuilder<T extends ParamsProtocol> {
 
     public <S extends ParamsProtocol> TaskBuilder<T> addOperation(final Class<? extends OperationScheme<S>> operationScheme,
                                                                   final Consumer<S> paramsInstaller) {
-        final OperationScheme<S> scheme =
-                taskSchemeRepository.findOperationScheme(operationScheme);
+        final OperationScheme<S> scheme = taskSchemeRepository.findOperationScheme(operationScheme);
         scheme.createOperationFor(this::addOperation, paramsInstaller);
         return this;
     }
