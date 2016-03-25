@@ -3,6 +3,7 @@ package org.ametiste.routine.configuration;
 import org.ametiste.laplatform.protocol.gateway.ProtocolGatewayService;
 import org.ametiste.routine.application.CoreEventsGateway;
 import org.ametiste.routine.application.TaskDomainEvenetsGateway;
+import org.ametiste.routine.domain.scheme.TaskSchemeRepository;
 import org.ametiste.routine.domain.task.TaskRepository;
 import org.ametiste.routine.infrastructure.execution.*;
 import org.ametiste.routine.infrastructure.execution.local.*;
@@ -48,6 +49,9 @@ public class LocalTaskExecutionGatewayConfiguration {
     @Autowired
     private ProtocolGatewayService protocolGatewayservice;
 
+    @Autowired
+    private TaskSchemeRepository taskSchemeRepository;
+
     @Bean
     public LineExecutionGateway localLineExecutionGateway() {
 
@@ -69,14 +73,14 @@ public class LocalTaskExecutionGatewayConfiguration {
 
         //
         // NOTE: adoptation of stateless executors to factories, to shortcut configuration for
-        // stateless executors, that anonymous factory will return one instance of an executor for
+        // stateless executors, that anonymous factory will return the one instance of an executor for
         // each request.
         //
         operationExecutors.entrySet().stream().forEach(
                 k -> factories.put(k.getKey(), () -> k.getValue())
         );
 
-        return new LocalLineExecutionGateway(factories,
+        return new LocalLineExecutionGateway(taskSchemeRepository,
                 protocolGatewayservice,
                 localTaskExecutionController()
         );

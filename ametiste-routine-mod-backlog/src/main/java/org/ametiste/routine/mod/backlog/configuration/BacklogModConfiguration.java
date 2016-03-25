@@ -22,6 +22,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -45,9 +46,14 @@ public class BacklogModConfiguration {
     @Autowired
     private List<BacklogRenewConstraint> constraints;
 
-    @Bean(name = BacklogRenewExecutor.NAME)
-    public OperationExecutor backlogRenewOperationExecutor() {
-        return new BacklogRenewExecutor();
+    @Autowired
+    private Map<String, BacklogPopulationStrategy> backlogPopulationStrategies;
+
+    @Bean
+    public BacklogPopulationStrategiesRegistry backlogPopulationStrategiesRegistry() {
+        return new MemoryBacklogPopulationStrategiesRegistry(
+                backlogPopulationStrategies
+        );
     }
 
     @Bean

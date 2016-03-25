@@ -1,18 +1,11 @@
 package org.ametiste.routine.mod.backlog.application.operation;
 
 import org.ametiste.laplatform.protocol.ProtocolGateway;
-import org.ametiste.routine.mod.backlog.domain.Backlog;
-import org.ametiste.routine.mod.backlog.domain.BacklogRepository;
 import org.ametiste.routine.mod.backlog.domain.RenewScheme;
-import org.ametiste.routine.mod.backlog.domain.RenewSchemeExecutor;
-import org.ametiste.routine.mod.backlog.mod.ModBacklog;
+import org.ametiste.routine.mod.backlog.infrastructure.BacklogPopulationStrategy;
+import org.ametiste.routine.mod.backlog.protocol.BacklogProtocol;
 import org.ametiste.routine.sdk.operation.OperationExecutor;
 import org.ametiste.routine.sdk.operation.OperationFeedback;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import java.util.Map;
-import java.util.UUID;
 
 /**
  *
@@ -20,26 +13,20 @@ import java.util.UUID;
  */
 public class BacklogRenewExecutor implements OperationExecutor {
 
-    // TODO: remove me
-    public static final String NAME = ModBacklog.MOD_ID + "::renewOperation";
-
-    @Autowired
-    private BacklogRepository backlogRepository;
-
-    @Autowired
-    private RenewSchemeExecutor renewSchemeExecutor;
-
     @Override
     public void execOperation(OperationFeedback feedback, ProtocolGateway protocolGateway) {
 
-        final Backlog backlog = backlogRepository.loadBacklogOf(
+        final BacklogProtocol backlogProtocol = protocolGateway.session(BacklogProtocol.class);
+
+        final RenewScheme renewScheme = backlogProtocol.loadRenewSchemeFor(
                 protocolGateway.session(BacklogParams.class).schemeName()
         );
 
-        final RenewScheme renewScheme = backlog.createRenewScheme();
+        final BacklogPopulationStrategy populationStrategy =
+                backlogProtocol.loadPopulationStrategy(renewScheme.populationStrategyName());
 
-        backlogRepository.save(backlog);
-        renewSchemeExecutor.executeRenewScheme(renewScheme);
+        populationStrategy.populate(protocolGateway);
+
     }
 
 }

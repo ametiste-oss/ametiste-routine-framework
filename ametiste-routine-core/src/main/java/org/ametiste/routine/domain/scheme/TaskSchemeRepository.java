@@ -1,5 +1,6 @@
 package org.ametiste.routine.domain.scheme;
 
+import org.ametiste.routine.domain.task.ExecutionLine;
 import org.ametiste.routine.sdk.protocol.operation.ParamsProtocol;
 
 import java.util.List;
@@ -23,5 +24,7 @@ public interface TaskSchemeRepository {
         findTaskScheme(Class<? extends TaskScheme<T>> taskScheme);
 
     List<String> loadSchemeNames();
+
+    OperationScheme findOperationScheme(String operationName);
 
 }

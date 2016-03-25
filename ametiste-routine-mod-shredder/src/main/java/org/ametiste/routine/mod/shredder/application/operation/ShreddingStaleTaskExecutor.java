@@ -19,7 +19,6 @@ import java.util.function.Function;
  *
  * @since 0.1.0
  */
-@Component(ShreddingStaleTaskOperationScheme.NAME)
 public class ShreddingStaleTaskExecutor implements OperationExecutor {
 
     @Override

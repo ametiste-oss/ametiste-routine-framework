@@ -10,8 +10,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.Random;
 
-// TODO: next step - resolve operation names as class names
-@Component(PrintOperationScheme.NAME)
 public final class PrintExecutor implements OperationExecutor {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());

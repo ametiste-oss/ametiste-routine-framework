@@ -18,7 +18,7 @@ public class PrintTaskScheme extends AbstractTaskScheme<PrintTaskSchemeParams> {
 
     @Override
     protected void verifyCreationRequest(final PrintTaskSchemeParams schemeParams, final String creatorIdentifier) throws TaskCreationRejectedBySchemeException {
-        if (!creatorIdentifier.equals(ALLOWED_CREATOR)) {
+        if (!creatorIdentifier.startsWith(ALLOWED_CREATOR)) {
             throw new TaskCreationRejectedBySchemeException(
                     "Unexpected creator identifier for task scheme '" + NAME + "' expected '" + ALLOWED_CREATOR + "' but '" + creatorIdentifier + "' given.");
         }

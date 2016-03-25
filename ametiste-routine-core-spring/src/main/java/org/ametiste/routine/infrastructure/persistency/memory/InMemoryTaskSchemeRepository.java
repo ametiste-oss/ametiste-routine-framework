@@ -7,6 +7,8 @@ import org.ametiste.routine.sdk.protocol.operation.ParamsProtocol;
 
 import java.util.*;
 
+import static javafx.scene.input.KeyCode.T;
+
 /**
  *
  * @since
@@ -15,6 +17,7 @@ public class InMemoryTaskSchemeRepository implements TaskSchemeRepository {
 
     private final Map<String, TaskScheme> schemas;
     private final Map<Class<? extends TaskScheme>, TaskScheme> taskSchemasByClass = new HashMap<>();
+    private final Map<String, OperationScheme> opSchemasByName = new HashMap<>();
     private final Map<Class<? extends OperationScheme>, OperationScheme> opSchemasByClass = new HashMap<>();
 
     public InMemoryTaskSchemeRepository(Map<String, TaskScheme> taskSchemas, Map<String, OperationScheme> opSchemas) {
@@ -23,7 +26,10 @@ public class InMemoryTaskSchemeRepository implements TaskSchemeRepository {
             s -> taskSchemasByClass.put(s.getClass(), s)
         );
         opSchemas.values().forEach(
-            s -> opSchemasByClass.put(s.getClass(), s)
+            s -> {
+                opSchemasByName.put(s.schemeName(), s);
+                opSchemasByClass.put(s.getClass(), s);
+            }
         );
     }
 
@@ -50,6 +56,11 @@ public class InMemoryTaskSchemeRepository implements TaskSchemeRepository {
     @Override
     public List<String> loadSchemeNames() {
         return new ArrayList<>(schemas.keySet());
+    }
+
+    @Override
+    public OperationScheme findOperationScheme(final String operationName) {
+        return opSchemasByName.get(operationName);
     }
 
 }

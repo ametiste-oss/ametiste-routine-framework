@@ -3,6 +3,9 @@ package org.ametiste.routine.infrastructure.execution.local;
 import org.ametiste.laplatform.protocol.ProtocolGateway;
 import org.ametiste.laplatform.protocol.gateway.ProtocolGatewayService;
 import org.ametiste.metrics.annotations.Timeable;
+import org.ametiste.routine.domain.scheme.OperationScheme;
+import org.ametiste.routine.domain.scheme.TaskScheme;
+import org.ametiste.routine.domain.scheme.TaskSchemeRepository;
 import org.ametiste.routine.domain.task.ExecutionLine;
 import org.ametiste.routine.infrastructure.execution.LineExecutionGateway;
 import org.ametiste.routine.sdk.operation.OperationExecutorFactory;
@@ -25,17 +28,17 @@ public class LocalLineExecutionGateway implements LineExecutionGateway {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private final Map<String, OperationExecutorFactory> operationExecutors;
+    private final TaskSchemeRepository taskSchemeRepository;
 
     private final TaskExecutionController feedback;
 
     private final ProtocolGatewayService protocolGatewayservice;
 
     public LocalLineExecutionGateway(
-            Map<String, OperationExecutorFactory> operationExecutors,
+            TaskSchemeRepository taskSchemeRepository,
             ProtocolGatewayService protocolGatewayservice,
             TaskExecutionController taskExecutionController) {
-        this.operationExecutors = operationExecutors;
+        this.taskSchemeRepository = taskSchemeRepository;
         this.protocolGatewayservice = protocolGatewayservice;
         this.feedback = taskExecutionController;
     }
@@ -44,10 +47,19 @@ public class LocalLineExecutionGateway implements LineExecutionGateway {
     @Timeable(name = ExecutionMetrics.GATEWAY_EXECUTION_TIMING)
     public void executeOperation(ExecutionLine executionLine) {
 
-        if (!operationExecutors.containsKey(executionLine.operationName())) {
+        OperationScheme operationScheme = taskSchemeRepository
+                .findOperationScheme(executionLine.operationName());
+
+        // TODO: move it to repo
+        if (operationScheme == null) {
             throw new IllegalStateException("Can't find operation executor for: " +
                     executionLine.operationName());
         }
+
+//        if (!operationExecutors.containsKey(executionLine.operationName())) {
+//            throw new IllegalStateException("Can't find operation executor for: " +
+//                    executionLine.operationName());
+//        }
 
         final LocalOperationFeedbackController feedbackController =
                 new LocalOperationFeedbackController(feedback, executionLine.operationId());
@@ -60,8 +72,7 @@ public class LocalLineExecutionGateway implements LineExecutionGateway {
         feedback.operationStarted(executionLine.operationId());
 
         try {
-            operationExecutors.get(executionLine.operationName())
-                    .createExecutor()
+            operationScheme.operationExecutor()
                     .execOperation(
                         feedbackController,
                         protocolGateway
