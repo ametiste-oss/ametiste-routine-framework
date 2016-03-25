@@ -17,9 +17,7 @@ public class BacklogParamsProtocolConfiguration {
     @Bean
     @Scope(scopeName = "prototype")
     public BacklogParams backlogParamsProtocol(GatewayContext c) {
-        return new BacklogParams(
-                c.lookupMap("params")
-        );
+        return BacklogParams.createFromMap(c.lookupMap("params"));
     }
 
     @Bean

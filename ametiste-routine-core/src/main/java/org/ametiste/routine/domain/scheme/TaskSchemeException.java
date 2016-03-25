@@ -7,7 +7,7 @@ package org.ametiste.routine.domain.scheme;
  *
  * @since 0.1.0
  */
-public abstract class TaskSchemeException extends Exception {
+public abstract class TaskSchemeException extends RuntimeException {
 
     public TaskSchemeException(String message) {
         super(message);

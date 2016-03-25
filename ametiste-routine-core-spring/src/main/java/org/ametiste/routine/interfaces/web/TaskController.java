@@ -24,11 +24,13 @@ public class TaskController {
 
     @RequestMapping(method = RequestMethod.POST)
     public void issueTask(@RequestBody IssueTaskData issueTaskData) {
-        taskIssueService.issueTask(
-                issueTaskData.taskSchemeName(),
-                issueTaskData.schemeParams(),
-                "web-api"
-        );
+        // TODO: I guess we need midleware service to convert public shema names to classes
+        throw new UnsupportedOperationException("Unsupported yet.");
+//        taskIssueService.issueTask(
+//                issueTaskData.taskSchemeName(),
+//                issueTaskData.schemeParams(),
+//                "web-api"
+//        );
     }
 
     @RequestMapping(method = RequestMethod.GET)

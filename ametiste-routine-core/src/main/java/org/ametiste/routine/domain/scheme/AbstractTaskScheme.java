@@ -1,30 +1,49 @@
 package org.ametiste.routine.domain.scheme;
 
 import org.ametiste.routine.domain.task.Task;
+import org.ametiste.routine.domain.task.properties.TaskProperty;
+import org.ametiste.routine.sdk.protocol.operation.ParamsProtocol;
 
-import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  *
  * @since
  */
-public abstract class AbstractTaskScheme implements TaskScheme {
+public abstract class AbstractTaskScheme<T extends ParamsProtocol> implements TaskScheme<T> {
 
-    @Override
-    public final Task createTask(Map<String, String> schemeParams, String creatorIdenifier) throws TaskCreationRejectedBySchemeException {
-        final Task task = new Task();
+    private final String schemeName;
+    private final Supplier<T> paramsProtocolFactory;
 
-        verifyCreationRequest(schemeParams, creatorIdenifier);
-        fulfillOperations(task, schemeParams);
-        fulfillProperties(task, schemeParams);
-
-        return task;
+    public AbstractTaskScheme(String schemeName, Supplier<T> paramsProtocolFactory) {
+        this.schemeName = schemeName;
+        this.paramsProtocolFactory = paramsProtocolFactory;
     }
 
-    protected void verifyCreationRequest(Map<String, String> schemeParams, String creatorIdentifier) throws TaskCreationRejectedBySchemeException {}
+    @Override
+    final public void setupTask(final TaskBuilder<T> taskBuilder,
+                                final Consumer<T> paramsInstaller,
+                                final String creatorIdenifier) throws TaskCreationRejectedBySchemeException {
 
-    protected void fulfillProperties(Task task, Map<String, String> schemeParams) { }
+        final T paramsProtocol = paramsProtocolFactory.get();
+        paramsInstaller.accept(paramsProtocol);
 
-    protected void fulfillOperations(Task task, Map<String, String> schemeParams) { }
+        verifyCreationRequest(paramsProtocol, creatorIdenifier);
+
+        fulfillOperations(taskBuilder::addOperation, paramsProtocol);
+        fulfillProperties(taskBuilder::addProperty, paramsProtocol);
+    }
+
+    protected void verifyCreationRequest(T schemeParams, String creatorIdentifier) throws TaskCreationRejectedBySchemeException {}
+
+    protected void fulfillProperties(TaskPropertiesReceiver propertiesReceiver, T schemeParams) { }
+
+    protected void fulfillOperations(TaskOperationInstaller operationReceiver, T schemeParams) { }
+
+    @Override
+    public String schemeName() {
+        return schemeName;
+    }
 
 }

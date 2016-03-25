@@ -1,5 +1,6 @@
 package org.ametiste.routine.configuration;
 
+import org.ametiste.routine.domain.scheme.OperationScheme;
 import org.ametiste.routine.domain.scheme.TaskScheme;
 import org.ametiste.routine.domain.scheme.TaskSchemeRepository;
 import org.ametiste.routine.infrastructure.persistency.memory.InMemoryTaskSchemeRepository;
@@ -17,11 +18,14 @@ import java.util.Map;
 public class TaskSchemeRepositoryConfiguration {
 
     @Autowired(required = false)
-    private Map<String, TaskScheme> schemes;
+    private Map<String, TaskScheme> taskSchemes;
+
+    @Autowired(required = false)
+    private Map<String, OperationScheme> opSchemes;
 
     @Bean
     public TaskSchemeRepository taskSchemeRepository() {
-        return new InMemoryTaskSchemeRepository(schemes);
+        return new InMemoryTaskSchemeRepository(taskSchemes, opSchemes);
     }
 
 }

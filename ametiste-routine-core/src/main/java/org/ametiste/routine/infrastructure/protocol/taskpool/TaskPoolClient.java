@@ -1,8 +1,7 @@
-package org.ametiste.routine.sdk.protocol.taskpool;
+package org.ametiste.routine.infrastructure.protocol.taskpool;
 
 import org.ametiste.laplatform.protocol.ProtocolGateway;
 import org.ametiste.routine.sdk.mod.TaskGateway;
-import org.ametiste.routine.sdk.protocol.taskpool.TaskPoolProtocol;
 
 import java.util.Map;
 
@@ -20,8 +19,7 @@ public class TaskPoolClient implements TaskGateway {
 
     @Override
     public void issueTask(String schemaName, Map<String, String> schemaParams) {
-        gateway.session(TaskPoolProtocol.class)
-                .issueTask(schemaName, schemaParams);
+        throw new UnsupportedOperationException("Deprecated API. Please use ProtocolGateway directly.");
     }
 
 }

@@ -18,8 +18,9 @@ import java.util.UUID;
  *
  * @since
  */
-public class BacklogRenewOperationExecutor implements OperationExecutor {
+public class BacklogRenewExecutor implements OperationExecutor {
 
+    // TODO: remove me
     public static final String NAME = ModBacklog.MOD_ID + "::renewOperation";
 
     @Autowired

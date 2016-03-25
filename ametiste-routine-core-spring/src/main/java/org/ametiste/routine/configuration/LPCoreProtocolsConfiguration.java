@@ -15,7 +15,7 @@ import org.ametiste.routine.infrastructure.protocol.taskpool.DirectTaskPoolConne
 import org.ametiste.routine.sdk.protocol.moddata.ModDataProtocol;
 import org.ametiste.routine.sdk.protocol.modreport.ModReportProtocol;
 import org.ametiste.routine.sdk.protocol.taskcontrol.TaskControlProtocol;
-import org.ametiste.routine.sdk.protocol.taskpool.TaskPoolProtocol;
+import org.ametiste.routine.infrastructure.protocol.taskpool.TaskPoolProtocol;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

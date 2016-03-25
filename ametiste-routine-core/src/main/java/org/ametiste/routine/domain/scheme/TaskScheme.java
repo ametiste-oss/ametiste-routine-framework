@@ -1,16 +1,19 @@
 package org.ametiste.routine.domain.scheme;
 
-import org.ametiste.routine.domain.task.Task;
+import org.ametiste.routine.sdk.protocol.operation.ParamsProtocol;
 
-import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  *
  * @since
  */
-public interface TaskScheme {
+public interface TaskScheme<T extends ParamsProtocol> {
 
-    Task createTask(Map<String, String> schemeParams, String creatorIdenifier)
-            throws TaskSchemeException;
+    String schemeName();
+
+    void setupTask(final TaskBuilder<T> taskBuilder,
+                   final Consumer<T> paramsInstaller,
+                   final String creatorIdenifier) throws TaskSchemeException;
 
 }

@@ -1,6 +1,6 @@
 logging:
   level:
-    org.ametiste: DEBUG
+    org.ametiste: TRACE
     org.ametiste.metrics: ERROR
     # org.ametiste.routine.printer.backlog.PrintTaskPopulationStrategy: DEBUG
     # org.ametiste.routine.mod.backlog.application.service.BacklogRenewService: DEBUG

@@ -1,7 +1,10 @@
 package org.ametiste.routine.application.service.issue;
 
-import java.util.Map;
+import org.ametiste.routine.domain.scheme.TaskScheme;
+import org.ametiste.routine.sdk.protocol.operation.ParamsProtocol;
+
 import java.util.UUID;
+import java.util.function.Consumer;
 
 /**
  *
@@ -9,8 +12,8 @@ import java.util.UUID;
  */
 public interface TaskIssueService {
 
-    UUID issueTask(String taskSchemeName,
-                   Map<String, String> params,
-                   String creatorIdentifier);
+    <T extends ParamsProtocol> UUID issueTask(Class<? extends TaskScheme<T>> taskSchemeName,
+                                              Consumer<T> paramsProtocol,
+                                              String creatorIdentifier);
 
 }

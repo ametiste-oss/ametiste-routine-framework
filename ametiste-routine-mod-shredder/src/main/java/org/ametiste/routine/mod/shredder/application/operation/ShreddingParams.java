@@ -1,7 +1,7 @@
 package org.ametiste.routine.mod.shredder.application.operation;
 
 import org.ametiste.routine.domain.task.Task;
-import org.ametiste.routine.sdk.protocol.operation.OperationProtocol;
+import org.ametiste.routine.sdk.protocol.operation.ParamsProtocol;
 
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -11,7 +11,7 @@ import java.util.function.Function;
  *
  * @since
  */
-public class ShreddingParams implements OperationProtocol {
+public class ShreddingParams implements ParamsProtocol {
 
     public static final String PARAM_STALE_THRESHOLD_VALUE = "mod-shredding.op.shredding.staleThreshold";
 
@@ -19,17 +19,13 @@ public class ShreddingParams implements OperationProtocol {
 
     public static final String PARAM_STALE_STATES = "mod-shredding.op.shredding.staleStates";
 
-    public static final List<String> DEFAULT_STALE_STATES = Arrays.asList(Task.State.DONE.name());
+    public static final List<String> DEFAULT_STALE_STATES = Collections.singletonList(Task.State.DONE.name());
 
     public static final int DEFAULT_STALE_THRESHOLD_VALUE = 12;
 
     public static final ChronoUnit DEFAULT_STALE_THRESHOLD_UNIT = ChronoUnit.HOURS;
 
-    private final Map<String, String> properties;
-
-    public ShreddingParams(Map<String, String> properties) {
-        this.properties = properties;
-    }
+    private final Map<String, String> properties = new HashMap<>();
 
     public Integer threshold() {
         return mayBe(PARAM_STALE_THRESHOLD_VALUE,
@@ -46,15 +42,14 @@ public class ShreddingParams implements OperationProtocol {
                 this::splitAsCSList, DEFAULT_STALE_STATES);
     }
 
-    public static Map<String, String> create(int staleThresholdValue, String staleThresholdUnit, List<String> staleStates) {
-        final HashMap<String, String> p = new HashMap<>();
-        p.put(ShreddingParams.PARAM_STALE_THRESHOLD_VALUE,
-                Integer.toString(staleThresholdValue));
-        p.put(ShreddingParams.PARAM_STALE_THRESHOLD_UNIT,
-                staleThresholdUnit);
-        p.put(ShreddingParams.PARAM_STALE_STATES,
-                String.join(",", staleStates));
-        return p;
+    @Override
+    public void fromMap(final Map<String, String> params) {
+        properties.putAll(params);
+    }
+
+    @Override
+    public Map<String, String> asMap() {
+        return properties;
     }
 
     private static <K,V> Optional<V> mayBe(K key, Map<K, V> in) {
@@ -69,8 +64,22 @@ public class ShreddingParams implements OperationProtocol {
         return Arrays.asList(s.split(","));
     }
 
-    @Override
-    public UUID operationId() {
-        return null;
+    public void staleStates(final List<String> staleStates) {
+        properties.put(PARAM_STALE_STATES, String.join(",", staleStates));
     }
+
+    public void staleThresholdValue(final int staleThresholdValue) {
+        properties.put(PARAM_STALE_THRESHOLD_VALUE, Integer.toString(staleThresholdValue));
+    }
+
+    public void staleThresholdUnit(final ChronoUnit staleThresholdUnit) {
+        properties.put(PARAM_STALE_THRESHOLD_UNIT, staleThresholdUnit.name());
+    }
+
+    public static ShreddingParams createFromMap(Map<String, String> params) {
+        final ShreddingParams backlogParams = new ShreddingParams();
+        backlogParams.fromMap(params);
+        return backlogParams;
+    }
+
 }

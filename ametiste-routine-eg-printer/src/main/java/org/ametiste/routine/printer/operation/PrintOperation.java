@@ -3,20 +3,15 @@ package org.ametiste.routine.printer.operation;
 import org.ametiste.laplatform.protocol.ProtocolGateway;
 import org.ametiste.routine.sdk.operation.OperationExecutor;
 import org.ametiste.routine.sdk.operation.OperationFeedback;
-import org.ametiste.routine.sdk.protocol.http.HttpProtocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
 import java.util.Random;
-import java.util.UUID;
 
-@Component(PrintOperation.NAME)
+@Component(PrintOperationScheme.NAME)
 public final class PrintOperation implements OperationExecutor {
-
-    public static final String NAME = "print-operation";
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -26,11 +21,12 @@ public final class PrintOperation implements OperationExecutor {
     @Override
     public void execOperation(OperationFeedback feedback, ProtocolGateway protocolGateway) {
 
-        final long any = new Random().longs(50, delyaTime).findAny().getAsLong();
+        final long any = new Random().longs(50, delyaTime).findAny().orElse(0);
+
+        final String operationOut = protocolGateway
+                .session(PrintOperationParams.class).operationOut();
 
         feedback.operationNotice("Delay time is: " + any);
-
-        // logger.trace("Start operation: " + operationId);
 
         try {
             Thread.sleep(any);
@@ -38,7 +34,9 @@ public final class PrintOperation implements OperationExecutor {
             e.printStackTrace();
         }
 
-        // logger.trace("Done operation: " + operationId);
+        if (logger.isTraceEnabled()) {
+            logger.trace("Operation out is: " + operationOut);
+        }
 
     }
 

@@ -2,11 +2,12 @@ package org.ametiste.routine.mod.shredder.application.operation;
 
 import org.ametiste.laplatform.protocol.ProtocolGateway;
 import org.ametiste.laplatform.protocol.gateway.SessionOption;
+import org.ametiste.routine.mod.shredder.application.schema.ShreddingStaleTaskScheme;
 import org.ametiste.routine.mod.shredder.mod.ModShredder;
 import org.ametiste.routine.sdk.operation.OperationExecutor;
 import org.ametiste.routine.sdk.operation.OperationFeedback;
 import org.ametiste.routine.sdk.protocol.modreport.ModReportProtocol;
-import org.ametiste.routine.sdk.protocol.taskpool.TaskPoolProtocol;
+import org.ametiste.routine.infrastructure.protocol.taskpool.TaskPoolProtocol;
 import org.springframework.stereotype.Component;
 
 import java.time.Instant;
@@ -18,10 +19,8 @@ import java.util.function.Function;
  *
  * @since 0.1.0
  */
-@Component(ShreddingStaleTaskOperationExecutor.NAME)
-public class ShreddingStaleTaskOperationExecutor implements OperationExecutor {
-
-    public static final String NAME = ModShredder.MOD_ID + "-op-shredding-stale";
+@Component(ShreddingStaleTaskOperationScheme.NAME)
+public class ShreddingStaleTaskExecutor implements OperationExecutor {
 
     @Override
     public void execOperation(final OperationFeedback feedback, final ProtocolGateway protocolGateway) {

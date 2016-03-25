@@ -1,7 +1,8 @@
 package org.ametiste.routine.mod.backlog.application.operation;
 
-import org.ametiste.routine.sdk.protocol.operation.OperationProtocol;
+import org.ametiste.routine.sdk.protocol.operation.ParamsProtocol;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.UUID;
 
@@ -9,21 +10,32 @@ import java.util.UUID;
  *
  * @since
  */
-public class BacklogParams implements OperationProtocol {
+public class BacklogParams implements ParamsProtocol {
 
-    private final Map<String, String> params;
+    private String schemeName;
 
-    public BacklogParams(Map<String, String> params) {
-        this.params = params;
+    public void schemeName(String schemeName) {
+        this.schemeName = schemeName;
     }
 
     public String schemeName() {
-        return params.get("schemeName");
+        return schemeName;
     }
 
     @Override
-    public UUID operationId() {
-        return null;
+    public Map<String, String> asMap() {
+        return Collections.singletonMap("schemeName", schemeName);
+    }
+
+    @Override
+    public void fromMap(Map<String, String> params) {
+        schemeName = params.get("schemeName");
+    }
+
+    public static BacklogParams createFromMap(Map<String, String> params) {
+        final BacklogParams backlogParams = new BacklogParams();
+        backlogParams.fromMap(params);
+        return backlogParams;
     }
 
 }

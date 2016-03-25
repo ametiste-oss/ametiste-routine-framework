@@ -1,25 +1,29 @@
 package org.ametiste.routine.printer.scheme;
 
-import org.ametiste.routine.domain.scheme.AbstractTaskScheme;
-import org.ametiste.routine.domain.scheme.TaskCreationRejectedBySchemeException;
-import org.ametiste.routine.domain.task.Task;
+import org.ametiste.routine.domain.scheme.*;
 import org.ametiste.routine.domain.task.properties.TaskProperty;
 import org.ametiste.routine.mod.backlog.mod.ModBacklog;
 import org.ametiste.routine.printer.operation.PrintOperation;
+import org.ametiste.routine.printer.operation.PrintOperationScheme;
 import org.springframework.stereotype.Component;
 
 import java.util.Collections;
-import java.util.Map;
 
-@Component(PrintTaskScheme.NAME)
-public class PrintTaskScheme extends AbstractTaskScheme {
+import static org.ametiste.routine.infrastructure.persistency.jpa.data.OperationData_.task;
+
+@Component
+public class PrintTaskScheme extends AbstractTaskScheme<PrintTaskSchemeParams> {
 
     public static final String NAME = "printer-eg-task";
 
     public static final String ALLOWED_CREATOR = ModBacklog.MOD_ID;
 
+    public PrintTaskScheme() {
+        super(NAME, PrintTaskSchemeParams::new);
+    }
+
     @Override
-    protected void verifyCreationRequest(Map<String, String> schemeParams, String creatorIdentifier) throws TaskCreationRejectedBySchemeException {
+    protected void verifyCreationRequest(PrintTaskSchemeParams schemeParams, String creatorIdentifier) throws TaskCreationRejectedBySchemeException {
         if (!creatorIdentifier.equals(ALLOWED_CREATOR)) {
             throw new TaskCreationRejectedBySchemeException(
                     "Unexpected creator identifier for task scheme '" + NAME + "' expected '" + ALLOWED_CREATOR + "' but '" + creatorIdentifier + "' given.");
@@ -27,21 +31,24 @@ public class PrintTaskScheme extends AbstractTaskScheme {
     }
 
     @Override
-    protected void fulfillOperations(Task task, Map<String, String> schemeParams) {
+    protected void fulfillProperties(final TaskPropertiesReceiver task, final PrintTaskSchemeParams schemeParams) {
+        task.addProperty("printer-eg.task.number", schemeParams.taskNumber());
+        task.addProperty("printer-eg.task.out", schemeParams.taskOut());
+    }
 
-        task.addProperty(new TaskProperty("printer-eg.task.number",
-                schemeParams.getOrDefault("task.number", "[none]")));
-
-        task.addProperty(new TaskProperty("printer-eg.task.out",
-                schemeParams.getOrDefault("task.out", "[none]")));
-
-        task.addOperation(PrintOperation.NAME,
-                Collections.singletonMap("out", schemeParams.getOrDefault("out", "[none]")+"::operation-1"));
-        task.addOperation(PrintOperation.NAME,
-                Collections.singletonMap("out", schemeParams.getOrDefault("out", "[none]")+"::operation-2"));
-        task.addOperation(PrintOperation.NAME,
-                Collections.singletonMap("out", schemeParams.getOrDefault("out", "[none]")+"::operation-3"));
-        task.addOperation(PrintOperation.NAME,
-                Collections.singletonMap("out", schemeParams.getOrDefault("out", "[none]")+"::operation-4"));
+    @Override
+    protected void fulfillOperations(final TaskOperationInstaller task, PrintTaskSchemeParams schemeParams) {
+        task.addOperation(PrintOperationScheme.class, params -> {
+                params.printOut(schemeParams.taskOut()+"::operation-1");
+            }
+        );
+        task.addOperation(PrintOperationScheme.class, params -> {
+                params.printOut(schemeParams.taskOut()+"::operation-2");
+            }
+        );
+        task.addOperation(PrintOperationScheme.class, params -> {
+                params.printOut(schemeParams.taskOut()+"::operation-3");
+            }
+        );
     }
 }

@@ -17,9 +17,7 @@ public class ModShredderParamsProtocolConfiguration {
     @Bean
     @Scope(scopeName = "prototype")
     public ShreddingParams shreddingParamsProtocol(GatewayContext c) {
-        return new ShreddingParams(
-                c.lookupMap("params")
-        );
+        return ShreddingParams.createFromMap(c.lookupMap("params"));
     }
 
     @Bean

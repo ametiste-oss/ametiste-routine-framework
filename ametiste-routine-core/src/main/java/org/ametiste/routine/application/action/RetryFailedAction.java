@@ -41,17 +41,17 @@ public class RetryFailedAction {
         final List<Task> tasksByState =
                 taskRepository.findTasksByState(Task.State.TERMINATED, 100);
 
-        for (Task task : tasksByState) {
-            try {
-                taskIssueService.issueTask(
-                        "routine.core.retryScheme",
-                        Collections.singletonMap("recovered.task.id", task.entityId().toString()),
-                        ACTION_IDENTIFIER
-                );
-            } catch (Exception e) {
-                logger.error("Error during issue task for recovery of {}", task.entityId());
-            }
-        }
+//        for (Task task : tasksByState) {
+//            try {
+//                taskIssueService.issueTask(
+//                        "routine.core.retryScheme",
+//                        Collections.singletonMap("recovered.task.id", task.entityId().toString()),
+//                        ACTION_IDENTIFIER
+//                );
+//            } catch (Exception e) {
+//                logger.error("Error during issue task for recovery of {}", task.entityId());
+//            }
+//        }
 
         // TODO: add 2 app events, recovery scheduled event and recovery shedule failed event
         // with lists of task identifiers for each category.

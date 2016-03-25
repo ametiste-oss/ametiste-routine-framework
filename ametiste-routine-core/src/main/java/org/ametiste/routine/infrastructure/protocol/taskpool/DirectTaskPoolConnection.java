@@ -3,8 +3,9 @@ package org.ametiste.routine.infrastructure.protocol.taskpool;
 import org.ametiste.metrics.annotations.Timeable;
 import org.ametiste.routine.application.service.issue.TaskIssueService;
 import org.ametiste.routine.application.service.removing.TaskRemovingService;
+import org.ametiste.routine.domain.scheme.TaskScheme;
 import org.ametiste.routine.domain.task.Task;
-import org.ametiste.routine.sdk.protocol.taskpool.TaskPoolProtocol;
+import org.ametiste.routine.sdk.protocol.operation.ParamsProtocol;
 
 import java.time.Instant;
 import java.util.List;
@@ -34,8 +35,9 @@ public class DirectTaskPoolConnection implements TaskPoolProtocol, DirectTaskPoo
     @Override
     @Timeable(name = OVERAL_ISSUE_TASK_TIMING)
     @Timeable(name = CLIENTS_PREFIX, nameSuffixExpression = CLIENT_ISSUE_TASK_TIMING)
-    public UUID issueTask(String taskScheme, Map<String, String> params) {
-        return taskIssueService.issueTask(taskScheme, params, clientId);
+    public <T extends ParamsProtocol> UUID issueTask(final Class<? extends TaskScheme<T>>
+                                                        taskScheme, final Consumer<T> paramsInstaller) {
+        return taskIssueService.issueTask(taskScheme, paramsInstaller, clientId);
     }
 
     @Override

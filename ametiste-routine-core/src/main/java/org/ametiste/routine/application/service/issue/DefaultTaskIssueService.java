@@ -2,6 +2,7 @@ package org.ametiste.routine.application.service.issue;
 
 import org.ametiste.routine.application.CoreEventsGateway;
 import org.ametiste.routine.application.TaskDomainEvenetsGateway;
+import org.ametiste.routine.domain.scheme.TaskBuilder;
 import org.ametiste.routine.domain.scheme.TaskScheme;
 import org.ametiste.routine.domain.scheme.TaskSchemeException;
 import org.ametiste.routine.domain.scheme.TaskSchemeRepository;
@@ -11,12 +12,13 @@ import org.ametiste.routine.domain.task.TaskRepository;
 import org.ametiste.routine.domain.task.properties.TaskPropertiesRegistry;
 import org.ametiste.routine.domain.task.properties.TaskProperty;
 import org.ametiste.routine.sdk.application.service.issue.constraints.IssueConstraint;
+import org.ametiste.routine.sdk.protocol.operation.ParamsProtocol;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 
 public class DefaultTaskIssueService implements TaskIssueService {
@@ -48,23 +50,15 @@ public class DefaultTaskIssueService implements TaskIssueService {
     }
 
     @Override
-    public UUID issueTask(String taskSchemeName, Map<String, String> params, String creatorIdenifier) {
+    public <T extends ParamsProtocol> UUID issueTask(
+            Class<? extends TaskScheme<T>> taskSchemeClass, Consumer<T> paramsInstaller, String creatorIdenifier) {
 
+        final TaskBuilder<T> builder = new TaskBuilder<>(taskSchemeRepository, creatorIdenifier);
 
-        final TaskScheme taskScheme = taskSchemeRepository.findTaskScheme(taskSchemeName);
-
-        final Task task;
-
-        // TODO: add aggregate instant for this
-        try {
-            task = taskScheme.createTask(params, creatorIdenifier);
-        } catch (TaskSchemeException e) {
-            // TODO: add specific app exception
-            throw new RuntimeException("Task creation error", e);
-        }
-
-        task.addProperty(new TaskProperty(Task.SCHEME_PROPERTY_NAME, taskSchemeName));
-        task.addProperty(new TaskProperty(Task.CREATOR_PROPERTY_NAME, creatorIdenifier));
+        final Task task = builder.defineScheme(taskSchemeClass, paramsInstaller)
+                .addProperty(Task.SCHEME_PROPERTY_NAME, taskSchemeClass.getName())
+                .addProperty(Task.CREATOR_PROPERTY_NAME, creatorIdenifier)
+                .build();
 
         taskRepository.saveTask(task);
         taskDomainEvenetsGateway.taskIssued(task.entityId());
@@ -72,7 +66,7 @@ public class DefaultTaskIssueService implements TaskIssueService {
 
         if (logger.isDebugEnabled()) {
             logger.debug("New task created using scheme:{}, task id: {}, creator id: {}",
-                    taskScheme, task.entityId().toString(), creatorIdenifier);
+                    taskSchemeClass.getSimpleName(), task.entityId().toString(), creatorIdenifier);
         }
 
         return task.entityId();

@@ -1,12 +1,9 @@
 package org.ametiste.routine.mod.backlog.configuration;
 
-import org.ametiste.laplatform.protocol.GatewayContext;
-import org.ametiste.laplatform.protocol.ProtocolFactory;
 import org.ametiste.routine.application.service.issue.TaskIssueService;
 import org.ametiste.routine.configuration.AmetisteRoutineCoreProperties;
 import org.ametiste.routine.mod.backlog.application.action.BacklogRenewAction;
-import org.ametiste.routine.mod.backlog.application.operation.BacklogParams;
-import org.ametiste.routine.mod.backlog.application.operation.BacklogRenewOperationExecutor;
+import org.ametiste.routine.mod.backlog.application.operation.BacklogRenewExecutor;
 import org.ametiste.routine.mod.backlog.application.service.ActiveBacklogTasksConstraint;
 import org.ametiste.routine.mod.backlog.application.service.ActiveRenewTaskConstraint;
 import org.ametiste.routine.mod.backlog.application.service.BacklogRenewConstraint;
@@ -21,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.util.ArrayList;
@@ -49,9 +45,9 @@ public class BacklogModConfiguration {
     @Autowired
     private List<BacklogRenewConstraint> constraints;
 
-    @Bean(name = BacklogRenewOperationExecutor.NAME)
+    @Bean(name = BacklogRenewExecutor.NAME)
     public OperationExecutor backlogRenewOperationExecutor() {
-        return new BacklogRenewOperationExecutor();
+        return new BacklogRenewExecutor();
     }
 
     @Bean
