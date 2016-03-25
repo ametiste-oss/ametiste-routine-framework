@@ -31,7 +31,7 @@ public class PrintTaskScheme extends AbstractTaskScheme<PrintTaskSchemeParams> {
     }
 
     @Override
-    protected void fulfillOperations(final TaskOperationInstaller task, final PrintTaskSchemeParams schemeParams) {
+    protected void fulfillOperations(final TaskOperationReceiver task, final PrintTaskSchemeParams schemeParams) {
         task.addOperation(PrintOperationScheme.class, params -> {
                 params.printOut(schemeParams.taskMessage()+"::operation-1");
                 params.delayTime(schemeParams.delayTime());

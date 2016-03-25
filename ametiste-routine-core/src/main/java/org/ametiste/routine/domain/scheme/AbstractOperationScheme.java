@@ -1,6 +1,5 @@
 package org.ametiste.routine.domain.scheme;
 
-import org.ametiste.routine.domain.task.Task;
 import org.ametiste.routine.sdk.protocol.operation.ParamsProtocol;
 
 import java.util.function.Consumer;
@@ -26,7 +25,7 @@ abstract public class AbstractOperationScheme<T extends ParamsProtocol> implemen
     }
 
     @Override
-    final public void createOperationFor(final TaskOperationReceiver operationReceiver,
+    final public void createOperationFor(final TaskOperationInstaller operationReceiver,
                                          final Consumer<T> paramsInstaller) {
         final T params = paramsProtocolFactory.get();
         paramsInstaller.accept(params);

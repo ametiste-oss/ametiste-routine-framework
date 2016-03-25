@@ -1,8 +1,7 @@
 package org.ametiste.routine.mod.shredder.application.schema;
 
 import org.ametiste.routine.domain.scheme.AbstractTaskScheme;
-import org.ametiste.routine.domain.scheme.TaskBuilder;
-import org.ametiste.routine.domain.scheme.TaskOperationInstaller;
+import org.ametiste.routine.domain.scheme.TaskOperationReceiver;
 import org.ametiste.routine.mod.shredder.application.operation.ShreddingStaleTaskOperationScheme;
 import org.ametiste.routine.mod.shredder.application.operation.ShreddingParams;
 import org.ametiste.routine.mod.shredder.mod.ModShredder;
@@ -18,7 +17,7 @@ public class ShreddingStaleTaskScheme extends AbstractTaskScheme<ShreddingParams
     }
 
     @Override
-    protected void fulfillOperations(final TaskOperationInstaller task, final ShreddingParams schemeParams) {
+    protected void fulfillOperations(final TaskOperationReceiver task, final ShreddingParams schemeParams) {
         task.addOperation(ShreddingStaleTaskOperationScheme.class, schemeParams::proxy);
     }
 

@@ -1,7 +1,5 @@
 package org.ametiste.routine.domain.scheme;
 
-import org.ametiste.routine.domain.task.Task;
-import org.ametiste.routine.domain.task.properties.TaskProperty;
 import org.ametiste.routine.sdk.protocol.operation.ParamsProtocol;
 
 import java.util.function.Consumer;
@@ -30,14 +28,7 @@ public abstract class AbstractTaskScheme<T extends ParamsProtocol> implements Ta
         paramsInstaller.accept(paramsProtocol);
 
         verifyCreationRequest(paramsProtocol, creatorIdenifier);
-
         fulfillOperations(taskBuilder::addOperation, paramsProtocol);
-
-        // mmm.. how can I have this as default behavior,
-        // in case where fulfillOperations is not defined explicitly?
-        // note, TaskOperationInstaller iface contains feature javadoc
-        // taskBuilder.addOperation(operationScheme, c -> c.fromMap(paramsProxy.asMap()));
-
         fulfillProperties(taskBuilder::addProperty, paramsProtocol);
     }
 
@@ -45,7 +36,7 @@ public abstract class AbstractTaskScheme<T extends ParamsProtocol> implements Ta
 
     protected void fulfillProperties(TaskPropertiesReceiver propertiesReceiver, T schemeParams) {}
 
-    protected void fulfillOperations(TaskOperationInstaller operationReceiver, T schemeParams) {
+    protected void fulfillOperations(TaskOperationReceiver operationReceiver, T schemeParams) {
 
     }
 

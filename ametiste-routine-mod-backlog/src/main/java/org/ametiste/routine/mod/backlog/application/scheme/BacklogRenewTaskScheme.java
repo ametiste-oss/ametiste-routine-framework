@@ -1,7 +1,7 @@
 package org.ametiste.routine.mod.backlog.application.scheme;
 
 import org.ametiste.routine.domain.scheme.AbstractTaskScheme;
-import org.ametiste.routine.domain.scheme.TaskOperationInstaller;
+import org.ametiste.routine.domain.scheme.TaskOperationReceiver;
 import org.ametiste.routine.mod.backlog.application.operation.BacklogParams;
 import org.ametiste.routine.mod.backlog.application.operation.BacklogRenewOperationScheme;
 import org.ametiste.routine.mod.backlog.mod.ModBacklog;
@@ -17,7 +17,7 @@ public class BacklogRenewTaskScheme extends AbstractTaskScheme<BacklogParams> {
     }
 
     @Override
-    protected void fulfillOperations(final TaskOperationInstaller task, final BacklogParams schemeParams) {
+    protected void fulfillOperations(final TaskOperationReceiver task, final BacklogParams schemeParams) {
         task.addOperation(BacklogRenewOperationScheme.class, schemeParams::proxy);
     }
 }
