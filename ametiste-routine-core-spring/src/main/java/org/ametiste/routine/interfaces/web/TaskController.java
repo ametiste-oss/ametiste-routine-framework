@@ -1,7 +1,7 @@
 package org.ametiste.routine.interfaces.web;
 
 import org.ametiste.routine.application.service.issue.TaskIssueService;
-import org.ametiste.routine.domain.scheme.TaskSchemeRepository;
+import org.ametiste.routine.domain.scheme.SchemeRepository;
 import org.ametiste.routine.interfaces.web.data.IssueTaskData;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +20,7 @@ public class TaskController {
     private TaskIssueService taskIssueService;
 
     @Autowired
-    private TaskSchemeRepository taskSchemeRepository;
+    private SchemeRepository schemeRepository;
 
     @RequestMapping(method = RequestMethod.POST)
     public void issueTask(@RequestBody IssueTaskData issueTaskData) {
@@ -35,7 +35,7 @@ public class TaskController {
 
     @RequestMapping(method = RequestMethod.GET)
     public @ResponseBody List<String> listTaskSchemas() {
-        return taskSchemeRepository.loadSchemeNames();
+        return schemeRepository.loadSchemeNames();
     }
 
 }

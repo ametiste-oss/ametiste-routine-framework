@@ -3,21 +3,16 @@ package org.ametiste.routine.configuration;
 import org.ametiste.laplatform.protocol.gateway.ProtocolGatewayService;
 import org.ametiste.routine.application.CoreEventsGateway;
 import org.ametiste.routine.application.TaskDomainEvenetsGateway;
-import org.ametiste.routine.domain.scheme.TaskSchemeRepository;
+import org.ametiste.routine.domain.scheme.SchemeRepository;
 import org.ametiste.routine.domain.task.TaskRepository;
 import org.ametiste.routine.infrastructure.execution.*;
 import org.ametiste.routine.infrastructure.execution.local.*;
 import org.ametiste.routine.infrastructure.messaging.JmsTaskExecutionGatewayListener;
-import org.ametiste.routine.sdk.operation.OperationExecutor;
-import org.ametiste.routine.sdk.operation.OperationExecutorFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.Executors;
 
 /**
@@ -50,7 +45,7 @@ public class LocalTaskExecutionGatewayConfiguration {
     private ProtocolGatewayService protocolGatewayservice;
 
     @Autowired
-    private TaskSchemeRepository taskSchemeRepository;
+    private SchemeRepository schemeRepository;
 
     @Bean
     public LineExecutionGateway localLineExecutionGateway() {
@@ -78,7 +73,7 @@ public class LocalTaskExecutionGatewayConfiguration {
         // each request.
         //
 
-        return new LocalLineExecutionGateway(taskSchemeRepository,
+        return new LocalLineExecutionGateway(schemeRepository,
                 protocolGatewayservice,
                 localTaskExecutionController()
         );

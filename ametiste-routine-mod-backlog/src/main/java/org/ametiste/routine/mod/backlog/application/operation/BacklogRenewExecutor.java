@@ -25,6 +25,8 @@ public class BacklogRenewExecutor implements OperationExecutor {
         final BacklogPopulationStrategy populationStrategy =
                 backlogProtocol.loadPopulationStrategy(renewScheme.populationStrategyName());
 
+        // TODO: add some checks, atm if there is no strategies NPE happens
+
         populationStrategy.populate(protocolGateway);
 
     }

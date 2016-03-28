@@ -11,7 +11,7 @@ import static javafx.scene.input.KeyCode.T;
  *
  * @since
  */
-public interface TaskSchemeRepository {
+public interface SchemeRepository {
 
     //TODO: mb I need special representation for "raw" scheme that only has name and fromMap toMap methods
     // for paramteres mapping?
@@ -26,5 +26,9 @@ public interface TaskSchemeRepository {
     List<String> loadSchemeNames();
 
     OperationScheme findOperationScheme(String operationName);
+
+    void saveScheme(OperationScheme<?> operationScheme);
+
+    void saveScheme(TaskScheme<?> taskScheme);
 
 }

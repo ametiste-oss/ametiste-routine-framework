@@ -4,13 +4,11 @@ import org.ametiste.routine.application.CoreEventsGateway;
 import org.ametiste.routine.application.TaskDomainEvenetsGateway;
 import org.ametiste.routine.domain.scheme.TaskBuilder;
 import org.ametiste.routine.domain.scheme.TaskScheme;
-import org.ametiste.routine.domain.scheme.TaskSchemeException;
-import org.ametiste.routine.domain.scheme.TaskSchemeRepository;
+import org.ametiste.routine.domain.scheme.SchemeRepository;
 import org.ametiste.routine.domain.task.Task;
 import org.ametiste.routine.application.events.TaskIssuedEvent;
 import org.ametiste.routine.domain.task.TaskRepository;
 import org.ametiste.routine.domain.task.properties.TaskPropertiesRegistry;
-import org.ametiste.routine.domain.task.properties.TaskProperty;
 import org.ametiste.routine.sdk.application.service.issue.constraints.IssueConstraint;
 import org.ametiste.routine.sdk.protocol.operation.ParamsProtocol;
 import org.slf4j.Logger;
@@ -27,7 +25,7 @@ public class DefaultTaskIssueService implements TaskIssueService {
 
     private TaskPropertiesRegistry taskPropertiesRegistry;
 
-    private TaskSchemeRepository taskSchemeRepository;
+    private SchemeRepository schemeRepository;
 
     private final TaskDomainEvenetsGateway taskDomainEvenetsGateway;
 
@@ -38,12 +36,12 @@ public class DefaultTaskIssueService implements TaskIssueService {
 
     public DefaultTaskIssueService(TaskRepository taskRepository,
                                    TaskPropertiesRegistry taskPropertiesRegistry,
-                                   TaskSchemeRepository taskSchemeRepository,
+                                   SchemeRepository schemeRepository,
                                    TaskDomainEvenetsGateway taskDomainEvenetsGateway,
                                    CoreEventsGateway coreEventsGateway,
                                    List<IssueConstraint> issueConstraints) {
         this.taskRepository = taskRepository;
-        this.taskSchemeRepository = taskSchemeRepository;
+        this.schemeRepository = schemeRepository;
         this.taskDomainEvenetsGateway = taskDomainEvenetsGateway;
         this.coreEventsGateway = coreEventsGateway;
         this.issueConstraints = issueConstraints;
@@ -53,7 +51,7 @@ public class DefaultTaskIssueService implements TaskIssueService {
     public <T extends ParamsProtocol> UUID issueTask(
             Class<? extends TaskScheme<T>> taskSchemeClass, Consumer<T> paramsInstaller, String creatorIdenifier) {
 
-        final TaskBuilder<T> builder = new TaskBuilder<>(taskSchemeRepository, creatorIdenifier);
+        final TaskBuilder<T> builder = new TaskBuilder<>(schemeRepository, creatorIdenifier);
 
         final Task task = builder.defineScheme(taskSchemeClass, paramsInstaller)
                 .addProperty(Task.SCHEME_PROPERTY_NAME, taskSchemeClass.getName())

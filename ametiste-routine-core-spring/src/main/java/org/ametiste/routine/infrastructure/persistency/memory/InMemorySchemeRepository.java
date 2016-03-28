@@ -2,45 +2,35 @@ package org.ametiste.routine.infrastructure.persistency.memory;
 
 import org.ametiste.routine.domain.scheme.OperationScheme;
 import org.ametiste.routine.domain.scheme.TaskScheme;
-import org.ametiste.routine.domain.scheme.TaskSchemeRepository;
+import org.ametiste.routine.domain.scheme.SchemeRepository;
 import org.ametiste.routine.sdk.protocol.operation.ParamsProtocol;
 
 import java.util.*;
-
-import static javafx.scene.input.KeyCode.T;
 
 /**
  *
  * @since
  */
-public class InMemoryTaskSchemeRepository implements TaskSchemeRepository {
+public class InMemorySchemeRepository implements SchemeRepository {
 
-    private final Map<String, TaskScheme> schemas;
+    private final Map<String, TaskScheme> taskSchemasByName = new HashMap<>();
     private final Map<Class<? extends TaskScheme>, TaskScheme> taskSchemasByClass = new HashMap<>();
     private final Map<String, OperationScheme> opSchemasByName = new HashMap<>();
     private final Map<Class<? extends OperationScheme>, OperationScheme> opSchemasByClass = new HashMap<>();
 
-    public InMemoryTaskSchemeRepository(Map<String, TaskScheme> taskSchemas, Map<String, OperationScheme> opSchemas) {
-        this.schemas = Collections.unmodifiableMap(taskSchemas);
-        this.schemas.values().forEach(
-            s -> taskSchemasByClass.put(s.getClass(), s)
-        );
-        opSchemas.values().forEach(
-            s -> {
-                opSchemasByName.put(s.schemeName(), s);
-                opSchemasByClass.put(s.getClass(), s);
-            }
-        );
+    public InMemorySchemeRepository(Map<String, TaskScheme> taskSchemas, Map<String, OperationScheme> opSchemas) {
+        taskSchemas.values().forEach(this::saveScheme);
+        opSchemas.values().forEach(this::saveScheme);
     }
 
     @Override
     public TaskScheme findTaskScheme(String taskSchemeName) {
 
-        if (!schemas.containsKey(taskSchemeName)) {
+        if (!taskSchemasByName.containsKey(taskSchemeName)) {
              throw new IllegalArgumentException("Can't find registered scheme with the given name: " + taskSchemeName);
         }
 
-        return schemas.get(taskSchemeName);
+        return taskSchemasByName.get(taskSchemeName);
     }
 
     @Override
@@ -55,12 +45,24 @@ public class InMemoryTaskSchemeRepository implements TaskSchemeRepository {
 
     @Override
     public List<String> loadSchemeNames() {
-        return new ArrayList<>(schemas.keySet());
+        return new ArrayList<>(taskSchemasByName.keySet());
     }
 
     @Override
     public OperationScheme findOperationScheme(final String operationName) {
         return opSchemasByName.get(operationName);
+    }
+
+    @Override
+    public void saveScheme(final OperationScheme<?> operationScheme) {
+        opSchemasByName.put(operationScheme.schemeName(), operationScheme);
+        opSchemasByClass.put(operationScheme.getClass(), operationScheme);
+    }
+
+    @Override
+    public void saveScheme(final TaskScheme<?> taskScheme) {
+        taskSchemasByName.put(taskScheme.schemeName(), taskScheme);
+        taskSchemasByClass.put(taskScheme.getClass(), taskScheme);
     }
 
 }

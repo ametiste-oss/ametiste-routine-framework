@@ -9,7 +9,7 @@ import org.ametiste.routine.application.service.termination.DefaultTaskTerminati
 import org.ametiste.routine.application.service.termination.TaskTerminationService;
 import org.ametiste.routine.domain.ModReportRepository;
 import org.ametiste.routine.domain.ModRepository;
-import org.ametiste.routine.domain.scheme.TaskSchemeRepository;
+import org.ametiste.routine.domain.scheme.SchemeRepository;
 import org.ametiste.routine.domain.task.TaskRepository;
 import org.ametiste.routine.domain.task.properties.TaskPropertiesRegistry;
 import org.ametiste.routine.domain.task.properties.TaskProperty;
@@ -55,7 +55,7 @@ public class AmetisteRoutineCoreConfiguration {
     private TaskPropertiesRegistry taskPropertiesRegistry;
 
     @Autowired
-    private TaskSchemeRepository taskSchemeRepository;
+    private SchemeRepository schemeRepository;
 
     @Autowired
     private JmsTemplate jmsTemplate;
@@ -84,7 +84,7 @@ public class AmetisteRoutineCoreConfiguration {
     @Bean
     public TaskIssueService taskIssueService() {
         return new DefaultTaskIssueService(taskRepository, taskPropertiesRegistry,
-                taskSchemeRepository, domainEventsGateway(), springCoreEventsGateway(), issueConstraints);
+                schemeRepository, domainEventsGateway(), springCoreEventsGateway(), issueConstraints);
     }
 
     @Bean

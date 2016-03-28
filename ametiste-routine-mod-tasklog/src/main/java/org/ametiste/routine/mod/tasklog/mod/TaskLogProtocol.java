@@ -9,7 +9,7 @@ import java.util.function.Consumer;
 
 /**
  * <p>
- *  Protocol defines queries to task log, clients may use this protocol
+ *  Connect defines queries to task log, clients may use this protocol
  *  to retrieve access to tasks termination history and other log data related to
  *  tasks termination and lifecycle.
  * </p>

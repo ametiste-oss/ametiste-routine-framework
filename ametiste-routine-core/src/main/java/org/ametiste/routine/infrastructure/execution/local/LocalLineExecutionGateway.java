@@ -4,15 +4,11 @@ import org.ametiste.laplatform.protocol.ProtocolGateway;
 import org.ametiste.laplatform.protocol.gateway.ProtocolGatewayService;
 import org.ametiste.metrics.annotations.Timeable;
 import org.ametiste.routine.domain.scheme.OperationScheme;
-import org.ametiste.routine.domain.scheme.TaskScheme;
-import org.ametiste.routine.domain.scheme.TaskSchemeRepository;
+import org.ametiste.routine.domain.scheme.SchemeRepository;
 import org.ametiste.routine.domain.task.ExecutionLine;
 import org.ametiste.routine.infrastructure.execution.LineExecutionGateway;
-import org.ametiste.routine.sdk.operation.OperationExecutorFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Map;
 
 /**
  *
@@ -28,17 +24,17 @@ public class LocalLineExecutionGateway implements LineExecutionGateway {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
-    private final TaskSchemeRepository taskSchemeRepository;
+    private final SchemeRepository schemeRepository;
 
     private final TaskExecutionController feedback;
 
     private final ProtocolGatewayService protocolGatewayservice;
 
     public LocalLineExecutionGateway(
-            TaskSchemeRepository taskSchemeRepository,
+            SchemeRepository schemeRepository,
             ProtocolGatewayService protocolGatewayservice,
             TaskExecutionController taskExecutionController) {
-        this.taskSchemeRepository = taskSchemeRepository;
+        this.schemeRepository = schemeRepository;
         this.protocolGatewayservice = protocolGatewayservice;
         this.feedback = taskExecutionController;
     }
@@ -47,7 +43,7 @@ public class LocalLineExecutionGateway implements LineExecutionGateway {
     @Timeable(name = ExecutionMetrics.GATEWAY_EXECUTION_TIMING)
     public void executeOperation(ExecutionLine executionLine) {
 
-        OperationScheme operationScheme = taskSchemeRepository
+        OperationScheme operationScheme = schemeRepository
                 .findOperationScheme(executionLine.operationName());
 
         // TODO: move it to repo
