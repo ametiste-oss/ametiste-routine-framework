@@ -38,7 +38,7 @@ public interface ParamsProtocol extends Protocol {
      * </p>
      * <pre>
      * protected void fulfillOperations(final TaskOperationInstaller task, final BacklogParams schemeParams) {
-     *      task.addOperation(BacklogRenewOperationScheme.class, params -> {
+     *      task.addOperation(BacklogRenewOperationScheme.class, params -&gt; {
      *          <b>params.schemeName(schemeParams.schemeName())</b>
      *      });
      * }
