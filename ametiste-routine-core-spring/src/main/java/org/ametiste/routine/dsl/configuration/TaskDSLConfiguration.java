@@ -1,12 +1,12 @@
-package org.ametiste.routine.configuration;
+package org.ametiste.routine.dsl.configuration;
 
 import org.ametiste.laplatform.protocol.GatewayContext;
 import org.ametiste.laplatform.protocol.Protocol;
 import org.ametiste.laplatform.protocol.ProtocolFactory;
 import org.ametiste.laplatform.protocol.ProtocolGateway;
-import org.ametiste.routine.app.annotations.*;
 import org.ametiste.routine.application.service.issue.TaskIssueService;
 import org.ametiste.routine.domain.scheme.*;
+import org.ametiste.routine.dsl.annotations.*;
 import org.ametiste.routine.interfaces.taskdsl.service.DynamicParamsProtocol;
 import org.ametiste.routine.interfaces.taskdsl.service.DynamicTaskService;
 import org.ametiste.routine.sdk.operation.OperationExecutor;
@@ -59,7 +59,7 @@ class DynamicOperationFactory {
         Stream.of(controllerClass.getDeclaredFields())
                 .filter(f -> f.isAnnotationPresent(Connect.class))
                 .forEach(f -> {
-                    // TODO: add exception, if @Connect does not point on Protocol field
+                    // TODO: add exception, if @Connect does not point on LambdaProtocol field
 
                     final Protocol session = protocolGateway
                             .session((Class<? extends Protocol>) f.getType());
@@ -156,9 +156,9 @@ class Pair<F, S> {
  * @since
  */
 @Configuration
-public class TaskDSLInterfaceConfiguration {
+public class TaskDSLConfiguration {
 
-    @Autowired
+    @Autowired(required = false)
     @RoutineTask
     private List<Object> taskControllers;
 
@@ -185,17 +185,22 @@ public class TaskDSLInterfaceConfiguration {
     }
 
     @Bean
-    public Object testConfig() {
+    public Object testDSLConfig() {
+        if (taskControllers != null) {
+            taskControllers.stream()
+                    .map(Object::getClass)
+                    .map(this::mapToTaskScheme)
+                    .forEach(schemeRepository::saveScheme);
 
-        taskControllers.stream()
-                .map(Object::getClass)
-                .map(this::mapToTaskScheme)
-                .forEach(schemeRepository::saveScheme);
-
+        }
         return new Object();
     }
 
     private TaskScheme mapToTaskScheme(Class<?> controllerClass) {
+
+        if (!controllerClass.isAnnotationPresent(RoutineTask.class)) {
+            throw new IllegalArgumentException("Only @RoutineTask classes are allowed.");
+        }
 
         final String schemeName = controllerClass
                 .getDeclaredAnnotation(SchemeMapping.class)

@@ -4,7 +4,7 @@ import org.ametiste.routine.domain.task.Task;
 import org.ametiste.routine.domain.task.properties.TaskProperty;
 import org.ametiste.routine.sdk.protocol.operation.ParamsProtocol;
 
-import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 /**
@@ -30,6 +30,11 @@ public class TaskBuilder<T extends ParamsProtocol> {
 
         taskScheme = schemeRepository.findTaskScheme(taskSchemeClass);
         task = new Task();
+
+        if (taskScheme == null) {
+            throw new RuntimeException("Can't find registered task scheme for the given class: " +
+                    "" + taskSchemeClass.getName() + ". Please check that the @Component annotation is exists.");
+        }
 
         try {
             taskScheme.setupTask(this, schemeParamsInstaller, creatorIdentifier);

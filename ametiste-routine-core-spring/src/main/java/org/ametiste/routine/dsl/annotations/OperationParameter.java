@@ -1,4 +1,6 @@
-package org.ametiste.routine.app.annotations;
+package org.ametiste.routine.dsl.annotations;
+
+import org.springframework.stereotype.Component;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -9,10 +11,11 @@ import java.lang.annotation.Target;
  *
  * @since
  */
-@Target({ElementType.METHOD})
+@Target({ElementType.PARAMETER})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface TaskOperation {
+@Component
+public @interface OperationParameter {
 
-    String schemeName() default "";
+    String value();
 
 }
