@@ -1,4 +1,4 @@
-package org.ametiste.routine.app.annotations;
+package org.ametiste.routine.dsl.annotations;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;

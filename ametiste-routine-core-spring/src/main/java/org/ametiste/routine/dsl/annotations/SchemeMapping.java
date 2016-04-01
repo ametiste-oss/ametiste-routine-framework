@@ -1,4 +1,4 @@
-package org.ametiste.routine.app.annotations;
+package org.ametiste.routine.dsl.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -9,7 +9,10 @@ import java.lang.annotation.Target;
  *
  * @since
  */
-@Target({ElementType.FIELD})
+@Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Connect {
+public @interface SchemeMapping {
+
+    String schemeName() default "";
+
 }

@@ -1,4 +1,4 @@
-package org.ametiste.routine.app.annotations;
+package org.ametiste.routine.dsl.annotations;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -9,9 +9,9 @@ import java.lang.annotation.Target;
  *
  * @since
  */
-@Target({ElementType.TYPE})
+@Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
-public @interface SchemeMapping {
+public @interface TaskOperation {
 
     String schemeName() default "";
 
