@@ -15,8 +15,11 @@ public class InMemorySchemeRepository implements SchemeRepository {
 
     private final Map<String, TaskScheme> taskSchemasByName = new HashMap<>();
     private final Map<Class<? extends TaskScheme>, TaskScheme> taskSchemasByClass = new HashMap<>();
+    private final Map<String, Class<? extends TaskScheme>> taskSchemasClassesByName = new HashMap<>();
+
     private final Map<String, OperationScheme> opSchemasByName = new HashMap<>();
     private final Map<Class<? extends OperationScheme>, OperationScheme> opSchemasByClass = new HashMap<>();
+    private final Map<String, Class<? extends OperationScheme>> opSchemasClassesByName = new HashMap<>();
 
     public InMemorySchemeRepository(Map<String, TaskScheme> taskSchemas, Map<String, OperationScheme> opSchemas) {
         taskSchemas.values().forEach(this::saveScheme);
@@ -44,8 +47,19 @@ public class InMemorySchemeRepository implements SchemeRepository {
     }
 
     @Override
-    public List<String> loadSchemeNames() {
+    public <T extends ParamsProtocol> Class<TaskScheme<T>> findTaskSchemeClass(final String schemeName, final Class<T> paramsClass) {
+        // TODO: add params type check somehow
+        return (Class<TaskScheme<T>>) taskSchemasClassesByName.get(schemeName);
+    }
+
+    @Override
+    public List<String> loadTaskSchemeNames() {
         return new ArrayList<>(taskSchemasByName.keySet());
+    }
+
+    @Override
+    public List<String> loadOperationSchemeNames() {
+        return new ArrayList<>(opSchemasByName.keySet());
     }
 
     @Override
@@ -57,12 +71,14 @@ public class InMemorySchemeRepository implements SchemeRepository {
     public void saveScheme(final OperationScheme<?> operationScheme) {
         opSchemasByName.put(operationScheme.schemeName(), operationScheme);
         opSchemasByClass.put(operationScheme.getClass(), operationScheme);
+        opSchemasClassesByName.put(operationScheme.schemeName(), operationScheme.getClass());
     }
 
     @Override
     public void saveScheme(final TaskScheme<?> taskScheme) {
         taskSchemasByName.put(taskScheme.schemeName(), taskScheme);
         taskSchemasByClass.put(taskScheme.getClass(), taskScheme);
+        taskSchemasClassesByName.put(taskScheme.schemeName(), taskScheme.getClass());
     }
 
 }

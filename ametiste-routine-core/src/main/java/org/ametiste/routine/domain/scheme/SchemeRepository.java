@@ -23,7 +23,11 @@ public interface SchemeRepository {
     <T extends ParamsProtocol> TaskScheme<T>
         findTaskScheme(Class<? extends TaskScheme<T>> taskScheme);
 
-    List<String> loadSchemeNames();
+    <T extends ParamsProtocol> Class<TaskScheme<T>> findTaskSchemeClass(String schemeName, Class<T> paramsClass);
+
+    List<String> loadTaskSchemeNames();
+
+    List<String> loadOperationSchemeNames();
 
     OperationScheme findOperationScheme(String operationName);
 

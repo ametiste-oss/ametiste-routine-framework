@@ -40,7 +40,7 @@ org:
             enabled: false
 
         backlog:
-          enabled: true
+          enabled: false
           renewRate: 5000
 
         shredder:

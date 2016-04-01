@@ -4,6 +4,7 @@ import org.ametiste.routine.domain.task.Task;
 import org.ametiste.routine.domain.task.properties.TaskProperty;
 import org.ametiste.routine.sdk.protocol.operation.ParamsProtocol;
 
+import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -24,7 +25,8 @@ public class TaskBuilder<T extends ParamsProtocol> {
         this.creatorIdentifier = creatorIdentifier;
     }
 
-    public TaskBuilder<T> defineScheme(Class<? extends TaskScheme<T>> taskSchemeClass, Consumer<T> schemeParamsInstaller) {
+    public TaskBuilder<T> defineScheme(final Class<? extends TaskScheme<T>> taskSchemeClass,
+                                       final Consumer<T> schemeParamsInstaller) {
 
         taskScheme = schemeRepository.findTaskScheme(taskSchemeClass);
         task = new Task();

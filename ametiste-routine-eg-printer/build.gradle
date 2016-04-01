@@ -1,6 +1,6 @@
 buildscript {
     ext {
-        springBootVersion = '1.3.1.RELEASE'
+        springBootVersion = '1.3.3.RELEASE'
     }
     repositories {
         mavenCentral()
@@ -31,7 +31,7 @@ publishing {
                 def parentNode = asNode().appendNode('parent')
                 parentNode.appendNode('groupId','org.springframework.boot')
                 parentNode.appendNode('artifactId','spring-boot-starter-parent')
-                parentNode.appendNode('version',"1.3.1.RELEASE")
+                parentNode.appendNode('version',"1.3.3.RELEASE")
             }
 
             from components.java

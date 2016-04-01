@@ -5,7 +5,7 @@ import org.ametiste.routine.mod.backlog.mod.ModBacklog;
 import org.ametiste.routine.printer.operation.PrintOperationScheme;
 import org.springframework.stereotype.Component;
 
-@Component
+// @Component
 public class PrintTaskScheme extends AbstractTaskScheme<PrintTaskSchemeParams> {
 
     public static final String NAME = "printer-eg-task";

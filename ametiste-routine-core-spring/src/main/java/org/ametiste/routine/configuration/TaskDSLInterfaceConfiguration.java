@@ -1,26 +1,26 @@
 package org.ametiste.routine.configuration;
 
+import org.ametiste.laplatform.protocol.GatewayContext;
 import org.ametiste.laplatform.protocol.Protocol;
+import org.ametiste.laplatform.protocol.ProtocolFactory;
 import org.ametiste.laplatform.protocol.ProtocolGateway;
-import org.ametiste.routine.app.annotations.Connect;
-import org.ametiste.routine.app.annotations.RoutineTask;
-import org.ametiste.routine.app.annotations.SchemeMapping;
-import org.ametiste.routine.app.annotations.TaskOperation;
+import org.ametiste.routine.app.annotations.*;
+import org.ametiste.routine.application.service.issue.TaskIssueService;
 import org.ametiste.routine.domain.scheme.*;
+import org.ametiste.routine.interfaces.taskdsl.service.DynamicParamsProtocol;
+import org.ametiste.routine.interfaces.taskdsl.service.DynamicTaskService;
 import org.ametiste.routine.sdk.operation.OperationExecutor;
 import org.ametiste.routine.sdk.operation.OperationFeedback;
-import org.ametiste.routine.sdk.protocol.operation.AbstractParamProtocol;
-import org.ametiste.routine.sdk.protocol.operation.ParamsProtocol;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 import org.springframework.util.ReflectionUtils;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -38,17 +38,15 @@ class DynamicOperationFactory {
 
     public DynamicOperationFactory(Class<?> controllerClass, Method method) {
         this.controllerClass = controllerClass;
-
-//        final List<Annotation[][]> collect = operations.stream().map(
-//                op -> op.getParameterAnnotations()
-//        ).collect(Collectors.toList());
-
+//        final Annotation[][] parameterAnnotations = ;
         this.method = method;
     }
 
     public DynamicOperation createDynamicOperation(final OperationFeedback operationFeedback, final ProtocolGateway protocolGateway) {
 
         final Object controllerInstance;
+        final Object[] params = new Object[method.getParameterAnnotations().length];
+        final Class<?>[] parameterTypes = method.getParameterTypes();
 
         try {
             controllerInstance = controllerClass.newInstance();
@@ -62,13 +60,30 @@ class DynamicOperationFactory {
                 .filter(f -> f.isAnnotationPresent(Connect.class))
                 .forEach(f -> {
                     // TODO: add exception, if @Connect does not point on Protocol field
-                    final Protocol session = protocolGateway.session((Class<? extends Protocol>) f.getType());
+
+                    final Protocol session = protocolGateway
+                            .session((Class<? extends Protocol>) f.getType());
+
+                    ReflectionUtils.makeAccessible(f);
                     ReflectionUtils.setField(f, controllerInstance, session);
                 });
 
+        int p = 0;
+
+        for (Annotation[] parameterType : method.getParameterAnnotations()) {
+            // NOTE: take only first parameter annotation in account, other annotations just ignored
+            if (parameterType[0] instanceof OperationParameter) {
+                params[p] = protocolGateway.session(DynamicParamsProtocol.class).param(
+                        ((OperationParameter) parameterType[0]).value());
+            } else {
+                throw new IllegalStateException("");
+            }
+            p++;
+        }
+
         return () -> {
             try {
-                method.invoke(controllerInstance, new Object[] {});
+                method.invoke(controllerInstance, params);
             } catch (IllegalAccessException | InvocationTargetException e) {
                 throw new RuntimeException(e);
             }
@@ -88,14 +103,6 @@ class DynamicOperationExecutor implements OperationExecutor {
     @Override
     public void execOperation(final OperationFeedback feedback, final ProtocolGateway protocolGateway) {
         operationFactory.createDynamicOperation(feedback, protocolGateway).run();
-    }
-
-}
-
-class DynamicParamsProtocol extends AbstractParamProtocol {
-
-    protected DynamicParamsProtocol(final List<String> definedParams, final Map<String, String> params) {
-        super(definedParams, params);
     }
 
 }
@@ -149,7 +156,7 @@ class Pair<F, S> {
  * @since
  */
 @Configuration
-public class AppConfiguration {
+public class TaskDSLInterfaceConfiguration {
 
     @Autowired
     @RoutineTask
@@ -158,11 +165,33 @@ public class AppConfiguration {
     @Autowired
     private SchemeRepository schemeRepository;
 
+    @Autowired
+    private TaskIssueService taskIssueService;
+
+    @Bean
+    @Scope(scopeName = "prototype")
+    public DynamicParamsProtocol dynamicParamsProtocol(GatewayContext context) {
+        return new DynamicParamsProtocol(context.lookupMap("params"));
+    }
+
+    @Bean
+    public ProtocolFactory<DynamicParamsProtocol> dynamicParamsProtocolConnection() {
+        return c -> dynamicParamsProtocol(c);
+    }
+
+    @Bean
+    public DynamicTaskService dynamicTaskService() {
+        return new DynamicTaskService(schemeRepository, taskIssueService);
+    }
+
     @Bean
     public Object testConfig() {
+
         taskControllers.stream()
                 .map(Object::getClass)
-                .forEach(this::mapToTaskScheme);
+                .map(this::mapToTaskScheme)
+                .forEach(schemeRepository::saveScheme);
+
         return new Object();
     }
 
@@ -191,10 +220,9 @@ public class AppConfiguration {
             @Override
             public void setupTask(final TaskBuilder<DynamicParamsProtocol> taskBuilder, final Consumer<DynamicParamsProtocol> paramsInstaller, final String creatorIdenifier) throws TaskSchemeException {
 
-                // TODO: atm there is no paramteres
+                final DynamicParamsProtocol dynamicParamsProtocol = new DynamicParamsProtocol();
 
-                final DynamicParamsProtocol dynamicParamsProtocol
-                        = new DynamicParamsProtocol(Collections.emptyList(), Collections.emptyMap());
+                paramsInstaller.accept(dynamicParamsProtocol);
 
                 operations.forEach(
                     op -> taskBuilder.addOperation(op.schemeName(), dynamicParamsProtocol)

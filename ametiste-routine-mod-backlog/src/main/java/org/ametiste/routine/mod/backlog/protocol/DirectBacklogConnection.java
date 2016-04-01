@@ -3,7 +3,6 @@ package org.ametiste.routine.mod.backlog.protocol;
 import org.ametiste.routine.mod.backlog.domain.Backlog;
 import org.ametiste.routine.mod.backlog.domain.BacklogRepository;
 import org.ametiste.routine.mod.backlog.domain.RenewScheme;
-import org.ametiste.routine.mod.backlog.domain.RenewSchemeExecutor;
 import org.ametiste.routine.mod.backlog.infrastructure.BacklogPopulationStrategiesRegistry;
 import org.ametiste.routine.mod.backlog.infrastructure.BacklogPopulationStrategy;
 

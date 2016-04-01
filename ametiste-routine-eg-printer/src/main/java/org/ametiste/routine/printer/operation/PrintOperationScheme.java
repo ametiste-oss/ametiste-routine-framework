@@ -15,7 +15,7 @@ import java.util.function.Supplier;
  *
  * @since
  */
-@Component
+//@Component
 public class PrintOperationScheme extends StatelessOperationScheme<PrintOperationParams> {
 
     public static final String NAME = "print-operation";

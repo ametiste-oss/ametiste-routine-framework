@@ -28,31 +28,31 @@ public class RoutineExamplePrinterApp {
         SpringApplication.run(RoutineExamplePrinterApp.class, args);
     }
 
-    @Bean
-    public Backlog backlog() {
-        return new Backlog(PrintTaskScheme.NAME, PrintTaskScheme.NAME + "-population");
-    }
-
-    @Bean
-    @Scope(scopeName = "prototype")
-    public PrintOperationParams printOperationParamsProtocol(GatewayContext c) {
-        return new PrintOperationParams(c.lookupMap("params"));
-    }
-
-    @Bean
-    public ProtocolFactory<PrintOperationParams> printOperationParamsProtocolConnectionFactory() {
-        return c -> printOperationParamsProtocol(c);
-    }
-
-    @Bean
-    @Scope(scopeName = "prototype")
-    public PrintTaskSchemeParams printTaskSchemeParamsProtocol(GatewayContext c) {
-        return new PrintTaskSchemeParams(c.lookupMap("params"));
-    }
-
-    @Bean
-    public ProtocolFactory<PrintTaskSchemeParams> printTaskSchemeParamsProtocolConnectionFactory() {
-        return c -> printTaskSchemeParamsProtocol(c);
-    }
+//    @Bean
+//    public Backlog backlog() {
+//        return new Backlog(PrintTaskScheme.NAME, PrintTaskScheme.NAME + "-population");
+//    }
+//
+//    @Bean
+//    @Scope(scopeName = "prototype")
+//    public PrintOperationParams printOperationParamsProtocol(GatewayContext c) {
+//        return new PrintOperationParams(c.lookupMap("params"));
+//    }
+//
+//    @Bean
+//    public ProtocolFactory<PrintOperationParams> printOperationParamsProtocolConnectionFactory() {
+//        return c -> printOperationParamsProtocol(c);
+//    }
+//
+//    @Bean
+//    @Scope(scopeName = "prototype")
+//    public PrintTaskSchemeParams printTaskSchemeParamsProtocol(GatewayContext c) {
+//        return new PrintTaskSchemeParams(c.lookupMap("params"));
+//    }
+//
+//    @Bean
+//    public ProtocolFactory<PrintTaskSchemeParams> printTaskSchemeParamsProtocolConnectionFactory() {
+//        return c -> printTaskSchemeParamsProtocol(c);
+//    }
 
 }

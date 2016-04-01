@@ -15,8 +15,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
+
+import static javafx.scene.input.KeyCode.T;
 
 
 public class DefaultTaskIssueService implements TaskIssueService {
@@ -49,22 +52,22 @@ public class DefaultTaskIssueService implements TaskIssueService {
 
     @Override
     public <T extends ParamsProtocol> UUID issueTask(
-            Class<? extends TaskScheme<T>> taskSchemeClass, Consumer<T> paramsInstaller, String creatorIdenifier) {
+            Class<? extends TaskScheme<T>> taskSchemeClass, Consumer<T> paramsInstaller, String creatorIdentifier) {
 
-        final TaskBuilder<T> builder = new TaskBuilder<>(schemeRepository, creatorIdenifier);
+        final TaskBuilder<T> builder = new TaskBuilder<>(schemeRepository, creatorIdentifier);
 
         final Task task = builder.defineScheme(taskSchemeClass, paramsInstaller)
                 .addProperty(Task.SCHEME_PROPERTY_NAME, taskSchemeClass.getName())
-                .addProperty(Task.CREATOR_PROPERTY_NAME, creatorIdenifier)
+                .addProperty(Task.CREATOR_PROPERTY_NAME, creatorIdentifier)
                 .build();
 
         taskRepository.saveTask(task);
         taskDomainEvenetsGateway.taskIssued(task.entityId());
-        coreEventsGateway.taskIssued(new TaskIssuedEvent(task.entityId(), creatorIdenifier));
+        coreEventsGateway.taskIssued(new TaskIssuedEvent(task.entityId(), creatorIdentifier));
 
         if (logger.isDebugEnabled()) {
             logger.debug("New task created using scheme:{}, task id: {}, creator id: {}",
-                    taskSchemeClass.getSimpleName(), task.entityId().toString(), creatorIdenifier);
+                    taskSchemeClass.getSimpleName(), task.entityId().toString(), creatorIdentifier);
         }
 
         return task.entityId();
