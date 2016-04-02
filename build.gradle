@@ -21,6 +21,7 @@ subprojects {
         ameLaPlatformVersion = "0.0.1-b6"
         ameGTEVersion = "0.0.1-b3"
         ameDomainVersion = "0.3.0-RELEASE"
+        ameUtilOTrace = "0.1.0-SNAPSHOT"
         bintray_vcsUrl = 'https://github.com/ametiste-oss/ametiste-routine-framework.git'
     }
 

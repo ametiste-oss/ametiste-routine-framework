@@ -15,4 +15,6 @@ public @interface SchemeMapping {
 
     String schemeName() default "";
 
+    Class<?> schemeClass() default Class.class;
+
 }

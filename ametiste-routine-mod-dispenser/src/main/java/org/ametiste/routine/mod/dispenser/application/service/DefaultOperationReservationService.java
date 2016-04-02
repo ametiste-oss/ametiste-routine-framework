@@ -40,7 +40,7 @@ import java.util.stream.Collectors;
  * <p>
  *     TODO: Another implementation which would allow to reserve only requested number of operations.<br>
  *     TODO: To support this feature, the domain should allow to launch tasks partialy,<br>
- *     TODO: atm all operations of the tasks become 'PENDING' after {@link Task#prepareExecution()} call.<br>
+ *     TODO: atm all operations of the tasks become 'PENDING' after {@link Task#prepareExecution()} trace.<br>
  * </p>
  *
  * <p>

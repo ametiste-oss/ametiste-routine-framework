@@ -52,6 +52,7 @@ dependencies {
 
     compile project(":ametiste-routine-core")
 
+    compile ("org.ametiste.util:o-trace:${ameUtilOTrace}")
     compile ("org.ametiste.gte:ametiste-gte-starter:${ameGTEVersion}")
     compile ("org.ametiste.lambda-platform:lambda-platform-pgw-spring-starter:${ameLaPlatformVersion}")
     compile ("org.ametiste.metrics:metrics-default-starter:${ameMetricsVersion}");
@@ -72,8 +73,10 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.11'
 }
 
-idea {
-    module {
-        generatedSourceDirs += file('src/generated/java')
+sourceSets {
+    main {
+        java {
+            srcDirs = ["src/main/java", "src/generated/java"]
+        }
     }
 }

@@ -43,10 +43,10 @@ public class BacklogModConfiguration {
     @Autowired(required = false)
     private List<Backlog> backlogs = new ArrayList<>();
 
-    @Autowired
+    @Autowired(required = false)
     private List<BacklogRenewConstraint> constraints;
 
-    @Autowired
+    @Autowired(required = false)
     private Map<String, BacklogPopulationStrategy> backlogPopulationStrategies;
 
     @Bean

@@ -8,4 +8,7 @@ public interface BacklogPopulationStrategiesRegistry {
 
     BacklogPopulationStrategy findPopulationStrategy(String strategyName);
 
+    void registerPopulationStrategy(String stragetyName,
+                                    BacklogPopulationStrategy backlogPopulationStrategy);
+
 }
