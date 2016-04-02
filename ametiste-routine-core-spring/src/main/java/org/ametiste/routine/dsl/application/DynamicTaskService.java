@@ -1,4 +1,4 @@
-package org.ametiste.routine.interfaces.taskdsl.service;
+package org.ametiste.routine.dsl.application;
 
 import org.ametiste.routine.application.CoreEventsGateway;
 import org.ametiste.routine.application.TaskDomainEvenetsGateway;

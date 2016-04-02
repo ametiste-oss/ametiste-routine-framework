@@ -1,11 +1,13 @@
 package org.ametiste.routine.sdk.mod;
 
+import java.util.Map;
+
 /**
  *
  * @since
  */
 public interface ModInfoConsumer {
 
-    void baseInfo(String modName, String version);
+    void modInfo(final String modName, final String version, final Map<String, String> attributes);
 
 }

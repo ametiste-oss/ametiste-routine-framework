@@ -4,7 +4,7 @@ import org.ametiste.laplatform.protocol.Protocol;
 import org.ametiste.laplatform.protocol.ProtocolGateway;
 import org.ametiste.routine.dsl.annotations.Connect;
 import org.ametiste.routine.dsl.annotations.SchemeMapping;
-import org.ametiste.routine.interfaces.taskdsl.service.DynamicTaskService;
+import org.ametiste.routine.dsl.application.DynamicTaskService;
 import org.ametiste.routine.meta.scheme.TaskMetaScheme;
 import org.ametiste.routine.meta.util.MetaObject;
 import org.ametiste.routine.meta.util.MetaMethod;
@@ -15,6 +15,7 @@ import org.ametiste.routine.mod.backlog.dsl.annotations.BacklogPopulator;
 import org.ametiste.routine.mod.backlog.infrastructure.BacklogPopulationStrategiesRegistry;
 import org.ametiste.routine.mod.backlog.infrastructure.BacklogPopulationStrategy;
 import org.ametiste.routine.mod.backlog.mod.ModBacklog;
+import org.ametiste.routine.sdk.mod.ModGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
@@ -23,6 +24,7 @@ import org.springframework.util.ReflectionUtils;
 
 import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -46,14 +48,20 @@ public class BacklogDSLConfiguration {
     private DynamicTaskService dynamicTaskService;
 
     @Bean
-    public Object configureBacklogDSL() {
+    public ModGateway configureBacklogDSL() {
 
-        if (backlogControllers != null) {
-            backlogControllers.stream().map(Object::getClass)
-                    .forEach(this::createBacklogEntry);
-        }
+        final List<? extends Class<?>> backlogControllers = this.backlogControllers.stream()
+                .map(Object::getClass)
+                .collect(Collectors.toList());
 
-        return new Object();
+        backlogControllers.forEach(this::createBacklogEntry);
+
+        return gw -> {
+            // TODO: how can I propagate artifact version?
+            gw.modInfo("dsl-backlog", "1.1",
+                backlogControllers.stream().collect(Collectors.toMap(s -> s.getName(), s -> ""))
+            );
+        };
     }
 
     private void createBacklogEntry(final Class<? extends Object> controllerClass) {

@@ -6,7 +6,7 @@ import org.ametiste.routine.mod.tasklog.infrastructure.persistency.jpa.JPATaskLo
 import org.ametiste.routine.mod.tasklog.infrastructure.persistency.jpa.SpringDataTaskLogRepository;
 import org.ametiste.routine.mod.tasklog.interfaces.web.TaskLogController;
 import org.ametiste.routine.mod.tasklog.mod.DirectTaskLogConnection;
-import org.ametiste.routine.mod.tasklog.mod.TaskLogGateway;
+import org.ametiste.routine.mod.tasklog.mod.ModTaskLogGateway;
 import org.ametiste.routine.mod.tasklog.mod.TaskLogProtocol;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -30,11 +30,10 @@ public class RoutineTasklogModConfiguration {
     }
 
     @Bean
-    public TaskLogGateway taskLogGateway() {
-         return new TaskLogGateway();
+    public ModTaskLogGateway taskLogGateway() {
+         return new ModTaskLogGateway(jpaTaskLogDataRepository);
     }
 
-    // TODO: may be I should move it into ModGateway definition?
     @Bean
     public ProtocolFactory<TaskLogProtocol> modTaskLogProtocolFactory() {
          return (c) -> new DirectTaskLogConnection(jpaTaskLogDataRepository);

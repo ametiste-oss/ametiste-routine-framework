@@ -15,12 +15,14 @@ import org.ametiste.routine.mod.backlog.mod.ModBacklog;
 import org.ametiste.routine.mod.tasklog.domain.TaskLogRepository;
 import org.ametiste.routine.sdk.operation.OperationExecutor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -41,13 +43,16 @@ public class BacklogModConfiguration {
     private TaskIssueService taskIssueService;
 
     @Autowired(required = false)
-    private List<Backlog> backlogs = new ArrayList<>();
+    private List<Backlog> backlogs = Collections.emptyList();
 
     @Autowired(required = false)
-    private List<BacklogRenewConstraint> constraints;
+    private List<BacklogRenewConstraint> constraints = Collections.emptyList();
 
     @Autowired(required = false)
-    private Map<String, BacklogPopulationStrategy> backlogPopulationStrategies;
+    private Map<String, BacklogPopulationStrategy> backlogPopulationStrategies = Collections.emptyMap();
+
+    @Value("${org.ametiste.routine.mod.backlog.renewRate:60000}")
+    private Long renewRate;
 
     @Bean
     public BacklogPopulationStrategiesRegistry backlogPopulationStrategiesRegistry() {
@@ -73,7 +78,7 @@ public class BacklogModConfiguration {
 
     @Bean
     public ModBacklog backlogModGateway() {
-         return new ModBacklog();
+         return new ModBacklog(renewRate);
     }
 
     @Bean

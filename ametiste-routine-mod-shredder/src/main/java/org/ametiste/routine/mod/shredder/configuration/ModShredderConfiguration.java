@@ -44,7 +44,7 @@ public class ModShredderConfiguration {
 
     @Bean
     public ModShredder modShredderGateway() {
-        return new ModShredder();
+        return new ModShredder(props);
     }
 
 }

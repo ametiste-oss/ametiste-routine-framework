@@ -27,7 +27,7 @@ public class ModsController {
     @RequestMapping(method = RequestMethod.GET)
     public List<ModDescriptionData> listModsDescriptions() {
         return modRegistry.loadMods().stream().map(
-                m -> new ModDescriptionData(m.getName(), m.getVersion())
+                m -> new ModDescriptionData(m.getName(), m.getVersion(), m.getAttributes())
         ).collect(Collectors.toList());
     }
 
