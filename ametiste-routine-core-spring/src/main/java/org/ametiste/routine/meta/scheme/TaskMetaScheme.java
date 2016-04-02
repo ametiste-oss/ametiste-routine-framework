@@ -3,7 +3,7 @@ package org.ametiste.routine.meta.scheme;
 import org.ametiste.lang.Let;
 import org.ametiste.routine.dsl.annotations.RoutineTask;
 import org.ametiste.routine.dsl.annotations.SchemeMapping;
-import org.amtetiste.uttil.object.trace.CallsTraceScaner;
+import org.ametiste.lang.object.trace.CallsTraceScaner;
 
 import java.util.Collections;
 import java.util.function.Consumer;

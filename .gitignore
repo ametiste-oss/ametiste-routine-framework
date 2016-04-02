@@ -12,6 +12,7 @@ target/*
 build/*
 build/
 hsql/
+generated/
 /build
 *.ipr
 *.iml

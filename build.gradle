@@ -13,7 +13,7 @@ subprojects {
     targetCompatibility = 1.8
 
     group = 'org.ametiste.routine'
-    version = '0.0.1-SNAPSHOT'
+    version = '1.1.0-SNAPSHOT'
 
     ext {
         slf4jVersion = "1.7.12"
@@ -21,7 +21,8 @@ subprojects {
         ameLaPlatformVersion = "0.0.1-b7"
         ameGTEVersion = "0.0.1-b3"
         ameDomainVersion = "0.3.0-RELEASE"
-        ameUtilOTrace = "0.1.0-SNAPSHOT"
+        ameUtilOTrace = "0.1.0-RELEASE"
+
         bintray_vcsUrl = 'https://github.com/ametiste-oss/ametiste-routine-framework.git'
     }
 
@@ -29,6 +30,7 @@ subprojects {
         mavenLocal()
         mavenCentral()
         jcenter()
+        maven { url "http://dl.bintray.com/ametiste-oss/maven/" }
     }
 
     configurations {
