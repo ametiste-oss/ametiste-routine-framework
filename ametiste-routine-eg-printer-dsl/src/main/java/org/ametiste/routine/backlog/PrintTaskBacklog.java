@@ -26,11 +26,11 @@ public class PrintTaskBacklog {
     @Connect
     private ContainerAppProtocol containerAppProtocol;
 
-    // @ModData("backlog-print-tasksPool-count")
+    // @ModDescriptionData("backlog-print-tasksPool-count")
     // private ModDataDescriptor<Integer> tasksCount;
 
     @BacklogPopulator
-    public void populate(PrintTask taskScheme) {
+    public void populate(PrintTask taskMetaScheme) {
 
         containerAppProtocol.systemOut(modData.toString());
 
@@ -40,7 +40,7 @@ public class PrintTaskBacklog {
                 .orElse(0);
 
         for (int i = 0; i < populationCount; i++, issuedTasksCount++) {
-            taskScheme.printOperation("I am task #" + issuedTasksCount, "out");
+            taskMetaScheme.printOperation("I am task #" + issuedTasksCount, "out");
         }
 
         modData.storeData("backlog-print-tasksPool-count", issuedTasksCount.toString());

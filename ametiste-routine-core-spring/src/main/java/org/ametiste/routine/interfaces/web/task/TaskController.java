@@ -1,11 +1,7 @@
-package org.ametiste.routine.interfaces.web;
+package org.ametiste.routine.interfaces.web.task;
 
-import org.ametiste.routine.application.service.issue.TaskIssueService;
 import org.ametiste.routine.domain.scheme.SchemeRepository;
-import org.ametiste.routine.domain.scheme.TaskScheme;
 import org.ametiste.routine.interfaces.taskdsl.service.DynamicTaskService;
-import org.ametiste.routine.interfaces.web.data.IssueTaskData;
-import org.ametiste.routine.sdk.protocol.operation.ParamsProtocol;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

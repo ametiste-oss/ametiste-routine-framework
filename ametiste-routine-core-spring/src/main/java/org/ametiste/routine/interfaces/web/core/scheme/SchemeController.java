@@ -1,4 +1,4 @@
-package org.ametiste.routine.interfaces.web;
+package org.ametiste.routine.interfaces.web.core.scheme;
 
 import org.ametiste.routine.domain.scheme.SchemeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +15,7 @@ import java.util.Map;
  * @since
  */
 @RestController
-@RequestMapping("/scheme")
+@RequestMapping("/core/schemes")
 public class SchemeController {
 
     @Autowired

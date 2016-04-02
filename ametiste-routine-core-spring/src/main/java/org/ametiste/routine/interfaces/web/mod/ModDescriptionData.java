@@ -1,15 +1,15 @@
-package org.ametiste.routine.interfaces.web.data;
+package org.ametiste.routine.interfaces.web.mod;
 
 /**
  *
  * @since
  */
-public class ModData {
+public class ModDescriptionData {
 
     private final String name;
     private final String version;
 
-    public ModData(String name, String version) {
+    public ModDescriptionData(String name, String version) {
         this.name = name;
         this.version = version;
     }

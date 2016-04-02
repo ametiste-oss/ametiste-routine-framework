@@ -20,7 +20,7 @@ import org.ametiste.routine.infrastructure.mod.InMemoryModReportRepository;
 import org.ametiste.routine.infrastructure.mod.SpringDataModRepository;
 import org.ametiste.routine.infrastructure.mod.jpa.JPAModDataRepository;
 import org.ametiste.routine.stat.interfaces.metrics.InfoMetrics;
-import org.ametiste.routine.interfaces.web.TaskController;
+import org.ametiste.routine.interfaces.web.task.TaskController;
 import org.ametiste.routine.sdk.application.service.issue.constraints.IssueConstraint;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;

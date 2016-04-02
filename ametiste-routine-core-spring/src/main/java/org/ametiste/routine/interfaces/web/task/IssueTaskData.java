@@ -1,4 +1,4 @@
-package org.ametiste.routine.interfaces.web.data;
+package org.ametiste.routine.interfaces.web.task;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
