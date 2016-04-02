@@ -1,7 +1,7 @@
 package org.ametiste.routine.task;
 
 import org.ametiste.routine.dsl.annotations.*;
-import org.ametiste.routine.protocol.ContainerAppProtocol;
+import org.ametiste.routine.sdk.protocol.containerapp.ContainerAppProtocol;
 
 @RoutineTask
 @SchemeMapping(schemeName = "printTaskScheme")
