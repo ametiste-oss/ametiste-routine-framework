@@ -1,5 +1,6 @@
 package org.ametiste.routine.configuration;
 
+import org.ametiste.routine.RoutineCoreSpring;
 import org.ametiste.routine.application.TaskDomainEvenetsGateway;
 import org.ametiste.routine.application.service.issue.DefaultTaskIssueService;
 import org.ametiste.routine.application.service.issue.TaskIssueService;
@@ -25,11 +26,13 @@ import org.ametiste.routine.sdk.application.service.issue.constraints.IssueConst
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.orm.jpa.EntityScan;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.jms.core.JmsTemplate;
 
 import java.util.List;
@@ -38,9 +41,13 @@ import java.util.List;
 @ComponentScan(basePackageClasses =
     {
         TaskController.class,   // enables scan for info web components
-        InfoMetrics.class       // enables scan for info metric source components
+        InfoMetrics.class,      // enables scan for info metric source components
+        RoutineCoreSpring.class // enables scan for framework components in case when host application
+                                // placed not in root routine package
     }
 )
+@EntityScan(basePackageClasses = RoutineCoreSpring.class)
+@EnableJpaRepositories(basePackageClasses = RoutineCoreSpring.class)
 @EnableConfigurationProperties(AmetisteRoutineCoreProperties.class)
 @Import(CoreStatConfiguration.class)
 public class AmetisteRoutineCoreConfiguration {
