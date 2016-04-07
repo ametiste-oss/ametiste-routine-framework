@@ -1,6 +1,6 @@
 package org.ametiste.routine.sdk.protocol.moddata;
 
-import org.ametiste.laplatform.protocol.Protocol;
+import org.ametiste.laplatform.sdk.protocol.Protocol;
 
 import java.util.Optional;
 

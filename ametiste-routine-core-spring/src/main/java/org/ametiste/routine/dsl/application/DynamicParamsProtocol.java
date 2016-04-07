@@ -1,6 +1,5 @@
 package org.ametiste.routine.dsl.application;
 
-import org.ametiste.routine.dsl.annotations.LambdaProtocol;
 import org.ametiste.routine.sdk.protocol.operation.ParamsProtocol;
 
 import java.util.Collections;

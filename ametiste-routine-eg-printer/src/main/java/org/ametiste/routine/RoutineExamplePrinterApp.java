@@ -1,29 +1,19 @@
 package org.ametiste.routine;
 
-import org.ametiste.laplatform.protocol.GatewayContext;
-import org.ametiste.laplatform.protocol.Protocol;
-import org.ametiste.laplatform.protocol.ProtocolFactory;
-import org.ametiste.routine.domain.scheme.StatelessOperationScheme;
-import org.ametiste.routine.mod.shredder.configuration.ModShredderConfiguration;
-import org.ametiste.routine.printer.operation.PrintExecutor;
-import org.ametiste.routine.printer.operation.PrintOperationParams;
-import org.ametiste.routine.printer.scheme.PrintTaskSchemeParams;
-import org.ametiste.routine.printer.scheme.PrintTaskScheme;
+import org.ametiste.laplatform.sdk.protocol.GatewayContext;
+import org.ametiste.laplatform.sdk.protocol.ProtocolFactory;
 import org.ametiste.routine.mod.backlog.domain.Backlog;
-import org.springframework.beans.BeansException;
+import org.ametiste.routine.mod.shredder.configuration.ModShredderConfiguration;
+import org.ametiste.routine.printer.operation.PrintOperationParams;
+import org.ametiste.routine.printer.scheme.PrintTaskScheme;
+import org.ametiste.routine.printer.scheme.PrintTaskSchemeParams;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 /**
  *

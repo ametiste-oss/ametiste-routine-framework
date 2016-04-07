@@ -1,6 +1,6 @@
 package org.ametiste.routine.mod.tasklog.configuration;
 
-import org.ametiste.laplatform.protocol.ProtocolFactory;
+import org.ametiste.laplatform.sdk.protocol.ProtocolFactory;
 import org.ametiste.routine.mod.tasklog.domain.TaskLogRepository;
 import org.ametiste.routine.mod.tasklog.infrastructure.persistency.jpa.JPATaskLogDataRepository;
 import org.ametiste.routine.mod.tasklog.infrastructure.persistency.jpa.SpringDataTaskLogRepository;

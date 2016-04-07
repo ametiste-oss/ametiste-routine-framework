@@ -55,6 +55,7 @@ dependencies {
 
     compile ("org.ametiste.lang:lang-o-trace:${ameUtilOTrace}")
     compile ("org.ametiste.gte:ametiste-gte-starter:${ameGTEVersion}")
+    compile ("org.ametiste.lambda-platform:lambda-platform-dsl:${ameLaPlatformVersion}")
     compile ("org.ametiste.lambda-platform:lambda-platform-pgw-spring-starter:${ameLaPlatformVersion}")
     compile ("org.ametiste.metrics:metrics-default-starter:${ameMetricsVersion}");
 

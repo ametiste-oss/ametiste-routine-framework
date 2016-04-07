@@ -1,6 +1,6 @@
 package org.ametiste.routine.infrastructure.protocol.containerapp;
 
-import org.ametiste.routine.dsl.annotations.LambdaProtocol;
+import org.ametiste.laplatform.dsl.LambdaProtocol;
 import org.ametiste.routine.sdk.protocol.containerapp.ContainerAppProtocol;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;

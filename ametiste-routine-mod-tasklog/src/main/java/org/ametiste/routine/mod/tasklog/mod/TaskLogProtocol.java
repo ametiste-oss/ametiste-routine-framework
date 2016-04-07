@@ -1,6 +1,6 @@
 package org.ametiste.routine.mod.tasklog.mod;
 
-import org.ametiste.laplatform.protocol.Protocol;
+import org.ametiste.laplatform.sdk.protocol.Protocol;
 import org.ametiste.routine.sdk.domain.TaskFilter;
 
 import java.util.List;

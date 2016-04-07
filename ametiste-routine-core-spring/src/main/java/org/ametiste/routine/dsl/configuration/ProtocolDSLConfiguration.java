@@ -1,8 +1,8 @@
 package org.ametiste.routine.dsl.configuration;
 
-import org.ametiste.laplatform.protocol.Protocol;
+import org.ametiste.laplatform.dsl.LambdaProtocol;
 import org.ametiste.laplatform.protocol.gateway.ProtocolGatewayService;
-import org.ametiste.routine.dsl.annotations.LambdaProtocol;
+import org.ametiste.laplatform.sdk.protocol.Protocol;
 import org.ametiste.routine.sdk.mod.ModGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;

@@ -1,7 +1,7 @@
 package org.ametiste.routine.configuration;
 
-import org.ametiste.laplatform.protocol.GatewayContext;
-import org.ametiste.laplatform.protocol.ProtocolFactory;
+import org.ametiste.laplatform.sdk.protocol.GatewayContext;
+import org.ametiste.laplatform.sdk.protocol.ProtocolFactory;
 import org.ametiste.routine.application.service.issue.TaskIssueService;
 import org.ametiste.routine.application.service.removing.TaskRemovingService;
 import org.ametiste.routine.application.service.termination.TaskTerminationService;
@@ -12,10 +12,10 @@ import org.ametiste.routine.infrastructure.protocol.moddata.DirectModDataConnect
 import org.ametiste.routine.infrastructure.protocol.modreport.DirectModReportConnection;
 import org.ametiste.routine.infrastructure.protocol.taskcontrol.DirectTaskControlConnection;
 import org.ametiste.routine.infrastructure.protocol.taskpool.DirectTaskPoolConnection;
+import org.ametiste.routine.infrastructure.protocol.taskpool.TaskPoolProtocol;
 import org.ametiste.routine.sdk.protocol.moddata.ModDataProtocol;
 import org.ametiste.routine.sdk.protocol.modreport.ModReportProtocol;
 import org.ametiste.routine.sdk.protocol.taskcontrol.TaskControlProtocol;
-import org.ametiste.routine.infrastructure.protocol.taskpool.TaskPoolProtocol;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,12 +1,11 @@
 package org.ametiste.routine.infrastructure.protocol.taskpool;
 
-import org.ametiste.laplatform.protocol.Protocol;
+import org.ametiste.laplatform.sdk.protocol.Protocol;
 import org.ametiste.routine.domain.scheme.TaskScheme;
 import org.ametiste.routine.sdk.protocol.operation.ParamsProtocol;
 
 import java.time.Instant;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.function.Consumer;
 

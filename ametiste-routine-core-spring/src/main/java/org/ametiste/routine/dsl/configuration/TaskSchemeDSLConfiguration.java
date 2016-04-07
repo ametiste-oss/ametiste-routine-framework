@@ -1,8 +1,8 @@
 package org.ametiste.routine.dsl.configuration;
 
 import org.ametiste.lang.Pair;
-import org.ametiste.laplatform.protocol.GatewayContext;
-import org.ametiste.laplatform.protocol.ProtocolFactory;
+import org.ametiste.laplatform.sdk.protocol.GatewayContext;
+import org.ametiste.laplatform.sdk.protocol.ProtocolFactory;
 import org.ametiste.routine.application.service.issue.TaskIssueService;
 import org.ametiste.routine.domain.scheme.SchemeRepository;
 import org.ametiste.routine.domain.scheme.TaskBuilder;

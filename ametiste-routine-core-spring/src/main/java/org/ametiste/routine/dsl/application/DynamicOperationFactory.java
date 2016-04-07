@@ -1,7 +1,7 @@
 package org.ametiste.routine.dsl.application;
 
-import org.ametiste.laplatform.protocol.Protocol;
 import org.ametiste.laplatform.protocol.ProtocolGateway;
+import org.ametiste.laplatform.sdk.protocol.Protocol;
 import org.ametiste.routine.dsl.annotations.Connect;
 import org.ametiste.routine.dsl.annotations.OperationParameter;
 import org.ametiste.routine.sdk.operation.OperationFeedback;

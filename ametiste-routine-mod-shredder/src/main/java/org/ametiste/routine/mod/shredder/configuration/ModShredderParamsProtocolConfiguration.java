@@ -1,7 +1,7 @@
 package org.ametiste.routine.mod.shredder.configuration;
 
-import org.ametiste.laplatform.protocol.GatewayContext;
-import org.ametiste.laplatform.protocol.ProtocolFactory;
+import org.ametiste.laplatform.sdk.protocol.GatewayContext;
+import org.ametiste.laplatform.sdk.protocol.ProtocolFactory;
 import org.ametiste.routine.mod.shredder.application.operation.ShreddingParams;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,6 +1,6 @@
 package org.ametiste.routine.sdk.protocol.containerapp;
 
-import org.ametiste.laplatform.protocol.Protocol;
+import org.ametiste.laplatform.sdk.protocol.Protocol;
 
 public interface ContainerAppProtocol extends Protocol {
 
