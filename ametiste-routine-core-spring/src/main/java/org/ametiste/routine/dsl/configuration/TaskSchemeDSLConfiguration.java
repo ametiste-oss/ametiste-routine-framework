@@ -63,7 +63,7 @@ public class TaskSchemeDSLConfiguration {
     }
 
     @Bean
-    public ModGateway taskSchemeDSLConfig() {
+    public ModGateway modTaskSchemeDSL() {
 
         final List<TaskScheme> schemes = taskControllers.stream()
                 .map(Object::getClass)

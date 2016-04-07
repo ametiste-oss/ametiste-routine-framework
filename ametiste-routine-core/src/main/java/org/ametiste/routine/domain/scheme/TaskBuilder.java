@@ -25,16 +25,9 @@ public class TaskBuilder<T extends ParamsProtocol> {
         this.creatorIdentifier = creatorIdentifier;
     }
 
-    public TaskBuilder<T> defineScheme(final Class<? extends TaskScheme<T>> taskSchemeClass,
-                                       final Consumer<T> schemeParamsInstaller) {
+    public TaskBuilder<T> forScheme(final TaskScheme taskScheme, Consumer schemeParamsInstaller) {
 
-        taskScheme = schemeRepository.findTaskScheme(taskSchemeClass);
         task = new Task();
-
-        if (taskScheme == null) {
-            throw new RuntimeException("Can't find registered task scheme for the given class: " +
-                    "" + taskSchemeClass.getName() + ". Please check that the @Component annotation is exists.");
-        }
 
         try {
             taskScheme.setupTask(this, schemeParamsInstaller, creatorIdentifier);
@@ -44,6 +37,19 @@ public class TaskBuilder<T extends ParamsProtocol> {
         }
 
         return this;
+    }
+
+    public TaskBuilder<T> defineScheme(final Class<? extends TaskScheme<T>> taskSchemeClass,
+                                       final Consumer<T> schemeParamsInstaller) {
+
+        taskScheme = schemeRepository.findTaskScheme(taskSchemeClass);
+
+        if (taskScheme == null) {
+            throw new RuntimeException("Can't find registered task scheme for the given class: " +
+                    "" + taskSchemeClass.getName() + ". Please check that the @Component annotation is exists.");
+        }
+
+        return forScheme(taskScheme, schemeParamsInstaller);
     }
 
     public <S extends ParamsProtocol> TaskBuilder<T> addOperation(final Class<? extends OperationScheme<S>> operationScheme,

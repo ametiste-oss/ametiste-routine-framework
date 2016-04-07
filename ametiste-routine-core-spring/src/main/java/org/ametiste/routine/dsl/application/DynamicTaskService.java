@@ -31,13 +31,13 @@ public class DynamicTaskService {
 
     public UUID issueTask(final String taskSchemeName, final Map<String, String> params, final String creatorIdentifier) {
 
-        final TaskBuilder<ParamsProtocol> builder =
-                new TaskBuilder<>(schemeRepository, creatorIdentifier);
+        final TaskScheme taskScheme = schemeRepository
+                .findTaskScheme(taskSchemeName);
 
-        final Class<TaskScheme<ParamsProtocol>> taskSchemeClass =
-                schemeRepository.findTaskSchemeClass(taskSchemeName, ParamsProtocol.class);
+        return taskIssueService.issueTask(taskScheme,
+                p -> p.fromMap(params), creatorIdentifier
+        );
 
-        return taskIssueService.issueTask(taskSchemeClass, p -> p.fromMap(params), creatorIdentifier);
     }
 
 }

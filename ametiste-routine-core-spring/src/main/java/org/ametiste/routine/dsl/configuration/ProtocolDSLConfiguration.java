@@ -32,7 +32,7 @@ public class ProtocolDSLConfiguration {
 
     // TODO: can I do it with bean post processor?
     @Bean
-    public ModGateway testDSLProtocolConfig() {
+    public ModGateway modDSLProtocol() {
 
         final List<? extends Class<? extends Protocol>> protocolClasses = lambdaProtocols.stream()
                 .map(Protocol::getClass)

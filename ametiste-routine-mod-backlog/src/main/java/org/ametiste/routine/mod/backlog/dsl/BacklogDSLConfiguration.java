@@ -48,7 +48,7 @@ public class BacklogDSLConfiguration {
     private DynamicTaskService dynamicTaskService;
 
     @Bean
-    public ModGateway configureBacklogDSL() {
+    public ModGateway modBacklogDSL() {
 
         final List<? extends Class<?>> backlogControllers = this.backlogControllers.stream()
                 .map(Object::getClass)
