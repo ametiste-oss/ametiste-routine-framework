@@ -65,23 +65,22 @@ public class LocalLineExecutionGateway implements LineExecutionGateway {
                 executionLine.properties()
         );
 
-        feedback.operationStarted(executionLine.operationId());
-
         try {
-            operationScheme.operationExecutor()
-                    .execOperation(
+            feedback.operationStarted(executionLine.operationId());
+            operationScheme.operationExecutor().execOperation(
                         feedbackController,
                         protocolGateway
                     );
+            feedback.operationDone(executionLine.operationId());
         } catch (Exception e) {
             if (logger.isDebugEnabled()) {
                 logger.error("Error during task operation termination.", e);
             }
             feedback.operationFailed(executionLine.operationId(), "Operation failed on termination.");
             return;
+        } finally {
+            protocolGateway.release();
         }
-
-        feedback.operationDone(executionLine.operationId());
 
     }
 
