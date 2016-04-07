@@ -56,3 +56,7 @@ subprojects {
         resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
     }
 }
+
+task wrapper(type: Wrapper) {
+    gradleVersion = '2.12'
+}
