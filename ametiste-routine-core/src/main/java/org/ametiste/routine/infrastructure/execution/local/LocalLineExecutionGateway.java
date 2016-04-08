@@ -46,17 +46,6 @@ public class LocalLineExecutionGateway implements LineExecutionGateway {
         OperationScheme operationScheme = schemeRepository
                 .findOperationScheme(executionLine.operationName());
 
-        // TODO: move it to repo
-        if (operationScheme == null) {
-            throw new IllegalStateException("Can't find operation executor for: " +
-                    executionLine.operationName());
-        }
-
-//        if (!operationExecutors.containsKey(executionLine.operationName())) {
-//            throw new IllegalStateException("Can't find operation executor for: " +
-//                    executionLine.operationName());
-//        }
-
         final LocalOperationFeedbackController feedbackController =
                 new LocalOperationFeedbackController(feedback, executionLine.operationId());
 
@@ -77,7 +66,6 @@ public class LocalLineExecutionGateway implements LineExecutionGateway {
                 logger.error("Error during task operation termination.", e);
             }
             feedback.operationFailed(executionLine.operationId(), "Operation failed on termination.");
-            return;
         } finally {
             protocolGateway.release();
         }

@@ -2,6 +2,7 @@ package org.ametiste.routine.configuration;
 
 import org.ametiste.laplatform.sdk.protocol.GatewayContext;
 import org.ametiste.laplatform.sdk.protocol.ProtocolFactory;
+import org.ametiste.routine.RoutineCoreSpring;
 import org.ametiste.routine.infrastructure.protocol.http.RestTemplateHttpConnection;
 import org.ametiste.routine.sdk.protocol.http.HttpProtocol;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -17,13 +18,13 @@ import org.springframework.web.client.RestTemplate;
  *
  * <p>
  *     Note, this configuration is disbled by default, to enable this http protocol implementaion
- *     set property <i>{@value AmetisteRoutineCoreProperties#PREFIX}.protocol.http.enabled=true</i>
+ *     set property <i>{@value RoutineCoreSpring#PROPS_PREFIX}.protocol.http.enabled=true</i>
  * </p>
  *
  * @since 0.1.0
  */
 @Configuration
-@ConditionalOnProperty(prefix = AmetisteRoutineCoreProperties.PREFIX,
+@ConditionalOnProperty(prefix = RoutineCoreSpring.PROPS_PREFIX,
         name = "protocol.http.enabled", matchIfMissing = false)
 public class LPHttpProtocolConfiguration {
 

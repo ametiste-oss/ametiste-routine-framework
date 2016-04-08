@@ -1,7 +1,7 @@
 package org.ametiste.routine.mod.shredder.configuration;
 
 import org.ametiste.laplatform.protocol.gateway.ProtocolGatewayService;
-import org.ametiste.routine.configuration.AmetisteRoutineCoreProperties;
+import org.ametiste.routine.RoutineCoreSpring;
 import org.ametiste.routine.mod.shredder.application.action.ShreddingAction;
 import org.ametiste.routine.mod.shredder.application.service.ShreddingTaskService;
 import org.ametiste.routine.mod.shredder.mod.ModShredder;
@@ -20,7 +20,7 @@ import org.springframework.context.annotation.Configuration;
 @EnableConfigurationProperties(ModShredderProperties.class)
 public class ModShredderConfiguration {
 
-    public static final String PREFIX = AmetisteRoutineCoreProperties.PREFIX_MOD + ".shredder";
+    public static final String PREFIX = RoutineCoreSpring.MOD_PROPS_PREFIX + ".shredder";
 
     @Autowired
     private ModShredderProperties props;

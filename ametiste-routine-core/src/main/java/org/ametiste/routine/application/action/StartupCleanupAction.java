@@ -9,7 +9,7 @@ import java.util.List;
 
 /**
  * <p>
- *  This action is designed to prevent tasks of hangin in abnormal states in case of application restarts.
+ *      This action is designed to prevent tasks of hangin in abnormal states in case of application restarts.
  * </p>
  *
  * <p>
@@ -19,13 +19,13 @@ import java.util.List;
  *
  * @since 0.1.0
  */
-public class StartupCleanAction implements Runnable {
+public class StartupCleanupAction implements Runnable {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private TaskRepository taskRepository;
 
-    public StartupCleanAction(TaskRepository taskRepository) {
+    public StartupCleanupAction(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
     }
 
@@ -45,12 +45,10 @@ public class StartupCleanAction implements Runnable {
             logger.warn("Active during startup tasks will be terminated, tasks count is: {} ", tasks.size());
             logger.debug("Tasks ids: {}", tasks);
 
-            tasks.forEach(
-                    task -> {
-                        task.terminate("Active during startup, terminated by StartupCleanAction.");
-                        taskRepository.saveTask(task);
-                    }
-            );
+            tasks.forEach(task -> {
+                    task.terminate("Active during startup, terminated by StartupCleanupAction.");
+                    taskRepository.saveTask(task);
+            });
         }
     }
 

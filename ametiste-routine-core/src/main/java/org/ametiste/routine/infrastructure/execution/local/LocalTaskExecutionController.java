@@ -28,6 +28,7 @@ import java.util.UUID;
 // as okay for this version to control tasks state through
 // exceptions.
 // TODO: hmm, should I define app-layer services for this operations and use controller only as a proxy for this?
+// TODO: I guess yes, cos there is aggregate roots logic.. but it is infrastrucure
 public class LocalTaskExecutionController implements TaskExecutionController {
 
     private final TaskRepository taskRepository;

@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.RejectedExecutionException;
 
@@ -38,10 +39,13 @@ public class LocalTaskExecutionGateway implements TaskExecutionGateway {
     private final ConcurrentHashMap<UUID, Future<?>> executingOrders = new ConcurrentHashMap<>();
 
     public LocalTaskExecutionGateway(LineExecutionGateway lineExecutionGateway,
-                                     BoundedExecutor boundedExecutor,
+                                     int initialCapacity,
                                      TaskExecutionController taskExecutionController) {
         this.lineExecutionGateway = lineExecutionGateway;
-        this.boundedExecutor = boundedExecutor;
+        this.boundedExecutor = new BoundedExecutor(
+            Executors.newFixedThreadPool(initialCapacity),
+            initialCapacity
+        );
         this.taskExecutionController = taskExecutionController;
     }
 

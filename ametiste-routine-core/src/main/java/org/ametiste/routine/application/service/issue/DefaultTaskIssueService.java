@@ -30,6 +30,7 @@ public class DefaultTaskIssueService implements TaskIssueService {
     private final TaskDomainEvenetsGateway taskDomainEvenetsGateway;
 
     private final CoreEventsGateway coreEventsGateway;
+
     private final List<IssueConstraint> issueConstraints;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());

@@ -1,5 +1,6 @@
 package org.ametiste.routine.configuration;
 
+import org.ametiste.routine.RoutineCoreSpring;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
@@ -9,14 +10,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
  *
  * @since 0.1.0
  */
-@ConfigurationProperties(prefix = AmetisteRoutineCoreProperties.PREFIX_CORE)
+@ConfigurationProperties(prefix = RoutineCoreSpring.CORE_PROPS_PREFIX)
 public class AmetisteRoutineCoreProperties {
-
-    public static final String PREFIX = "org.ametiste.routine";
-
-    public static final String PREFIX_CORE = PREFIX + ".core";
-
-    public static final String PREFIX_MOD = PREFIX + ".mod";
 
     /**
      * Defines how many workers would initialized to execute pending tasks.

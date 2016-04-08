@@ -3,7 +3,7 @@ package org.ametiste.routine.infrastructure.execution.local;
 import java.util.concurrent.*;
 import java.util.function.Consumer;
 
-public class BoundedExecutor {
+class BoundedExecutor {
 
     private final ExecutorService exec;
     private final Semaphore semaphore;

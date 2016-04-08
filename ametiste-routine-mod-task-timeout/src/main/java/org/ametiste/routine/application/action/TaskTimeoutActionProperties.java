@@ -1,13 +1,13 @@
 package org.ametiste.routine.application.action;
 
-import org.ametiste.routine.configuration.AmetisteRoutineCoreProperties;
+import org.ametiste.routine.RoutineCoreSpring;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 /**
  *
  * @since
  */
-@ConfigurationProperties(prefix = AmetisteRoutineCoreProperties.PREFIX_MOD + ".task-timeout")
+@ConfigurationProperties(prefix = RoutineCoreSpring.MOD_PROPS_PREFIX + ".task-timeout")
 public class TaskTimeoutActionProperties {
 
     private int defaultTimeout = 60;

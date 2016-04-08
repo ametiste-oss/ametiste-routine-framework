@@ -5,6 +5,7 @@ import org.ametiste.routine.sdk.protocol.operation.ParamsProtocol;
 import java.util.Collections;
 import java.util.Map;
 
+// TODO: add metrics interface, provide client identifer to metrics
 public class DynamicParamsProtocol implements ParamsProtocol {
 
     private Map<String, String> params;

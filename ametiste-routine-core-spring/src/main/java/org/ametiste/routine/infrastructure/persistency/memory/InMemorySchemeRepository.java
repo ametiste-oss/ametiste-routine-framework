@@ -28,28 +28,23 @@ public class InMemorySchemeRepository implements SchemeRepository {
 
     @Override
     public TaskScheme findTaskScheme(String taskSchemeName) {
-
-        if (!taskSchemasByName.containsKey(taskSchemeName)) {
-             throw new IllegalArgumentException("Can't find registered scheme with the given name: " + taskSchemeName);
-        }
-
-        return taskSchemasByName.get(taskSchemeName);
+        return notNull(taskSchemasByName.get(taskSchemeName), taskSchemeName);
     }
 
     @Override
     public <T extends ParamsProtocol> OperationScheme<T> findOperationScheme(final Class<? extends OperationScheme<T>> operationSchemeClass) {
-        return opSchemasByClass.get(operationSchemeClass);
+        return notNull(opSchemasByClass.get(operationSchemeClass), operationSchemeClass.getSimpleName());
     }
 
     @Override
     public <T extends ParamsProtocol> TaskScheme<T> findTaskScheme(final Class<? extends TaskScheme<T>> taskSchemeClass) {
-        return taskSchemasByClass.get(taskSchemeClass);
+        return notNull(taskSchemasByClass.get(taskSchemeClass), taskSchemeClass.getSimpleName());
     }
 
     @Override
     public <T extends ParamsProtocol> Class<TaskScheme<T>> findTaskSchemeClass(final String schemeName, final Class<T> paramsClass) {
         // TODO: add params type check somehow
-        return (Class<TaskScheme<T>>) taskSchemasClassesByName.get(schemeName);
+        return notNull((Class<TaskScheme<T>>) taskSchemasClassesByName.get(schemeName), schemeName);
     }
 
     @Override
@@ -64,7 +59,7 @@ public class InMemorySchemeRepository implements SchemeRepository {
 
     @Override
     public OperationScheme findOperationScheme(final String operationName) {
-        return opSchemasByName.get(operationName);
+        return notNull(opSchemasByName.get(operationName), operationName);
     }
 
     @Override
@@ -79,6 +74,15 @@ public class InMemorySchemeRepository implements SchemeRepository {
         taskSchemasByName.put(taskScheme.schemeName(), taskScheme);
         taskSchemasByClass.put(taskScheme.getClass(), taskScheme);
         taskSchemasClassesByName.put(taskScheme.schemeName(), taskScheme.getClass());
+    }
+
+    private <T> T notNull(T object, String schemeName) {
+        if (object == null) {
+            // TODO: custom exception
+            throw new RuntimeException("Can't find registered scheme for: " +
+                    schemeName);
+        }
+        return object;
     }
 
 }

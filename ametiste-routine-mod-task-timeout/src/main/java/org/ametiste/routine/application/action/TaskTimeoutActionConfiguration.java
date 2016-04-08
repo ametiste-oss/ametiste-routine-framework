@@ -4,7 +4,7 @@ import org.ametiste.gte.Action;
 import org.ametiste.gte.ActionActuatorDelegate;
 import org.ametiste.gte.ActionFactory;
 import org.ametiste.laplatform.protocol.gateway.ProtocolGatewayService;
-import org.ametiste.routine.configuration.AmetisteRoutineCoreProperties;
+import org.ametiste.routine.RoutineCoreSpring;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -18,7 +18,7 @@ import java.util.Collections;
  * @since
  */
 @Configuration
-@ConditionalOnProperty(prefix = AmetisteRoutineCoreProperties.PREFIX_MOD,
+@ConditionalOnProperty(prefix = RoutineCoreSpring.MOD_PROPS_PREFIX,
         name = "task-timeout.enabled", matchIfMissing = false)
 @EnableConfigurationProperties(TaskTimeoutActionProperties.class)
 public class TaskTimeoutActionConfiguration {

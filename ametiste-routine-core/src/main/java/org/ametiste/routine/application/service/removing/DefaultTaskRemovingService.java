@@ -36,9 +36,9 @@ public class DefaultTaskRemovingService implements TaskRemovingService {
         }
 
         final long taskCountToRemove = taskRepository.countTasks(c -> {
-                    c.stateIn(states.stream().map(Task.State::name).collect(Collectors.toList()));
-                    c.completionTimeAfter(after);
-                }
+                c.stateIn(states.stream().map(Task.State::name).collect(Collectors.toList()));
+                c.completionTimeAfter(after);
+            }
         );
 
         logger.debug("Tasks scheduled for removing by {} : {}", clientId, taskCountToRemove);

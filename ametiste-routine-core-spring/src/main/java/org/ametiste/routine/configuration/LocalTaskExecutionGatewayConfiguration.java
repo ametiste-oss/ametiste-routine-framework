@@ -52,7 +52,7 @@ public class LocalTaskExecutionGatewayConfiguration {
 
         // v1.1 UPDATE:
         //
-        // Now OperationExecutorFactory is enclosed within the OperationScheme, all semantics
+        // Now OperationExecutorFactory is enclosed within the OperationScheme, but all semantics
         // described bellow still applicable for.
         //
         // DOCUMENTATE ME:
@@ -73,10 +73,7 @@ public class LocalTaskExecutionGatewayConfiguration {
         // each request.
         //
 
-        return new LocalLineExecutionGateway(schemeRepository,
-                protocolGatewayservice,
-                localTaskExecutionController()
-        );
+        return new LocalLineExecutionGateway(schemeRepository, protocolGatewayservice, localTaskExecutionController());
     }
 
     @Bean
@@ -88,10 +85,7 @@ public class LocalTaskExecutionGatewayConfiguration {
     public TaskExecutionGateway localTaskExecutionGateway() {
         return new LocalTaskExecutionGateway(
             localLineExecutionGateway(),
-            new BoundedExecutor(
-                Executors.newFixedThreadPool(props.getInitialExecutionConcurrency()),
-                props.getInitialExecutionConcurrency()
-            ),
+            props.getInitialExecutionConcurrency(),
             localTaskExecutionController()
         );
     }
