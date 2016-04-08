@@ -4,6 +4,7 @@ import org.ametiste.routine.domain.scheme.AbstractTaskScheme;
 import org.ametiste.routine.domain.scheme.TaskOperationReceiver;
 import org.ametiste.routine.mod.backlog.application.operation.BacklogParams;
 import org.ametiste.routine.mod.backlog.application.operation.BacklogRenewOperationScheme;
+import org.ametiste.routine.mod.backlog.application.operation.DirectBacklogParams;
 import org.ametiste.routine.mod.backlog.mod.ModBacklog;
 import org.springframework.stereotype.Component;
 
@@ -13,7 +14,7 @@ public class BacklogRenewTaskScheme extends AbstractTaskScheme<BacklogParams> {
     public static final String NAME = ModBacklog.MOD_ID + "::renewTaskScheme";
 
     public BacklogRenewTaskScheme() {
-        super(NAME, BacklogParams::new);
+        super(NAME, DirectBacklogParams::new);
     }
 
     @Override

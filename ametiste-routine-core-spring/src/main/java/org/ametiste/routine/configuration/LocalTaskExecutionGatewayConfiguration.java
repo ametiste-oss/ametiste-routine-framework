@@ -1,6 +1,7 @@
 package org.ametiste.routine.configuration;
 
 import org.ametiste.laplatform.protocol.gateway.ProtocolGatewayService;
+import org.ametiste.metrics.MetricsService;
 import org.ametiste.routine.application.CoreEventsGateway;
 import org.ametiste.routine.application.TaskDomainEvenetsGateway;
 import org.ametiste.routine.domain.scheme.SchemeRepository;
@@ -47,6 +48,9 @@ public class LocalTaskExecutionGatewayConfiguration {
     @Autowired
     private SchemeRepository schemeRepository;
 
+    @Autowired
+    private MetricsService metricsService;
+
     @Bean
     public LineExecutionGateway localLineExecutionGateway() {
 
@@ -73,7 +77,8 @@ public class LocalTaskExecutionGatewayConfiguration {
         // each request.
         //
 
-        return new LocalLineExecutionGateway(schemeRepository, protocolGatewayservice, localTaskExecutionController());
+        return new LocalLineExecutionGateway(schemeRepository,
+                protocolGatewayservice, localTaskExecutionController(), metricsService);
     }
 
     @Bean

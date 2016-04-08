@@ -2,6 +2,7 @@ package org.ametiste.routine.infrastructure.execution.local;
 
 import org.ametiste.laplatform.protocol.ProtocolGateway;
 import org.ametiste.laplatform.protocol.gateway.ProtocolGatewayService;
+import org.ametiste.metrics.MetricsService;
 import org.ametiste.metrics.annotations.Timeable;
 import org.ametiste.routine.domain.scheme.OperationScheme;
 import org.ametiste.routine.domain.scheme.SchemeRepository;
@@ -25,18 +26,20 @@ public class LocalLineExecutionGateway implements LineExecutionGateway {
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
     private final SchemeRepository schemeRepository;
-
     private final TaskExecutionController feedback;
+    private final MetricsService metricsService;
 
     private final ProtocolGatewayService protocolGatewayservice;
 
     public LocalLineExecutionGateway(
             SchemeRepository schemeRepository,
             ProtocolGatewayService protocolGatewayservice,
-            TaskExecutionController taskExecutionController) {
+            TaskExecutionController taskExecutionController,
+            MetricsService metricsService) {
         this.schemeRepository = schemeRepository;
         this.protocolGatewayservice = protocolGatewayservice;
         this.feedback = taskExecutionController;
+        this.metricsService = metricsService;
     }
 
     @Override
@@ -53,6 +56,12 @@ public class LocalLineExecutionGateway implements LineExecutionGateway {
                 executionLine.operationName(),
                 executionLine.properties()
         );
+
+        // TODO: add error metrics
+        protocolGateway.onInvocationTiming((c, g, o, t) -> {
+            metricsService.createEvent(g + "." + c + ".overall." + o + ".timing", (int) t);
+            metricsService.createEvent(g + "." + c + ".clients." + executionLine.operationName() + "." + o + ".timing", (int) t);
+        });
 
         try {
             feedback.operationStarted(executionLine.operationId());

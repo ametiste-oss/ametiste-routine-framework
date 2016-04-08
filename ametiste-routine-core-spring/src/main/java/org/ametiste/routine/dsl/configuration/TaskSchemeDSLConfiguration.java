@@ -11,10 +11,7 @@ import org.ametiste.routine.domain.scheme.TaskSchemeException;
 import org.ametiste.routine.dsl.annotations.RoutineTask;
 import org.ametiste.routine.dsl.annotations.SchemeMapping;
 import org.ametiste.routine.dsl.annotations.TaskOperation;
-import org.ametiste.routine.dsl.application.DynamicOperationFactory;
-import org.ametiste.routine.dsl.application.DynamicOperationScheme;
-import org.ametiste.routine.dsl.application.DynamicParamsProtocol;
-import org.ametiste.routine.dsl.application.DynamicTaskService;
+import org.ametiste.routine.dsl.application.*;
 import org.ametiste.routine.sdk.mod.ModGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -49,7 +46,7 @@ public class TaskSchemeDSLConfiguration {
     @Bean
     @Scope(scopeName = "prototype")
     public DynamicParamsProtocol dynamicParamsProtocol(GatewayContext context) {
-        return new DynamicParamsProtocol(context.lookupMap("params"));
+        return new DirectDynamicParamsProtocol(context.lookupMap("params"));
     }
 
     @Bean
@@ -109,7 +106,7 @@ public class TaskSchemeDSLConfiguration {
             @Override
             public void setupTask(final TaskBuilder<DynamicParamsProtocol> taskBuilder, final Consumer<DynamicParamsProtocol> paramsInstaller, final String creatorIdenifier) throws TaskSchemeException {
 
-                final DynamicParamsProtocol dynamicParamsProtocol = new DynamicParamsProtocol();
+                final DynamicParamsProtocol dynamicParamsProtocol = new DirectDynamicParamsProtocol();
 
                 paramsInstaller.accept(dynamicParamsProtocol);
 

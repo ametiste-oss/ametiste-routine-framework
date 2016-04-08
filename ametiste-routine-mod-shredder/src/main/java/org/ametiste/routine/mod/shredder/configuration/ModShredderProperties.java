@@ -1,6 +1,6 @@
 package org.ametiste.routine.mod.shredder.configuration;
 
-import org.ametiste.routine.mod.shredder.application.operation.ShreddingParams;
+import org.ametiste.routine.mod.shredder.application.operation.DirectShreddingParams;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.time.temporal.ChronoUnit;
@@ -18,13 +18,13 @@ public class ModShredderProperties {
 
     private StaleThreshold staleThreshold = new StaleThreshold();
 
-    private List<String> staleStates = ShreddingParams.DEFAULT_STALE_STATES;
+    private List<String> staleStates = DirectShreddingParams.DEFAULT_STALE_STATES;
 
     public static class StaleThreshold {
 
-        private int staleThresholdValue = ShreddingParams.DEFAULT_STALE_THRESHOLD_VALUE;
+        private int staleThresholdValue = DirectShreddingParams.DEFAULT_STALE_THRESHOLD_VALUE;
 
-        private ChronoUnit staleThresholdUnit = ShreddingParams.DEFAULT_STALE_THRESHOLD_UNIT;
+        private ChronoUnit staleThresholdUnit = DirectShreddingParams.DEFAULT_STALE_THRESHOLD_UNIT;
 
         public int getValue() {
             return staleThresholdValue;

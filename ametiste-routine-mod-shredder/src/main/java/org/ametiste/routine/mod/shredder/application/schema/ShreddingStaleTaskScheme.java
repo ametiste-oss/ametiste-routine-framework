@@ -2,6 +2,7 @@ package org.ametiste.routine.mod.shredder.application.schema;
 
 import org.ametiste.routine.domain.scheme.AbstractTaskScheme;
 import org.ametiste.routine.domain.scheme.TaskOperationReceiver;
+import org.ametiste.routine.mod.shredder.application.operation.DirectShreddingParams;
 import org.ametiste.routine.mod.shredder.application.operation.ShreddingStaleTaskOperationScheme;
 import org.ametiste.routine.mod.shredder.application.operation.ShreddingParams;
 import org.ametiste.routine.mod.shredder.mod.ModShredder;
@@ -13,7 +14,7 @@ public class ShreddingStaleTaskScheme extends AbstractTaskScheme<ShreddingParams
     public static final String NAME = ModShredder.MOD_ID + "-scheme-shredding-stale-tasks";
 
     public ShreddingStaleTaskScheme() {
-        super(NAME, ShreddingParams::new);
+        super(NAME, DirectShreddingParams::new);
     }
 
     @Override

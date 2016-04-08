@@ -2,6 +2,7 @@ package org.ametiste.routine.mod.shredder.configuration;
 
 import org.ametiste.laplatform.sdk.protocol.GatewayContext;
 import org.ametiste.laplatform.sdk.protocol.ProtocolFactory;
+import org.ametiste.routine.mod.shredder.application.operation.DirectShreddingParams;
 import org.ametiste.routine.mod.shredder.application.operation.ShreddingParams;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,7 +18,7 @@ public class ModShredderParamsProtocolConfiguration {
     @Bean
     @Scope(scopeName = "prototype")
     public ShreddingParams shreddingParamsProtocol(GatewayContext c) {
-        return ShreddingParams.createFromMap(c.lookupMap("params"));
+        return DirectShreddingParams.createFromMap(c.lookupMap("params"));
     }
 
     @Bean

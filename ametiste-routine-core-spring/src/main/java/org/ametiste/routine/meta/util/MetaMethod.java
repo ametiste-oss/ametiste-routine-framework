@@ -1,7 +1,10 @@
 package org.ametiste.routine.meta.util;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Optional;
+import java.util.function.Function;
 
 /**
  *
@@ -43,6 +46,17 @@ public class MetaMethod {
         return this;
     }
 
+    // TODO: copypaste from MetaObject, may we have it as general?
+    public <T, S extends Annotation> Optional<T> annotationValue(
+            Class<S> annotationClass, Function<S, T> valueProducer) {
+
+        if (!method.isAnnotationPresent(annotationClass)) {
+            return Optional.empty();
+        }
+
+        return Optional.ofNullable(valueProducer.apply(method.getDeclaredAnnotation(annotationClass)));
+    }
+
     public MetaMethod assertAttributesTypes(final Class<?>... expectedTypes) {
 
         final Class<?>[] actualTypes = method.getParameterTypes();
@@ -60,5 +74,9 @@ public class MetaMethod {
         }
 
         return this;
+    }
+
+    public String name() {
+        return method.getName();
     }
 }

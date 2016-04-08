@@ -2,13 +2,10 @@ package org.ametiste.routine.mod.shredder.application.operation;
 
 import org.ametiste.laplatform.protocol.ProtocolGateway;
 import org.ametiste.laplatform.protocol.gateway.SessionOption;
-import org.ametiste.routine.mod.shredder.application.schema.ShreddingStaleTaskScheme;
-import org.ametiste.routine.mod.shredder.mod.ModShredder;
 import org.ametiste.routine.sdk.operation.OperationExecutor;
 import org.ametiste.routine.sdk.operation.OperationFeedback;
 import org.ametiste.routine.sdk.protocol.modreport.ModReportProtocol;
 import org.ametiste.routine.infrastructure.protocol.taskpool.TaskPoolProtocol;
-import org.springframework.stereotype.Component;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -24,16 +21,16 @@ public class ShreddingStaleTaskExecutor implements OperationExecutor {
     @Override
     public void execOperation(final OperationFeedback feedback, final ProtocolGateway protocolGateway) {
 
-        final Integer threshold = protocolGateway
-                .session(ShreddingParams.class)
+        final ShreddingParams shreddingParams = protocolGateway
+                .session(ShreddingParams.class);
+
+        final Integer threshold =  shreddingParams
                 .threshold();
 
-        final ChronoUnit unit = protocolGateway
-                .session(ShreddingParams.class)
+        final ChronoUnit unit = shreddingParams
                 .unit();
 
-        final List<String> staleStates =protocolGateway
-                .session(ShreddingParams.class)
+        final List<String> staleStates = shreddingParams
                 .staleStates();
 
         final long removedTasksCount = protocolGateway

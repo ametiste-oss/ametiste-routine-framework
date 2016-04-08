@@ -1,7 +1,10 @@
 package org.ametiste.routine.meta.util;
 
+import org.ametiste.lang.Pair;
+
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -66,6 +69,18 @@ public class MetaObject {
         return Stream.of(klass.getDeclaredFields()).filter(
                 f -> f.isAnnotationPresent(annotationClass)
         );
+    }
+
+    public Stream<MetaMethod> streamOfMethodsWithoutAnnotation(final Class<? extends Annotation> annotationClass) {
+        return Stream.of(klass.getMethods()).filter(
+            f -> !f.isAnnotationPresent(annotationClass)
+        ).map(m -> MetaMethod.of(this, m));
+    }
+
+    public Stream<MetaMethod> streamOfAnnotatedMethods(final Class<? extends Annotation> annotationClass) {
+        return Stream.of(klass.getMethods()).filter(
+                f -> f.isAnnotationPresent(annotationClass)
+        ).map(m -> MetaMethod.of(this, m));
     }
 
     public Object object() {
