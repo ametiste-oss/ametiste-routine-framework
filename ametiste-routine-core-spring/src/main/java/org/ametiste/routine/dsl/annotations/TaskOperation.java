@@ -15,4 +15,6 @@ public @interface TaskOperation {
 
     String schemeName() default "";
 
+    int order() default 1;
+
 }

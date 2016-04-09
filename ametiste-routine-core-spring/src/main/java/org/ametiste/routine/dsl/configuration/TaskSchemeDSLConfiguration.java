@@ -94,6 +94,20 @@ public class TaskSchemeDSLConfiguration {
         final List<DynamicOperationScheme> operations = Stream
                 .of(ReflectionUtils.getAllDeclaredMethods(controllerClass))
                 .filter(m -> m.isAnnotationPresent(TaskOperation.class))
+                // NOTE: operations order support, just sort list of schemas in a defined order
+                .sorted((t, o)  -> {
+                    final int first = t.getDeclaredAnnotation(TaskOperation.class).order();
+                    final int second = o.getDeclaredAnnotation(TaskOperation.class).order();
+                    if (first > second) {
+                        return 1;
+                    } else if (first < second) {
+                        return -1;
+                    } else {
+                        // TODO: add scheme name to exception
+                        throw new IllegalStateException("Operations order is undefined. " +
+                                "Please define unique operations order explicitly.");
+                    }
+                })
                 .map(m -> Pair.of(resolveOperationName(m), new DynamicOperationFactory(conversionService, controllerClass, m)))
                 .map(p -> new DynamicOperationScheme(p.first(), p.second()))
                 .collect(Collectors.toList());
@@ -111,9 +125,9 @@ public class TaskSchemeDSLConfiguration {
             public void setupTask(final TaskBuilder<DynamicParamsProtocol> taskBuilder, final Consumer<DynamicParamsProtocol> paramsInstaller, final String creatorIdenifier) throws TaskSchemeException {
 
                 final DynamicParamsProtocol dynamicParamsProtocol = new DirectDynamicParamsProtocol();
-
                 paramsInstaller.accept(dynamicParamsProtocol);
 
+                // NOTE: operations are sorted in defined order, so just adding em one after one
                 operations.forEach(
                     op -> taskBuilder.addOperation(op.schemeName(), dynamicParamsProtocol)
                 );

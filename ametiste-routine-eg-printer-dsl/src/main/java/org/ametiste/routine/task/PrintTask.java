@@ -16,4 +16,9 @@ public class PrintTask {
         containerAppProtocol.systemOut(prefix + Integer.toString(taskNumber));
     }
 
+    @TaskOperation(order = 2)
+    public void cleanupOperation() {
+        containerAppProtocol.systemOut("Just Second Print");
+    }
+
 }
