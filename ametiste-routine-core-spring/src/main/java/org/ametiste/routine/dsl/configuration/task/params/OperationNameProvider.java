@@ -2,7 +2,6 @@ package org.ametiste.routine.dsl.configuration.task.params;
 
 import org.ametiste.laplatform.protocol.ProtocolGateway;
 import org.ametiste.routine.dsl.annotations.OperationName;
-import org.ametiste.routine.dsl.annotations.TaskName;
 import org.ametiste.routine.dsl.application.AnnotatedParameterProvider;
 import org.ametiste.routine.meta.util.MetaMethodParameter;
 import org.ametiste.routine.sdk.protocol.operation.OperationMetaProtocol;
