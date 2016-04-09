@@ -6,15 +6,20 @@ import org.ametiste.routine.application.CoreEventsGateway;
 import org.ametiste.routine.application.TaskDomainEvenetsGateway;
 import org.ametiste.routine.domain.scheme.SchemeRepository;
 import org.ametiste.routine.domain.task.TaskRepository;
-import org.ametiste.routine.infrastructure.execution.*;
-import org.ametiste.routine.infrastructure.execution.local.*;
+import org.ametiste.routine.infrastructure.execution.LineExecutionGateway;
+import org.ametiste.routine.infrastructure.execution.OperationRuntimeProtocolFactory;
+import org.ametiste.routine.infrastructure.execution.TaskExecutionGateway;
+import org.ametiste.routine.infrastructure.execution.local.LocalLineExecutionGateway;
+import org.ametiste.routine.infrastructure.execution.local.LocalTaskExecutionController;
+import org.ametiste.routine.infrastructure.execution.local.LocalTaskExecutionGateway;
+import org.ametiste.routine.infrastructure.execution.local.TaskExecutionController;
 import org.ametiste.routine.infrastructure.messaging.JmsTaskExecutionGatewayListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.concurrent.Executors;
+import java.util.List;
 
 /**
  *
@@ -27,12 +32,6 @@ public class LocalTaskExecutionGatewayConfiguration {
     @Autowired
     private AmetisteRoutineCoreProperties props;
 
-//    @Autowired(required = false)
-//    private Map<String, OperationExecutorFactory> operationExecutorFactories = Collections.emptyMap();
-//
-//    @Autowired(required = false)
-//    private Map<String, OperationExecutor> operationExecutors = Collections.emptyMap();
-//
     @Autowired
     private TaskRepository taskRepository;
 
@@ -50,6 +49,9 @@ public class LocalTaskExecutionGatewayConfiguration {
 
     @Autowired
     private MetricsService metricsService;
+
+    @Autowired
+    private List<OperationRuntimeProtocolFactory<?>> operationRuntimeProtocolFactories;
 
     @Bean
     public LineExecutionGateway localLineExecutionGateway() {
@@ -78,7 +80,7 @@ public class LocalTaskExecutionGatewayConfiguration {
         //
 
         return new LocalLineExecutionGateway(schemeRepository,
-                protocolGatewayservice, localTaskExecutionController(), metricsService);
+                localTaskExecutionController(), protocolGatewayservice, operationRuntimeProtocolFactories);
     }
 
     @Bean

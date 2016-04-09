@@ -3,6 +3,8 @@ package org.ametiste.routine.task;
 import org.ametiste.routine.dsl.annotations.*;
 import org.ametiste.routine.sdk.protocol.containerapp.ContainerAppProtocol;
 
+import java.util.UUID;
+
 @RoutineTask
 @SchemeMapping(schemeName = "printTaskScheme")
 public class PrintTask {
@@ -11,14 +13,19 @@ public class PrintTask {
     private ContainerAppProtocol containerAppProtocol;
 
     @TaskOperation
-    public void printOperation(@OperationParameter("operationOut") String prefix,
-            @OperationParameter("secondParameter") int taskNumber) {
+    public void printOperationOut(@OperationParameter("operationOut") String prefix,
+                                  @OperationParameter("secondParameter") int taskNumber) {
         containerAppProtocol.systemOut(prefix + Integer.toString(taskNumber));
     }
 
     @TaskOperation(order = 2)
-    public void cleanupOperation() {
-        containerAppProtocol.systemOut("Just Second Print");
+    public void printOperationId(@OperationId String operationId) {
+        containerAppProtocol.systemOut("Operation id: " + operationId);
+    }
+
+    @TaskOperation(order = 3)
+    public void printOperationName(@OperationName String operationName) {
+        containerAppProtocol.systemOut("Operation name: " + operationName);
     }
 
 }

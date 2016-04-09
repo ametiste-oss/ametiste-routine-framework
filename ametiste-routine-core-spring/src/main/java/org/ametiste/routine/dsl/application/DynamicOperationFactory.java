@@ -3,41 +3,39 @@ package org.ametiste.routine.dsl.application;
 import org.ametiste.laplatform.protocol.ProtocolGateway;
 import org.ametiste.laplatform.sdk.protocol.Protocol;
 import org.ametiste.routine.dsl.annotations.Connect;
-import org.ametiste.routine.dsl.annotations.OperationParameter;
+import org.ametiste.routine.meta.util.*;
 import org.ametiste.routine.sdk.operation.OperationFeedback;
-import org.springframework.core.convert.ConversionService;
 import org.springframework.util.ReflectionUtils;
 
-import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class DynamicOperationFactory {
 
     private final Method method;
-    private final ConversionService conversionService;
     private final Class<?> controllerClass;
+    private final List<ParamaterProvider> paramaterProviders;
 
-    public DynamicOperationFactory(ConversionService conversionService, Class<?> controllerClass, Method method) {
-        this.conversionService = conversionService;
+    public DynamicOperationFactory(
+            final Class<?> controllerClass,
+            final Method method,
+            final List<ParamaterProvider> paramaterProviders) {
         this.controllerClass = controllerClass;
         this.method = method;
+        this.paramaterProviders = paramaterProviders;
     }
 
-    public DynamicOperation createDynamicOperation(final OperationFeedback operationFeedback, final ProtocolGateway protocolGateway) {
-
-        final Object controllerInstance;
-        final Object[] params = new Object[method.getParameterAnnotations().length];
-        final Class<?>[] parameterTypes = method.getParameterTypes();
-
-        try {
-            controllerInstance = controllerClass.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            throw new RuntimeException(e);
-        }
+    public DynamicOperation createDynamicOperation(final OperationFeedback operationFeedback,
+                                                   final ProtocolGateway protocolGateway) {
 
         // Вот это можно сделать один раз и сюда передавать уже данные о том, какие инжекты нужны будут
+
+        final Object controllerInstance = createOperationControllerInstance();
+        final MetaMethod metaMethod = MetaMethod.of(MetaObject.of(controllerInstance), method);
 
         Stream.of(controllerClass.getDeclaredFields())
                 .filter(f -> f.isAnnotationPresent(Connect.class))
@@ -49,20 +47,10 @@ public class DynamicOperationFactory {
                     ReflectionUtils.setField(f, controllerInstance, session);
                 });
 
-        int p = 0;
-
-        for (Annotation[] parameterAnnotations : method.getParameterAnnotations()) {
-            // NOTE: take only first parameter annotation in account, other annotations just ignored
-            if (parameterAnnotations[0] instanceof OperationParameter) {
-                params[p] = protocolGateway.session(DynamicParamsProtocol.class).param(
-                        ((OperationParameter) parameterAnnotations[0]).value());
-                params[p] = conversionService.convert(params[p], parameterTypes[p]);
-            } else {
-                throw new IllegalStateException("Mismatch task scheme dsl, is expected to has " +
-                        "@OperationParameter as first annotation for the operation method paramters.");
-            }
-            p++;
-        }
+        final Object[] params = metaMethod.streamOfParameters()
+                .map(p -> resolveMethodParameters(p, protocolGateway))
+                .collect(Collectors.toList())
+                .toArray(new Object[metaMethod.paramsCount()]);
 
         return () -> {
             try {
@@ -71,6 +59,25 @@ public class DynamicOperationFactory {
                 throw new RuntimeException(e);
             }
         };
+    }
+
+    private Object resolveMethodParameters(MetaMethodParameter methodParameter, final ProtocolGateway protocolGateway) {
+        return paramaterProviders.stream()
+            .map(p -> p.provideValue(methodParameter, protocolGateway))
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .findFirst()
+            .orElseThrow(() -> new IllegalStateException("There is no resolved parameters."));
+    }
+
+    private Object createOperationControllerInstance() {
+        final Object controllerInstance;
+        try {
+            controllerInstance = controllerClass.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            throw new RuntimeException(e);
+        }
+        return controllerInstance;
     }
 
 }

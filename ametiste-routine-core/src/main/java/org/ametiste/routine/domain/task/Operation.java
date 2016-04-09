@@ -26,7 +26,7 @@ public class Operation {
     List<Notice> notices;
 
     Operation(String operationLabel, Map<String, String> properties) {
-        this(UUID.randomUUID(), operationLabel, properties, State.NEW, Collections.<Notice>emptyList());
+        this(UUID.randomUUID(), operationLabel, properties, State.NEW, Collections.emptyList());
     }
 
     Operation(UUID id, String label, Map<String, String> properties, String state, List<Notice> notices) {

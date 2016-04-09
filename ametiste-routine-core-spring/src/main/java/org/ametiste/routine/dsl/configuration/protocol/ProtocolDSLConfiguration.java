@@ -1,4 +1,4 @@
-package org.ametiste.routine.dsl.configuration;
+package org.ametiste.routine.dsl.configuration.protocol;
 
 import org.ametiste.lang.Pair;
 import org.ametiste.laplatform.dsl.LambdaProtocol;
@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.convert.ConversionService;
 
 import java.util.*;
 import java.util.stream.Collectors;

@@ -1,8 +1,6 @@
-package org.ametiste.routine.dsl.configuration;
+package org.ametiste.routine.dsl.configuration.task;
 
 import org.ametiste.lang.Pair;
-import org.ametiste.laplatform.sdk.protocol.GatewayContext;
-import org.ametiste.laplatform.sdk.protocol.ProtocolFactory;
 import org.ametiste.routine.application.service.issue.TaskIssueService;
 import org.ametiste.routine.domain.scheme.SchemeRepository;
 import org.ametiste.routine.domain.scheme.TaskBuilder;
@@ -12,11 +10,11 @@ import org.ametiste.routine.dsl.annotations.RoutineTask;
 import org.ametiste.routine.dsl.annotations.SchemeMapping;
 import org.ametiste.routine.dsl.annotations.TaskOperation;
 import org.ametiste.routine.dsl.application.*;
+import org.ametiste.routine.dsl.application.ParamaterProvider;
 import org.ametiste.routine.sdk.mod.ModGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.util.ReflectionUtils;
 
@@ -47,16 +45,8 @@ public class TaskSchemeDSLConfiguration {
     @Autowired
     private ConversionService conversionService;
 
-    @Bean
-    @Scope(scopeName = "prototype")
-    public DynamicParamsProtocol dynamicParamsProtocol(GatewayContext context) {
-        return new DirectDynamicParamsProtocol(context.lookupMap("params"));
-    }
-
-    @Bean
-    public ProtocolFactory<DynamicParamsProtocol> dynamicParamsProtocolConnection() {
-        return c -> dynamicParamsProtocol(c);
-    }
+    @Autowired
+    private List<ParamaterProvider> paramProviders;
 
     @Bean
     public DynamicTaskService dynamicTaskService() {
@@ -108,7 +98,7 @@ public class TaskSchemeDSLConfiguration {
                                 "Please define unique operations order explicitly.");
                     }
                 })
-                .map(m -> Pair.of(resolveOperationName(m), new DynamicOperationFactory(conversionService, controllerClass, m)))
+                .map(m -> Pair.of(resolveOperationName(m), new DynamicOperationFactory(controllerClass, m, paramProviders)))
                 .map(p -> new DynamicOperationScheme(p.first(), p.second()))
                 .collect(Collectors.toList());
 

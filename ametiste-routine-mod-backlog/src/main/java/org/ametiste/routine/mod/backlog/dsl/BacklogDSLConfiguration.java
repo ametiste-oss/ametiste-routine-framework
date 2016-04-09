@@ -78,7 +78,7 @@ public class BacklogDSLConfiguration {
 
         backlogController.oneAnnotatedMethod(BacklogPopulator.class)
                 .orElseThrow(processError(controllerClass, "Exactly one @BacklogPopulator method are expected."))
-                .assertAttributesTypes(taskScheme);
+                .assertParameterTypes(taskScheme);
 
         final String schemeName = MetaObject.from(taskScheme)
                 .annotationValue(SchemeMapping.class, SchemeMapping::schemeName)

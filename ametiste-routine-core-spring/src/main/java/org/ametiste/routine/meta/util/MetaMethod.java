@@ -5,6 +5,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Optional;
 import java.util.function.Function;
+import java.util.stream.Stream;
 
 /**
  *
@@ -15,13 +16,21 @@ public class MetaMethod {
     private final MetaObject metaObject;
     private final Method method;
 
-    public MetaMethod(MetaObject metaObject, Method method) {
+    MetaMethod(MetaObject metaObject, Method method) {
         this.metaObject = metaObject;
         this.method = method;
     }
 
+    MetaMethod(Method method) {
+        this(null, method);
+    }
+
     public static final MetaMethod of(MetaObject metaObject, Method method) {
         return new MetaMethod(metaObject, method);
+    }
+
+    public static final MetaMethod of(Method method) {
+        return new MetaMethod(method);
     }
 
     public MetaObject ofClass() {
@@ -29,11 +38,21 @@ public class MetaMethod {
     }
 
     public void invoke(Object... args) {
+
+        if (metaObject == null) {
+            throw new IllegalStateException("Can't use invoke() method on method with nullable meta-object.");
+        }
+
         try {
             method.invoke(metaObject.object, args);
         } catch (InvocationTargetException | IllegalAccessException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    public Stream<MetaMethodParameter> streamOfParameters() {
+        return Stream.of(method.getParameters())
+                .map(p -> new MetaMethodParameter(this, p));
     }
 
     public MetaMethod assertParametersCount(final int paramsCount) {
@@ -57,7 +76,7 @@ public class MetaMethod {
         return Optional.ofNullable(valueProducer.apply(method.getDeclaredAnnotation(annotationClass)));
     }
 
-    public MetaMethod assertAttributesTypes(final Class<?>... expectedTypes) {
+    public MetaMethod assertParameterTypes(final Class<?>... expectedTypes) {
 
         final Class<?>[] actualTypes = method.getParameterTypes();
 
@@ -78,5 +97,9 @@ public class MetaMethod {
 
     public String name() {
         return method.getName();
+    }
+
+    public int paramsCount() {
+        return method.getParameterAnnotations().length;
     }
 }
