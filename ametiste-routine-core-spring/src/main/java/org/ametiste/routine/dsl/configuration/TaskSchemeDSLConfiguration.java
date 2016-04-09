@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Method;
@@ -42,6 +43,9 @@ public class TaskSchemeDSLConfiguration {
 
     @Autowired
     private TaskIssueService taskIssueService;
+
+    @Autowired
+    private ConversionService conversionService;
 
     @Bean
     @Scope(scopeName = "prototype")
@@ -90,7 +94,7 @@ public class TaskSchemeDSLConfiguration {
         final List<DynamicOperationScheme> operations = Stream
                 .of(ReflectionUtils.getAllDeclaredMethods(controllerClass))
                 .filter(m -> m.isAnnotationPresent(TaskOperation.class))
-                .map(m -> Pair.of(resolveOperationName(m), new DynamicOperationFactory(controllerClass, m)))
+                .map(m -> Pair.of(resolveOperationName(m), new DynamicOperationFactory(conversionService, controllerClass, m)))
                 .map(p -> new DynamicOperationScheme(p.first(), p.second()))
                 .collect(Collectors.toList());
 

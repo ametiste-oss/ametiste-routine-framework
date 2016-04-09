@@ -5,6 +5,7 @@ import org.ametiste.laplatform.sdk.protocol.Protocol;
 import org.ametiste.routine.dsl.annotations.Connect;
 import org.ametiste.routine.dsl.annotations.OperationParameter;
 import org.ametiste.routine.sdk.operation.OperationFeedback;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.annotation.Annotation;
@@ -15,11 +16,12 @@ import java.util.stream.Stream;
 public class DynamicOperationFactory {
 
     private final Method method;
+    private final ConversionService conversionService;
     private final Class<?> controllerClass;
 
-    public DynamicOperationFactory(Class<?> controllerClass, Method method) {
+    public DynamicOperationFactory(ConversionService conversionService, Class<?> controllerClass, Method method) {
+        this.conversionService = conversionService;
         this.controllerClass = controllerClass;
-//        final Annotation[][] parameterAnnotations = ;
         this.method = method;
     }
 
@@ -41,23 +43,23 @@ public class DynamicOperationFactory {
                 .filter(f -> f.isAnnotationPresent(Connect.class))
                 .forEach(f -> {
                     // TODO: add exception, if @Connect does not point on LambdaProtocol field
-
                     final Protocol session = protocolGateway
                             .session((Class<? extends Protocol>) f.getType());
-
                     ReflectionUtils.makeAccessible(f);
                     ReflectionUtils.setField(f, controllerInstance, session);
                 });
 
         int p = 0;
 
-        for (Annotation[] parameterType : method.getParameterAnnotations()) {
+        for (Annotation[] parameterAnnotations : method.getParameterAnnotations()) {
             // NOTE: take only first parameter annotation in account, other annotations just ignored
-            if (parameterType[0] instanceof OperationParameter) {
+            if (parameterAnnotations[0] instanceof OperationParameter) {
                 params[p] = protocolGateway.session(DynamicParamsProtocol.class).param(
-                        ((OperationParameter) parameterType[0]).value());
+                        ((OperationParameter) parameterAnnotations[0]).value());
+                params[p] = conversionService.convert(params[p], parameterTypes[p]);
             } else {
-                throw new IllegalStateException("");
+                throw new IllegalStateException("Mismatch task scheme dsl, is expected to has " +
+                        "@OperationParameter as first annotation for the operation method paramters.");
             }
             p++;
         }

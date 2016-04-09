@@ -11,13 +11,9 @@ public class PrintTask {
     private ContainerAppProtocol containerAppProtocol;
 
     @TaskOperation
-    public void printOperation(@OperationParameter("operationOut") String operationOut,
-            @OperationParameter("secondParameter") String secondOut) {
-
-        containerAppProtocol.systemOut(operationOut);
-        containerAppProtocol.systemOut(secondOut);
-        containerAppProtocol.systemOut(containerAppProtocol.toString());
-
+    public void printOperation(@OperationParameter("operationOut") String prefix,
+            @OperationParameter("secondParameter") int taskNumber) {
+        containerAppProtocol.systemOut(prefix + Integer.toString(taskNumber));
     }
 
 }

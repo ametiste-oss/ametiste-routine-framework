@@ -34,7 +34,7 @@ public class PrintTaskBacklog {
                 .orElse(0);
 
         for (int i = 0; i < populationCount; i++, issuedTasksCount++) {
-            taskMetaScheme.printOperation("I am task #" + issuedTasksCount, "out");
+            taskMetaScheme.printOperation("I am task #", issuedTasksCount);
         }
 
         modData.storeData("backlog-print-tasksPool-count", issuedTasksCount.toString());
