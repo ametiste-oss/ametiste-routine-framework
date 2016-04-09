@@ -5,6 +5,7 @@ import org.ametiste.laplatform.dsl.LambdaProtocol;
 import org.ametiste.laplatform.dsl.ProtocolMeta;
 import org.ametiste.laplatform.protocol.gateway.ProtocolGatewayService;
 import org.ametiste.laplatform.sdk.protocol.Protocol;
+import org.ametiste.routine.dsl.infrastructure.DynamicProtocolMetricsTool;
 import org.ametiste.routine.meta.util.MetaMethod;
 import org.ametiste.routine.meta.util.MetaObject;
 import org.ametiste.routine.sdk.mod.ModGateway;
@@ -18,7 +19,15 @@ import java.util.stream.Collectors;
 
 /**
  *
+ * <p>
+ * <b>Dynamic Protocols Metrics Feature</b> is implemented as custom
+ * {@link org.ametiste.laplatform.protocol.gateway.ProtocolGatewayTool}, which implementation
+ * can be found at {@link DynamicProtocolMetricsTool}.
+ * </p>
+ *
  * @since
+ * @see DynamicProtocolMetricsTool
+ * @since 1.1
  */
 @Configuration
 public class ProtocolDSLConfiguration {

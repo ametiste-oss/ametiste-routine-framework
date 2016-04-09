@@ -57,12 +57,6 @@ public class LocalLineExecutionGateway implements LineExecutionGateway {
                 executionLine.properties()
         );
 
-        // TODO: add error metrics
-        protocolGateway.onInvocationTiming((c, g, o, t) -> {
-            metricsService.createEvent(g + "." + c + ".overall." + o + ".timing", (int) t);
-            metricsService.createEvent(g + "." + c + ".clients." + executionLine.operationName() + "." + o + ".timing", (int) t);
-        });
-
         try {
             feedback.operationStarted(executionLine.operationId());
             operationScheme.operationExecutor().execOperation(

@@ -12,7 +12,6 @@ dependencies {
 
     compile project(":ametiste-routine-sdk")
 
-    compile "org.ametiste.metrics:metrics-service:${ameMetricsVersion}"
     compile "org.ametiste.metrics:metrics-annotations:${ameMetricsVersion}"
 
     testCompile group: 'junit', name: 'junit', version: '4.11'
