@@ -11,6 +11,6 @@ import java.util.UUID;
  */
 public interface LineExecutionGateway {
 
-    void executeOperation(ExecutionLine line);
+    void executeOperation(UUID taskId, ExecutionLine line);
 
 }

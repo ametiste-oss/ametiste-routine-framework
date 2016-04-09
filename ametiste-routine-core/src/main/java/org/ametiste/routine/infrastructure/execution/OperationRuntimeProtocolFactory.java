@@ -6,6 +6,8 @@ import org.ametiste.routine.domain.scheme.OperationScheme;
 import org.ametiste.routine.domain.task.ExecutionLine;
 import org.ametiste.routine.sdk.operation.OperationFeedback;
 
+import java.util.UUID;
+
 /**
  *
  * @since
@@ -20,7 +22,7 @@ public interface OperationRuntimeProtocolFactory<T extends Protocol> {
      * @return protocol factory instance, must be not null
      */
     ProtocolFactory<T> runtimeProtocolFactory(
-            final ExecutionLine executionLine,
+            final UUID taskId, final ExecutionLine executionLine,
             final OperationScheme operationScheme,
             final OperationFeedback feedbackController
     );

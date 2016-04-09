@@ -49,7 +49,7 @@ public class LocalLineExecutionGateway implements LineExecutionGateway {
 
     @Override
     @Timeable(name = ExecutionMetrics.GATEWAY_EXECUTION_TIMING)
-    public void executeOperation(ExecutionLine executionLine) {
+    public void executeOperation(UUID taskId, ExecutionLine executionLine) {
 
         final OperationScheme operationScheme = schemeRepository
                 .findOperationScheme(executionLine.operationName());
@@ -59,7 +59,7 @@ public class LocalLineExecutionGateway implements LineExecutionGateway {
 
         // NOTE: creating protocols that depends on concrete operation runtime
         final List<ProtocolFactory<?>> runtimeProtocolFactories = runtimeProtocols.stream().map(
-                f -> f.runtimeProtocolFactory(executionLine, operationScheme, feedbackController)
+                f -> f.runtimeProtocolFactory(taskId, executionLine, operationScheme, feedbackController)
         ).collect(Collectors.toList());
 
         final ProtocolGateway protocolGateway = protocolGatewayservice.createGateway(

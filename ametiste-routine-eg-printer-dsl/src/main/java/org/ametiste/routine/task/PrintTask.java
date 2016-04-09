@@ -28,4 +28,9 @@ public class PrintTask {
         containerAppProtocol.systemOut("Operation name: " + operationName);
     }
 
+    @TaskOperation(order = 4)
+    public void printTaskId(@TaskId String taskId) {
+        containerAppProtocol.systemOut("Task id: " + taskId);
+    }
+
 }

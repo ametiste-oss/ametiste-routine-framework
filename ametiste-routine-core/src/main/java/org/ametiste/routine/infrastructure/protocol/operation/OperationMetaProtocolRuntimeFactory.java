@@ -11,9 +11,11 @@ import java.util.UUID;
 
 /**
  * <p>
- *     Provides access to operation runtime metadata.
+ *     Runtime factory for {@link OperationMetaProtocol}. This factory used during operation runtime
+ *     to create protocol that bound to the current executing operation runtime values.
  * </p>
  *
+ * @see OperationMetaProtocol
  * @since 1.1
  */
 public class OperationMetaProtocolRuntimeFactory implements OperationRuntimeProtocolFactory<OperationMetaProtocol> {
@@ -21,10 +23,14 @@ public class OperationMetaProtocolRuntimeFactory implements OperationRuntimeProt
     // TODO: how can I register it at mod, so that I can see this factory/protocol via http interface
     // TODO: how can I describe its @ProtocolMeta paramteres? So that I can have auto-metrics for such protocols
     @Override
-    public ProtocolFactory<OperationMetaProtocol> runtimeProtocolFactory(final ExecutionLine executionLine,
+    public ProtocolFactory<OperationMetaProtocol> runtimeProtocolFactory(final UUID taskId,
+                                                                         final ExecutionLine executionLine,
                                                                          final OperationScheme operationScheme,
                                                                          final OperationFeedback feedbackController) {
         return (gw) -> new OperationMetaProtocol() {
+
+            @Override
+            public UUID taskId() { return taskId; }
 
             @Override
             public UUID operationId() {
