@@ -3,6 +3,7 @@ package org.ametiste.routine.application.action;
 import org.ametiste.gte.Action;
 import org.ametiste.gte.ActionActuatorDelegate;
 import org.ametiste.gte.ActionFactory;
+import org.ametiste.laplatform.protocol.ProtocolGateway;
 import org.ametiste.laplatform.protocol.gateway.ProtocolGatewayService;
 import org.ametiste.routine.RoutineCoreSpring;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ import java.util.Collections;
  */
 @Configuration
 @ConditionalOnProperty(prefix = RoutineCoreSpring.MOD_PROPS_PREFIX,
-        name = "task-timeout.enabled", matchIfMissing = false)
+        name = "task-timeout.enabled")
 @EnableConfigurationProperties(TaskTimeoutActionProperties.class)
 public class TaskTimeoutActionConfiguration {
 
@@ -45,9 +46,15 @@ public class TaskTimeoutActionConfiguration {
              @Override
              public Action createAction(ActionActuatorDelegate actionActuatorDelegate) {
                  return () -> {
-                    taskTimeoutAction().executeAction(
-                        protocolGatewayService.createGateway(TIMEOUT_ACTION_ID, Collections.emptyMap())
-                    );
+                     final ProtocolGateway protocolGateway =
+                             protocolGatewayService.createGateway(TIMEOUT_ACTION_ID, Collections.emptyMap());
+                    try {
+                        taskTimeoutAction().executeAction(
+                                protocolGateway
+                        );
+                    } finally {
+                        protocolGateway.release();
+                    }
                  };
              }
 

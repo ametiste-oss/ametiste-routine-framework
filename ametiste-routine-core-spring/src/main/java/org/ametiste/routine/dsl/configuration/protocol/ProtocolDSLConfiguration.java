@@ -4,8 +4,8 @@ import org.ametiste.lang.Pair;
 import org.ametiste.laplatform.dsl.LambdaProtocol;
 import org.ametiste.laplatform.dsl.ProtocolMeta;
 import org.ametiste.laplatform.protocol.gateway.ProtocolGatewayService;
+import org.ametiste.laplatform.protocol.tools.ProtocolGatewayTool;
 import org.ametiste.laplatform.sdk.protocol.Protocol;
-import org.ametiste.routine.dsl.infrastructure.DynamicProtocolMetricsTool;
 import org.ametiste.routine.meta.util.MetaMethod;
 import org.ametiste.routine.meta.util.MetaObject;
 import org.ametiste.routine.sdk.mod.ModGateway;
@@ -19,15 +19,14 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- *
  * <p>
  * <b>Dynamic Protocols Metrics Feature</b> is implemented as custom
- * {@link org.ametiste.laplatform.protocol.gateway.ProtocolGatewayTool}, which implementation
- * can be found at {@link DynamicProtocolMetricsTool}.
+ * {@link ProtocolGatewayTool}, which implementation
+ * can be found at {@link org.ametiste.routine.dsl.infrastructure.DynamicProtocolMetricsTool}.
  * </p>
  *
  * @since
- * @see DynamicProtocolMetricsTool
+ * @see org.ametiste.routine.dsl.infrastructure.DynamicProtocolMetricsTool
  * @since 1.1
  */
 @Configuration
@@ -58,7 +57,8 @@ public class ProtocolDSLConfiguration {
         return gw -> {
             // TODO: how can I propagate artifact version?
             gw.modInfo("dsl-protocol", "1.1",
-                protocolClasses.stream().collect(Collectors.toMap(s -> s.getName(), s -> ""))
+                protocolClasses.stream().collect(Collectors.toMap(s -> s.getName(), s -> "")),
+                Collections.emptyList()
             );
         };
     }

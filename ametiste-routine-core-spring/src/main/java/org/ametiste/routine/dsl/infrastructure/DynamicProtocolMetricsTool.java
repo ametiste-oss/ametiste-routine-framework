@@ -1,8 +1,8 @@
 package org.ametiste.routine.dsl.infrastructure;
 
 import org.ametiste.laplatform.protocol.ProtocolGateway;
-import org.ametiste.laplatform.protocol.gateway.ProtocolGatewayTool;
-import org.ametiste.laplatform.protocol.stats.ProtocolGatewayInstrumentary;
+import org.ametiste.laplatform.protocol.tools.ProtocolGatewayInstrumentary;
+import org.ametiste.laplatform.protocol.tools.ProtocolGatewayTool;
 import org.ametiste.metrics.MetricsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,16 +18,16 @@ import org.springframework.stereotype.Component;
  * </p>
  *
  * <p>
- *     Note, at the moment this tool configured as {@link Component} to shortcut configuration effort,
- *     but it will be changed in a one of next versions. Next after suitable configuration
- *     layout definition will be done.
+ *  Note, at the moment this tool configured as {@link Component} to shortcut configuration effort,
+ *  but it will be changed in a one of next versions. Next after suitable configuration
+ *  layout definition will be done.
  * </p>
  *
  * @since 1.1
  */
 @Component
 // TODO: remove @Component and move configuration to suitable @Configuration component
-public class DynamicProtocolMetricsTool implements ProtocolGatewayTool {
+class DynamicProtocolMetricsTool implements ProtocolGatewayTool {
 
     private final MetricsService metricsService;
 

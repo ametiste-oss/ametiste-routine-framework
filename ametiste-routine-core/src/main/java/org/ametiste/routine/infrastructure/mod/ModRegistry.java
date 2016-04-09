@@ -17,10 +17,11 @@ public class ModRegistry {
     }
 
     public void addMod(ModGateway modGateway) {
-        // TODO: some validation required, for example "mod::blabla::id" is invalid name
+        // TODO: some validation required, for example "mod::blabla::id" is invalid name cos we cant collect metrics
+        // for this name
         // I guess only [a-z0-9-] should be allowed to be mod identifiers
-        modGateway.provideModInfo((n, v, a) -> {
-            registeredMods.put(n, new RegisteredMod(n, v, a, modGateway));
+        modGateway.provideModInfo((name, version, attrs, infoProviders) -> {
+            registeredMods.put(name, new RegisteredMod(name, version, attrs, infoProviders, modGateway));
         });
     }
 

@@ -66,7 +66,8 @@ public class TaskSchemeDSLConfiguration {
         return gw -> {
             // TODO: how can I propagate artifact version?
             gw.modInfo("dsl-task-scheme", "1.1",
-                schemes.stream().collect(Collectors.toMap(s -> s.schemeName(), s -> s.getClass().getName()))
+                schemes.stream().collect(Collectors.toMap(s -> s.schemeName(), s -> s.getClass().getName())),
+                Collections.emptyList()
             );
         };
     }

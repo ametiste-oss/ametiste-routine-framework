@@ -29,7 +29,7 @@ public class ModShredder implements ModGateway {
         properties.put("stale.threshold.value", Integer.toString(modShredderProperties.getStaleThreshold().getValue()));
         properties.put("stale.threshold.unit", modShredderProperties.getStaleThreshold().getUnit().toString());
 
-        modInfoConsumer.modInfo(ModShredder.MOD_ID, "1.1", properties);
+        modInfoConsumer.modInfo(ModShredder.MOD_ID, "1.1", properties, Collections.emptyList());
     }
 
 }

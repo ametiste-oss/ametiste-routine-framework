@@ -10,12 +10,13 @@ public class ModDescriptionData {
 
     private final String name;
     private final String version;
-    private final Map<String, String> attributes;
 
-    public ModDescriptionData(String name, String version, final Map<String, String> attributes) {
+    private final Map<String, Map<String, ? extends Object>> sections;
+
+    public ModDescriptionData(String name, String version, final Map<String, Map<String, ? extends Object>> sections) {
         this.name = name;
         this.version = version;
-        this.attributes = attributes;
+        this.sections = sections;
     }
 
     public String getName() {
@@ -26,8 +27,8 @@ public class ModDescriptionData {
         return version;
     }
 
-    public Map<String, String> getAttributes() {
-        return attributes;
+    public Map<String, Map<String, ? extends Object>> getSections() {
+        return sections;
     }
 
 }

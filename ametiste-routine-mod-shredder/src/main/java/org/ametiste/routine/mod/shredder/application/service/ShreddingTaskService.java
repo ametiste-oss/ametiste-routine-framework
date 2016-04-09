@@ -1,5 +1,6 @@
 package org.ametiste.routine.mod.shredder.application.service;
 
+import org.ametiste.laplatform.protocol.ProtocolGateway;
 import org.ametiste.laplatform.protocol.gateway.ProtocolGatewayService;
 import org.ametiste.routine.mod.shredder.application.operation.ShreddingParams;
 import org.ametiste.routine.mod.shredder.application.schema.ShreddingStaleTaskScheme;
@@ -44,13 +45,20 @@ public class ShreddingTaskService {
                     staleThresholdValue, staleThresholdUnit);
         }
 
-        protocolGatewayService.createGateway(ModShredder.MOD_ID, Collections.emptyMap())
-            .session(TaskPoolProtocol.class)
-            .issueTask(ShreddingStaleTaskScheme.class, p -> {
-                p.staleStates(staleStates);
-                p.staleThresholdValue(staleThresholdValue);
-                p.staleThresholdUnit(staleThresholdUnit);
-            });
+        final ProtocolGateway gateway = protocolGatewayService
+                .createGateway(ModShredder.MOD_ID, Collections.emptyMap());
+
+        try {
+            gateway.session(TaskPoolProtocol.class)
+                    .issueTask(ShreddingStaleTaskScheme.class, p -> {
+                        p.staleStates(staleStates);
+                        p.staleThresholdValue(staleThresholdValue);
+                        p.staleThresholdUnit(staleThresholdUnit);
+                    });
+        } finally {
+            gateway.release();
+        }
+
     }
 
 }

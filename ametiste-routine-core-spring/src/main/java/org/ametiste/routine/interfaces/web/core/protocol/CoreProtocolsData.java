@@ -1,5 +1,6 @@
 package org.ametiste.routine.interfaces.web.core.protocol;
 
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -8,14 +9,14 @@ import java.util.List;
  */
 public class CoreProtocolsData {
 
-    private final List<ProtocolData> protocols;
+    private final HashMap<String, List<ProtocolData>> protocolGroups;
 
-    public CoreProtocolsData(List<ProtocolData> protocols) {
-        this.protocols = protocols;
+    public CoreProtocolsData(final HashMap<String, List<ProtocolData>> protocolGroups) {
+        this.protocolGroups = protocolGroups;
     }
 
-    public List<ProtocolData> getProtocols() {
-        return protocols;
+    public HashMap<String, List<ProtocolData>> getGroups() {
+        return protocolGroups;
     }
 
 }

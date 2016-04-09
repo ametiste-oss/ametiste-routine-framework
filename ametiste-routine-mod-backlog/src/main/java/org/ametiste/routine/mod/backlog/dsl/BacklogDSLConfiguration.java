@@ -22,6 +22,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.ReflectionUtils;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -59,7 +60,8 @@ public class BacklogDSLConfiguration {
         return gw -> {
             // TODO: how can I propagate artifact version?
             gw.modInfo("dsl-backlog", "1.1",
-                backlogControllers.stream().collect(Collectors.toMap(s -> s.getName(), s -> ""))
+                backlogControllers.stream().collect(Collectors.toMap(s -> s.getName(), s -> "")),
+                Collections.emptyList()
             );
         };
     }

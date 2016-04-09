@@ -20,9 +20,10 @@ public class ModTaskLogGateway implements ModGateway {
 
     @Override
     public void provideModInfo(ModInfoConsumer modInfoConsumer) {
-        modInfoConsumer.modInfo("mod-tasklog", "1.1", Collections.singletonMap(
-                "task.repository.used", usedRepository.getClass().getName()
-        ));
+        modInfoConsumer.modInfo("mod-tasklog", "1.1",
+            Collections.singletonMap("task.repository.used", usedRepository.getClass().getName()),
+            Collections.emptyList()
+        );
     }
 
 }

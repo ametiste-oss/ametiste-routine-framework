@@ -20,7 +20,10 @@ public class ModBacklog implements ModGateway {
 
     @Override
     public void provideModInfo(ModInfoConsumer modInfoConsumer) {
-        modInfoConsumer.modInfo(MOD_ID, "1.1", Collections.singletonMap("renew.rate", renewRate.toString()));
+        modInfoConsumer.modInfo(MOD_ID, "1.1",
+            Collections.singletonMap("renew.rate", renewRate.toString()),
+            Collections.emptyList()
+        );
     }
 
 }
