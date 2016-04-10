@@ -5,7 +5,9 @@ import org.ametiste.laplatform.dsl.LambdaProtocol;
 import org.ametiste.laplatform.dsl.ProtocolMeta;
 import org.ametiste.laplatform.protocol.gateway.ProtocolGatewayService;
 import org.ametiste.laplatform.protocol.tools.ProtocolGatewayTool;
+import org.ametiste.laplatform.sdk.protocol.GatewayContext;
 import org.ametiste.laplatform.sdk.protocol.Protocol;
+import org.ametiste.laplatform.sdk.protocol.ProtocolFactory;
 import org.ametiste.routine.meta.util.MetaMethod;
 import org.ametiste.routine.meta.util.MetaObject;
 import org.ametiste.routine.sdk.mod.ModGateway;
@@ -71,18 +73,12 @@ public class ProtocolDSLConfiguration {
 
         final String protocolName = resolveProtocolName(protocolClass);
         final String protocolGroup = resolveProtocolGroup(protocolClass);
-        final Class<? extends Protocol> protocolType = (Class<? extends Protocol>)protocolClass.getInterfaces()[0];
+        final Class<? extends Protocol> protocolType = (Class<? extends Protocol>) protocolClass.getInterfaces()[0];
         final Map<String, String> operationsMapping = resolveOperationNamesMapping(protocolClass);
 
-        return new ProtocolGatewayService.Entry(protocolName, protocolGroup, operationsMapping, protocolType, c -> {
-            try {
-                final Protocol protocol = (Protocol) protocolClass.newInstance();
-                applicationContext.getAutowireCapableBeanFactory().autowireBean(protocol);
-                return protocol;
-            } catch (InstantiationException | IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
-        });
+        return new ProtocolGatewayService.Entry(protocolName, protocolGroup, operationsMapping, protocolType,
+                new DynamicProtocolFactory<>(protocolClass, applicationContext)
+        );
     }
 
     private static String resolveProtocolName(final Class<? extends Protocol> protocolClass) {

@@ -36,7 +36,7 @@ public class CoreProtocolController {
             p -> protocolGroups.computeIfAbsent(p.group, k -> new ArrayList<ProtocolData>())
                     .add(new ProtocolData(
                             p.name,
-                            p.type,
+                            p.factory.protocolType(),
                             p.factory,
                             p.operationsMapping,
                             p.isProduceEvents,

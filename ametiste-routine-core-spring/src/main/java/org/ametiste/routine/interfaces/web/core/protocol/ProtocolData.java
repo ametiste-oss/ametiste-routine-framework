@@ -39,7 +39,7 @@ public class ProtocolData {
     }
 
     public String getType() {
-        return factory.getClass().getName();
+        return type.getName();
     }
 
     public String getFactory() {
