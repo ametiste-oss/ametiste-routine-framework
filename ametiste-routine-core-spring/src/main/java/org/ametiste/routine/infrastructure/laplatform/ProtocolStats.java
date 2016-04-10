@@ -1,44 +1,66 @@
 package org.ametiste.routine.infrastructure.laplatform;
 
+import jdk.nashorn.internal.objects.NativeArray;
+
+import java.time.Duration;
+import java.time.LocalDateTime;
+
+import static org.ametiste.routine.infrastructure.laplatform.Stats.EMPTY_STATS;
+
 /**
  *
  * @since
  */
-// TODO: move to lp project
 public class ProtocolStats {
 
-    public final static ProtocolStats EMPTY_STATS = new ProtocolStats(0, 0);
+    private final static ProtocolStats EMPTY = new ProtocolStats(Stats.empty(), PeriodStats.empty());
 
-    private final long createdCount;
+    private final Stats stats;
+    private final PeriodStats periodStats;
 
-    private final long currentCount;
+    public ProtocolStats(final Stats stats, final PeriodStats periodStats) {
+        this.stats = stats;
+        this.periodStats = periodStats;
+    }
 
-    ProtocolStats(final long createdCount, final long currentCount) {
-        this.createdCount = createdCount;
-        this.currentCount = currentCount;
+    public Duration period() {
+        return periodStats.duration();
+    }
+
+    public long createdForPeriod() {
+        return periodStats.createdForPeriod();
     }
 
     public long createdCount() {
-        return createdCount;
+        return stats.createdCount();
     }
 
     public long currentCount() {
-        return currentCount;
+        return stats.currentCount();
     }
 
-    public ProtocolStats incrementCreated() {
-        return new ProtocolStats(createdCount + 1, currentCount);
+    public LocalDateTime renewAt() {
+        return periodStats.renewAt();
     }
 
-    public ProtocolStats incrementCurrent() {
-        return new ProtocolStats(createdCount, currentCount + 1);
+    ProtocolStats incCreated() {
+        return new ProtocolStats(stats.incCreated(), periodStats.incCreated());
     }
 
-    public ProtocolStats decrementCurrent() {
-        return new ProtocolStats(createdCount, currentCount - 1);
+    ProtocolStats incCurrent() {
+        return new ProtocolStats(stats.incCurrent(), periodStats.incCurrent());
     }
 
-    public static ProtocolStats empty() {
-        return EMPTY_STATS;
+    ProtocolStats decCurrent() {
+        return new ProtocolStats(stats.decCurrent(), periodStats);
     }
+
+    static ProtocolStats periodic(Duration duration) {
+        return new ProtocolStats(Stats.empty(), PeriodStats.renewedAfter(duration));
+    }
+
+    static ProtocolStats empty() {
+        return EMPTY;
+    }
+
 }

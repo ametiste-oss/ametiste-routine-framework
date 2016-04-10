@@ -54,10 +54,13 @@ public class ProtocolData {
         return isProduceEvents;
     }
 
-    public Map<String, Long> getProtocolStats() {
-        final HashMap<String, Long> stats = new HashMap<>();
+    public Map<String, Object> getProtocolStats() {
+        final HashMap<String, Object> stats = new HashMap<>();
         stats.put("total-created", protocolStats.createdCount());
         stats.put("current-runing", protocolStats.currentCount());
+        stats.put("period", protocolStats.period().toString());
+        stats.put("renewed-at", protocolStats.renewAt().toString());
+        stats.put("total-for-period", protocolStats.createdForPeriod());
         return stats;
     }
 }

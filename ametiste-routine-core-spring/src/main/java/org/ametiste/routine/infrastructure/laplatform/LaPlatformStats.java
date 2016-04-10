@@ -3,6 +3,7 @@ package org.ametiste.routine.infrastructure.laplatform;
 import org.ametiste.laplatform.sdk.protocol.Protocol;
 import org.springframework.stereotype.Component;
 
+import java.time.Duration;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -20,6 +21,8 @@ import java.util.concurrent.ConcurrentHashMap;
 // may be internal for package
 public class LaPlatformStats {
 
+    final static Duration aggregateionPeriod = Duration.ofSeconds(30);
+
     final private ConcurrentHashMap<Class<? extends Protocol>, ProtocolStats> stats
             = new ConcurrentHashMap<>();
 
@@ -29,20 +32,19 @@ public class LaPlatformStats {
 
     public void incCreated(Class<? extends Protocol> protocolType) {
         stats.put(protocolType,
-            stats.getOrDefault(protocolType, ProtocolStats.empty()).incrementCreated()
+            stats.getOrDefault(protocolType, ProtocolStats.periodic(aggregateionPeriod)).incCreated()
         );
     }
 
     public void incCurrent(Class<? extends Protocol> protocolType) {
         stats.put(protocolType,
-            stats.getOrDefault(protocolType, ProtocolStats.empty()).incrementCurrent()
+            stats.getOrDefault(protocolType, ProtocolStats.periodic(aggregateionPeriod)).incCurrent()
         );
     }
 
     public void decCurrent(Class<? extends Protocol> protocolType) {
         if (stats.containsKey(protocolType)) {
-            stats.put(protocolType,
-                stats.get(protocolType).decrementCurrent()
+            stats.put(protocolType, stats.get(protocolType).decCurrent()
             );
         }
     }
