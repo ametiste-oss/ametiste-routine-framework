@@ -5,7 +5,7 @@ package org.ametiste.routine.infrastructure.laplatform;
  * @since
  */
 // TODO: move to lp project
-public class Stats {
+class Stats {
 
     public final static Stats EMPTY_STATS = new Stats(0, 0);
 

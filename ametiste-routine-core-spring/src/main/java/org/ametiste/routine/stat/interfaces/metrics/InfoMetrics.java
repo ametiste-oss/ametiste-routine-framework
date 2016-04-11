@@ -4,7 +4,7 @@ import org.ametiste.metrics.annotations.markers.MetricsInterface;
 
 /**
  *
- * @since
+ * @since 1.0
  */
 @MetricsInterface
 public interface InfoMetrics {

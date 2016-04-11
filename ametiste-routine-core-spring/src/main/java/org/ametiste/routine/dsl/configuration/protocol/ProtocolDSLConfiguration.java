@@ -20,6 +20,8 @@ import org.springframework.core.convert.ConversionService;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static org.ametiste.lang.StringUtils.splitCamelCase;
+
 /**
  * <p>
  * <b>Dynamic Protocols Metrics Feature</b> is implemented as custom
@@ -143,7 +145,6 @@ public class ProtocolDSLConfiguration {
                     "Generated operation shortname length can't be greater than 16. Please use @ProtocolMeta(shortName=) " +
                     "annotation parameter to avoid generated limitations.");
         }
-
         return splitCamelCase(method.name());
     }
 
@@ -154,13 +155,6 @@ public class ProtocolDSLConfiguration {
 
     private static boolean filterObjectNativeMethods(String methodName) {
         return !excludeMethods.contains(methodName);
-    }
-
-    private static String splitCamelCase(String s) {
-        String regex = "([a-z])([A-Z]+)";
-        String replacement = "$1-$2";
-        return s.replaceAll(regex, replacement)
-                .toLowerCase();
     }
 
 }

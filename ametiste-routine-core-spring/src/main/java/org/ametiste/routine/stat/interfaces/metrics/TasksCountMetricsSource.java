@@ -4,13 +4,14 @@ import org.ametiste.metrics.MetricsService;
 import org.ametiste.routine.infrastructure.persistency.jpa.JPATaskDataRepository;
 import org.ametiste.routine.stat.CoreStatRepository;
 import org.ametiste.routine.stat.CoreStats;
+import org.ametiste.routine.stat.application.BasicMetricsSourceService;
+import org.ametiste.routine.stat.application.MetricsSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
- * This {@code metric source} periodically counts stored tasks and provides this value
+ * This {@link MetricsSource} counts stored tasks and provides this value
  * as {@code gauage} metrics named as
  * <ul>
  *     <li>{@value InfoMetrics#STORED_TASKS_COUNT}</li>
@@ -32,16 +33,15 @@ import org.springframework.stereotype.Component;
  *
  * @since 0.1.0
  * @see InfoMetrics
+ * @see MetricsSource
+ * @see BasicMetricsSourceService
  */
 @Component
 @ConditionalOnProperty(name = "org.ametiste.routine.metrics.source.info.stored-tasks-count.enabled",
         matchIfMissing = true)
 // TODO NOTE: @ConditionalOnBean does not work for spring-data driven object, so this check is disabled :[
 //      NOTE: @ConditionalOnBean(JPATaskDataRepository.class)
-public class TasksCountMetricSource {
-
-    @Autowired(required = false)
-    private MetricsService metricsService;
+public class TasksCountMetricsSource implements MetricsSource {
 
     @Autowired(required = false)
     private JPATaskDataRepository taskDataRepository;
@@ -49,12 +49,11 @@ public class TasksCountMetricSource {
     @Autowired
     private CoreStatRepository coreStatRepository;
 
-    // TODO: extract as property
-    @Scheduled(fixedRate = 30000)
-    public void countMetrics() {
+    @Override
+    public void provideMetric(final MetricsService metricsService) {
 
         // NOTE: @ConditionalOnBean does not work for spring-data driven object so this check requred :[
-        if (taskDataRepository == null || metricsService == null) {
+        if (taskDataRepository == null) {
             return;
         }
 
@@ -74,5 +73,4 @@ public class TasksCountMetricSource {
 //                .countByState());
 
     }
-
 }

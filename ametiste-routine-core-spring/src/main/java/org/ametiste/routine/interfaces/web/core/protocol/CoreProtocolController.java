@@ -1,7 +1,7 @@
 package org.ametiste.routine.interfaces.web.core.protocol;
 
 import org.ametiste.laplatform.protocol.gateway.ProtocolGatewayService;
-import org.ametiste.routine.infrastructure.laplatform.LaPlatformStats;
+import org.ametiste.routine.infrastructure.laplatform.LaPlatformStatsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,7 +24,7 @@ public class CoreProtocolController {
     private ProtocolGatewayService protocolGatewayService;
 
     @Autowired
-    private LaPlatformStats laPlatformStats;
+    private LaPlatformStatsService laPlatformStatsService;
 
     @RequestMapping(method = RequestMethod.GET)
     @ResponseBody
@@ -40,7 +40,7 @@ public class CoreProtocolController {
                             p.factory,
                             p.operationsMapping,
                             p.isProduceEvents,
-                            laPlatformStats.loadProtocolStats(p.type)
+                            laPlatformStatsService.loadProtocolStats(p.type)
                     ))
         );
 

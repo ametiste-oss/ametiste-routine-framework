@@ -1,11 +1,9 @@
 package org.ametiste.routine.infrastructure.laplatform;
 
-import jdk.nashorn.internal.objects.NativeArray;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-
-import static org.ametiste.routine.infrastructure.laplatform.Stats.EMPTY_STATS;
 
 /**
  *
@@ -13,14 +11,20 @@ import static org.ametiste.routine.infrastructure.laplatform.Stats.EMPTY_STATS;
  */
 public class ProtocolStats {
 
-    private final static ProtocolStats EMPTY = new ProtocolStats(Stats.empty(), PeriodStats.empty());
+    private final static ProtocolStats EMPTY = new ProtocolStats("", Stats.empty(), PeriodStats.empty());
 
+    private final String name;
     private final Stats stats;
     private final PeriodStats periodStats;
 
-    public ProtocolStats(final Stats stats, final PeriodStats periodStats) {
+    public ProtocolStats(final String name, final Stats stats, final PeriodStats periodStats) {
+        this.name = name;
         this.stats = stats;
         this.periodStats = periodStats;
+    }
+
+    public String name() {
+        return name;
     }
 
     public Duration period() {
@@ -44,23 +48,26 @@ public class ProtocolStats {
     }
 
     ProtocolStats incCreated() {
-        return new ProtocolStats(stats.incCreated(), periodStats.incCreated());
+        return new ProtocolStats(name, stats.incCreated(), periodStats.incCreated());
     }
 
     ProtocolStats incCurrent() {
-        return new ProtocolStats(stats.incCurrent(), periodStats.incCurrent());
+        return new ProtocolStats(name, stats.incCurrent(), periodStats.incCurrent());
     }
 
     ProtocolStats decCurrent() {
-        return new ProtocolStats(stats.decCurrent(), periodStats);
+        return new ProtocolStats(name, stats.decCurrent(), periodStats);
     }
 
-    static ProtocolStats periodic(Duration duration) {
-        return new ProtocolStats(Stats.empty(), PeriodStats.renewedAfter(duration));
+    static ProtocolStats periodic(final String name, Duration duration) {
+        return new ProtocolStats(name, Stats.empty(), PeriodStats.renewedAfter(duration));
     }
 
     static ProtocolStats empty() {
         return EMPTY;
     }
 
+    public boolean isNotEmpty() {
+        return this != empty();
+    }
 }

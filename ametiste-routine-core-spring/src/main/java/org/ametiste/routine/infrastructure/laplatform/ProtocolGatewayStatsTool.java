@@ -2,7 +2,6 @@ package org.ametiste.routine.infrastructure.laplatform;
 
 import org.ametiste.laplatform.protocol.tools.ProtocolGatewayInstrumentary;
 import org.ametiste.laplatform.protocol.tools.ProtocolGatewayTool;
-import org.aspectj.lang.annotation.After;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,17 +13,14 @@ import java.util.concurrent.Executors;
  *
  * @since
  */
-@Component
-// TODO: move to @Configuration component
 // TODO: move to lp project
 class ProtocolGatewayStatsTool implements ProtocolGatewayTool {
 
     private final ExecutorService executorService;
-    private final LaPlatformStats laPlatformStats;
+    private final LaPlatformStatsService laPlatformStatsService;
 
-    @Autowired
-    public ProtocolGatewayStatsTool(final LaPlatformStats laPlatformStats) {
-        this.laPlatformStats = laPlatformStats;
+    public ProtocolGatewayStatsTool(final LaPlatformStatsService laPlatformStatsService) {
+        this.laPlatformStatsService = laPlatformStatsService;
         // TODO: use some shared executor, if possible someone from GTE
         this.executorService = Executors.newFixedThreadPool(1);
     }
@@ -35,8 +31,8 @@ class ProtocolGatewayStatsTool implements ProtocolGatewayTool {
         gateway.listenProtocolConnection(
             (protocolType, protocol, name, group) -> {
                 executorService.execute(() -> {
-                    laPlatformStats.incCreated(protocolType);
-                    laPlatformStats.incCurrent(protocolType);
+                    laPlatformStatsService.incCreated(protocolType, name);
+                    laPlatformStatsService.incCurrent(protocolType, name);
                 });
             }
         );
@@ -44,7 +40,7 @@ class ProtocolGatewayStatsTool implements ProtocolGatewayTool {
         gateway.listenProtocolDisconnected(
             (protocolType, protocol, name, group) -> {
                 executorService.execute(() -> {
-                    laPlatformStats.decCurrent(protocolType);
+                    laPlatformStatsService.decCurrent(protocolType);
                 });
             }
         );
