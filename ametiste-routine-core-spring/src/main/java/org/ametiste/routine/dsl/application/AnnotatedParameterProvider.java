@@ -6,7 +6,7 @@ import org.ametiste.routine.meta.util.MetaMethodParameter;
 import java.lang.annotation.Annotation;
 import java.util.Optional;
 
-public abstract class AnnotatedParameterProvider implements ParamaterProvider {
+public abstract class AnnotatedParameterProvider implements ParameterProvider {
 
     private final Class<? extends Annotation> annotation;
 

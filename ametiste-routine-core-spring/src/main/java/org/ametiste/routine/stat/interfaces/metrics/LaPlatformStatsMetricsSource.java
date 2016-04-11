@@ -12,24 +12,19 @@ import org.springframework.stereotype.Component;
 import static org.ametiste.routine.stat.interfaces.metrics.LaPlatformMetrics.protocolsCreatedCountMetric;
 
 /**
- * <p>
  * This {@link MetricsSource} provides {@link LaPlatformStatsService} data as {@code gauage} metrics
  * <ul>
  *     <li>{@value LaPlatformMetrics#PROTOCOLS_CREATED_COUNT}</li>
  * </ul>
- * </p>
  * <p>
- *    Metrics are provided only for the current application runtime session.
+ * Metrics are provided only for the current application runtime session.
  * <p>
+ * This source will be active only in a context, wheree {@link LaPlatformStatsService}
+ * bean is present.
  * <p>
- *    This source will be active only in a context, wheree {@link LaPlatformStatsService}
- *    bean is present.
- * </p>
- * <p>
- *    This source may be deactivated by property<br/>
- *    <br/>
- *    <i>org.ametiste.routine.metrics.source.platform.protocols.enabled=false</i>
- * </p>
+ * This source may be deactivated by property<br>
+ * <br>
+ * <i>org.ametiste.routine.metrics.source.platform.protocols.enabled=false</i>
  *
  * @see LaPlatformMetrics
  * @see LaPlatformStatsService

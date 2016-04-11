@@ -18,15 +18,15 @@ public class DynamicOperationFactory {
 
     private final Method method;
     private final Class<?> controllerClass;
-    private final List<ParamaterProvider> paramaterProviders;
+    private final List<ParameterProvider> parameterProviders;
 
     public DynamicOperationFactory(
             final Class<?> controllerClass,
             final Method method,
-            final List<ParamaterProvider> paramaterProviders) {
+            final List<ParameterProvider> parameterProviders) {
         this.controllerClass = controllerClass;
         this.method = method;
-        this.paramaterProviders = paramaterProviders;
+        this.parameterProviders = parameterProviders;
     }
 
     public DynamicOperation createDynamicOperation(final OperationFeedback operationFeedback,
@@ -62,7 +62,7 @@ public class DynamicOperationFactory {
     }
 
     private Object resolveMethodParameters(MetaMethodParameter methodParameter, final ProtocolGateway protocolGateway) {
-        return paramaterProviders.stream()
+        return parameterProviders.stream()
             .map(p -> p.provideValue(methodParameter, protocolGateway))
             .filter(Optional::isPresent)
             .map(Optional::get)

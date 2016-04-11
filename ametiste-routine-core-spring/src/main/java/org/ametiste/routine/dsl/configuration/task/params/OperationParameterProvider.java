@@ -22,7 +22,7 @@ import java.util.Collections;
  * </p>
  *
  * <p>
- *     Paramter types are resolved using {@link ConversionService}, so general extension mechanisms
+ *     Parameter types are resolved using {@link ConversionService}, so general extension mechanisms
  *     provided by <i>Spring Framework Conversion System</i> may be adopted to extend paramter types resolving.
  * </p>
  *

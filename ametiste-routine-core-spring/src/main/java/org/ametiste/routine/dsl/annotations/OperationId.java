@@ -6,10 +6,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * <p>
- *  Annotation which indicates that a method parameter should be bound to the operation
- *  identifier.
- * </p>
+ * Annotation which indicates that a method parameter should be bound to the operation
+ * identifier.
  *
  * @see org.ametiste.routine.dsl.configuration.task.params.OperationIdProvider
  * @since 1.1
