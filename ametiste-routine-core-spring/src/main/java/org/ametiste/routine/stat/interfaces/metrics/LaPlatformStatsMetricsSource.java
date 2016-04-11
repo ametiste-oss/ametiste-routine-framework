@@ -46,7 +46,7 @@ public class LaPlatformStatsMetricsSource implements MetricsSource {
     @Override
     public void provideMetric(final MetricsService metricsService) {
         laPlatformStatsService.loadProtocolStats(
-                s -> metricsService.increment(protocolsCreatedCountMetric(s.name()), (int) s.createdForPeriod())
+                s -> metricsService.gauge(protocolsCreatedCountMetric(s.name()), (int) s.createdForPeriod())
         );
     }
 
