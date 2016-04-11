@@ -1,7 +1,6 @@
 package org.ametiste.routine.stat.interfaces.metrics;
 
 import org.ametiste.metrics.MetricsService;
-import org.ametiste.metrics.annotations.markers.MetricsInterface;
 import org.ametiste.routine.infrastructure.laplatform.LaPlatformStatsService;
 import org.ametiste.routine.stat.application.MetricsSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,14 +11,14 @@ import org.springframework.stereotype.Component;
 import static org.ametiste.routine.stat.interfaces.metrics.LaPlatformMetrics.protocolsCreatedCountMetric;
 
 /**
- * This {@link MetricsSource} provides {@link LaPlatformStatsService} data as {@code gauage} metrics
+ * This {@link MetricsSource} provides {@link LaPlatformStatsService} data as {@code gauge} metrics
  * <ul>
  *     <li>{@value LaPlatformMetrics#PROTOCOLS_CREATED_COUNT}</li>
  * </ul>
  * <p>
  * Metrics are provided only for the current application runtime session.
  * <p>
- * This source will be active only in a context, wheree {@link LaPlatformStatsService}
+ * This source will be active only in a context, where {@link LaPlatformStatsService}
  * bean is present.
  * <p>
  * This source may be deactivated by property<br>
