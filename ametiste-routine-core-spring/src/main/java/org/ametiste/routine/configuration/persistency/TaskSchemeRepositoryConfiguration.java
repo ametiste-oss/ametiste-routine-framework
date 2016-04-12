@@ -1,4 +1,4 @@
-package org.ametiste.routine.configuration;
+package org.ametiste.routine.configuration.persistency;
 
 import org.ametiste.routine.domain.scheme.OperationScheme;
 import org.ametiste.routine.domain.scheme.TaskScheme;

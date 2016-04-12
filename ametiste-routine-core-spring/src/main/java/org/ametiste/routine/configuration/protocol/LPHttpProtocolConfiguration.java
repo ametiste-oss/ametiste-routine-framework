@@ -1,4 +1,4 @@
-package org.ametiste.routine.configuration;
+package org.ametiste.routine.configuration.protocol;
 
 import org.ametiste.laplatform.sdk.protocol.GatewayContext;
 import org.ametiste.laplatform.sdk.protocol.ProtocolFactory;

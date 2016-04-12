@@ -10,7 +10,8 @@ import org.ametiste.routine.dsl.annotations.RoutineTask;
 import org.ametiste.routine.dsl.annotations.SchemeMapping;
 import org.ametiste.routine.dsl.annotations.TaskOperation;
 import org.ametiste.routine.dsl.application.*;
-import org.ametiste.routine.dsl.application.ParameterProvider;
+import org.ametiste.routine.dsl.infrastructure.protocol.DirectDynamicParamsProtocol;
+import org.ametiste.routine.dsl.infrastructure.protocol.DynamicParamsProtocolRuntime;
 import org.ametiste.routine.sdk.mod.ModGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -47,6 +48,11 @@ public class TaskSchemeDSLConfiguration {
 
     @Autowired
     private List<ParameterProvider> paramProviders;
+
+    @Bean
+    public DynamicParamsProtocolRuntime dynamicParamsProtocolRuntimeFactory() {
+        return new DynamicParamsProtocolRuntime();
+    }
 
     @Bean
     public DynamicTaskService dynamicTaskService() {

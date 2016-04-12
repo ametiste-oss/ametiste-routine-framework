@@ -1,13 +1,14 @@
 package org.ametiste.routine.configuration;
 
 import org.ametiste.laplatform.protocol.gateway.ProtocolGatewayService;
+import org.ametiste.laplatform.sdk.protocol.ProtocolFactory;
 import org.ametiste.metrics.MetricsService;
 import org.ametiste.routine.application.CoreEventsGateway;
 import org.ametiste.routine.application.TaskDomainEvenetsGateway;
 import org.ametiste.routine.domain.scheme.SchemeRepository;
 import org.ametiste.routine.domain.task.TaskRepository;
 import org.ametiste.routine.infrastructure.execution.LineExecutionGateway;
-import org.ametiste.routine.infrastructure.execution.OperationRuntimeProtocolFactory;
+import org.ametiste.routine.infrastructure.execution.OperationRuntime;
 import org.ametiste.routine.infrastructure.execution.TaskExecutionGateway;
 import org.ametiste.routine.infrastructure.execution.local.LocalLineExecutionGateway;
 import org.ametiste.routine.infrastructure.execution.local.LocalTaskExecutionController;
@@ -51,7 +52,7 @@ public class LocalTaskExecutionGatewayConfiguration {
     private MetricsService metricsService;
 
     @Autowired
-    private List<OperationRuntimeProtocolFactory<?>> operationRuntimeProtocolFactories;
+    private List<OperationRuntime<ProtocolFactory<?>>> runtimeProtocols;
 
     @Bean
     public LineExecutionGateway localLineExecutionGateway() {
@@ -80,7 +81,7 @@ public class LocalTaskExecutionGatewayConfiguration {
         //
 
         return new LocalLineExecutionGateway(schemeRepository,
-                localTaskExecutionController(), protocolGatewayservice, operationRuntimeProtocolFactories);
+                localTaskExecutionController(), protocolGatewayservice, runtimeProtocols);
     }
 
     @Bean

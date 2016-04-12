@@ -8,8 +8,7 @@ import org.ametiste.routine.domain.scheme.OperationScheme;
 import org.ametiste.routine.domain.scheme.SchemeRepository;
 import org.ametiste.routine.domain.task.ExecutionLine;
 import org.ametiste.routine.infrastructure.execution.LineExecutionGateway;
-import org.ametiste.routine.infrastructure.execution.OperationRuntimeProtocolFactory;
-import org.ametiste.routine.sdk.protocol.operation.OperationMetaProtocol;
+import org.ametiste.routine.infrastructure.execution.OperationRuntime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,14 +32,14 @@ public class LocalLineExecutionGateway implements LineExecutionGateway {
 
     private final SchemeRepository schemeRepository;
     private final ProtocolGatewayService protocolGatewayservice;
-    private final List<OperationRuntimeProtocolFactory<?>> runtimeProtocols;
+    private final List<OperationRuntime<ProtocolFactory<?>>> runtimeProtocols;
     private final TaskExecutionController feedback;
 
     public LocalLineExecutionGateway(
             SchemeRepository schemeRepository,
             TaskExecutionController taskExecutionController,
             ProtocolGatewayService protocolGatewayservice,
-            List<OperationRuntimeProtocolFactory<?>> runtimeProtocols) {
+            List<OperationRuntime<ProtocolFactory<?>>> runtimeProtocols) {
         this.schemeRepository = schemeRepository;
         this.feedback = taskExecutionController;
         this.runtimeProtocols = runtimeProtocols;
@@ -57,9 +56,9 @@ public class LocalLineExecutionGateway implements LineExecutionGateway {
         final LocalOperationFeedbackController feedbackController =
                 new LocalOperationFeedbackController(feedback, executionLine.operationId());
 
-        // NOTE: creating protocols that depends on concrete operation runtime
+        // NOTE: creating protocols that bound to concrete operation runtime
         final List<ProtocolFactory<?>> runtimeProtocolFactories = runtimeProtocols.stream().map(
-                f -> f.runtimeProtocolFactory(taskId, executionLine, operationScheme, feedbackController)
+                f -> f.createRuntimeBoundObject(taskId, executionLine, operationScheme, feedbackController)
         ).collect(Collectors.toList());
 
         final ProtocolGateway protocolGateway = protocolGatewayservice.createGateway(

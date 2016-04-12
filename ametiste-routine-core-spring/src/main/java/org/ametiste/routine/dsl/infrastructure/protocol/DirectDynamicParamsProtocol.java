@@ -1,5 +1,6 @@
-package org.ametiste.routine.dsl.application;
+package org.ametiste.routine.dsl.infrastructure.protocol;
 
+import org.ametiste.routine.dsl.application.DynamicParamsProtocol;
 import org.ametiste.routine.sdk.protocol.operation.ParamsProtocol;
 
 import java.util.Collections;

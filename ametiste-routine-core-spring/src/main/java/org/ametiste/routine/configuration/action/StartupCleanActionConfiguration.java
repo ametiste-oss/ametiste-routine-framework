@@ -1,4 +1,4 @@
-package org.ametiste.routine.configuration;
+package org.ametiste.routine.configuration.action;
 
 import org.ametiste.routine.RoutineCoreSpring;
 import org.ametiste.routine.application.action.StartupCleanupAction;

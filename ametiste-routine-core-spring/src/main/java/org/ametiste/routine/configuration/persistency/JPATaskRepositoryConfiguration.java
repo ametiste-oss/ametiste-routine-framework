@@ -1,4 +1,4 @@
-package org.ametiste.routine.configuration;
+package org.ametiste.routine.configuration.persistency;
 
 import org.ametiste.routine.domain.task.TaskRepository;
 import org.ametiste.routine.infrastructure.persistency.jpa.JPATaskDataRepository;

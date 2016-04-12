@@ -1,4 +1,4 @@
-package org.ametiste.routine.configuration;
+package org.ametiste.routine.configuration.persistency;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

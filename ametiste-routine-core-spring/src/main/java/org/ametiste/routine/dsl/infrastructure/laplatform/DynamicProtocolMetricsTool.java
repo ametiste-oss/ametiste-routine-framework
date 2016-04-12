@@ -1,4 +1,4 @@
-package org.ametiste.routine.dsl.infrastructure;
+package org.ametiste.routine.dsl.infrastructure.laplatform;
 
 import org.ametiste.laplatform.protocol.ProtocolGateway;
 import org.ametiste.laplatform.protocol.tools.ProtocolGatewayInstrumentary;
