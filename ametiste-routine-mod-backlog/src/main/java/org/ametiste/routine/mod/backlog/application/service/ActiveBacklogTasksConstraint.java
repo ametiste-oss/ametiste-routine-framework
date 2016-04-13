@@ -3,6 +3,7 @@ package org.ametiste.routine.mod.backlog.application.service;
 import org.ametiste.routine.domain.task.Task;
 import org.ametiste.routine.domain.task.properties.TaskProperty;
 import org.ametiste.routine.mod.backlog.domain.Backlog;
+import org.ametiste.routine.mod.backlog.mod.ModBacklog;
 import org.ametiste.routine.mod.tasklog.domain.TaskLogRepository;
 
 import java.util.Arrays;
@@ -31,7 +32,7 @@ public class ActiveBacklogTasksConstraint implements BacklogRenewConstraint {
                         // TODO: this properties are required and installed by core services,
                         // TODO Need some kind of constants or something like this
                         new TaskProperty(Task.SCHEME_PROPERTY_NAME, backlog.boundTaskScheme()),
-                        new TaskProperty(Task.CREATOR_PROPERTY_NAME, "mod-backlog")
+                        new TaskProperty(Task.CREATOR_PROPERTY_NAME, ModBacklog.MOD_ID)
                 )
         );
 

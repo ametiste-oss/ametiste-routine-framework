@@ -15,6 +15,8 @@ public class PrintTaskBacklog {
 
     private final static String POPULATION_COUNT_PROPERTY = "org.ametiste.routine.eg.printer.populationCount";
 
+    private final static String DELAY_PROPERTY = "org.ametiste.routine.eg.printer.delayTime";
+
     @Connect
     private ModDataProtocol modData;
 
@@ -28,16 +30,17 @@ public class PrintTaskBacklog {
     public void populate(PrintTask taskMetaScheme) {
 
         final int populationCount = containerApp.envProperty(POPULATION_COUNT_PROPERTY, Integer.class);
+        final long delayTime = containerApp.envProperty(DELAY_PROPERTY, Long.class);
 
-        Integer issuedTasksCount = modData.loadData("backlog-print-tasksPool-count")
+        Integer issuedTasksCount = modData.loadData("backlog-print-tasks-count")
                 .map(Integer::parseInt)
                 .orElse(0);
 
         for (int i = 0; i < populationCount; i++, issuedTasksCount++) {
-            taskMetaScheme.printOperationOut("I am task #", issuedTasksCount);
+            taskMetaScheme.printOperationOut("I am task #", issuedTasksCount, delayTime);
         }
 
-        modData.storeData("backlog-print-tasksPool-count", issuedTasksCount.toString());
+        modData.storeData("backlog-print-tasks-count", issuedTasksCount.toString());
 
     }
 

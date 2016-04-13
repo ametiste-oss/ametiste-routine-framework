@@ -34,11 +34,11 @@
 //
 //        for (int i = 0; i < populationCount; i++, issuedTasksCount++) {
 //
-//            final HashMap<String, String> params = new HashMap<>();
-//            params.put("task.number", Integer.toString(issuedTasksCount));
-//            params.put("task.out", "I am task #" + issuedTasksCount);
+//            final HashMap<String, String> calls = new HashMap<>();
+//            calls.put("task.number", Integer.toString(issuedTasksCount));
+//            calls.put("task.out", "I am task #" + issuedTasksCount);
 //
-//            tasks.issueTask(PrintTaskScheme.NAME, params);
+//            tasks.issueTask(PrintTaskScheme.NAME, calls);
 //        }
 //
 //        data.storeModData("backlog-print-tasks-count", issuedTasksCount);

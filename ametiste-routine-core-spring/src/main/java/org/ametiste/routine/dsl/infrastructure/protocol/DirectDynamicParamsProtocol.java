@@ -4,6 +4,7 @@ import org.ametiste.routine.dsl.application.DynamicParamsProtocol;
 import org.ametiste.routine.sdk.protocol.operation.ParamsProtocol;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Map;
 
 // TODO: add metrics interface, provide client identifer to metrics
@@ -26,7 +27,7 @@ public class DirectDynamicParamsProtocol implements DynamicParamsProtocol {
 
     @Override
     public void fromMap(final Map<String, String> params) {
-        this.params = params;
+        this.params = new HashMap<>(params);
     }
 
     @Override
@@ -35,7 +36,7 @@ public class DirectDynamicParamsProtocol implements DynamicParamsProtocol {
     }
 
     @Override
-    public <T extends ParamsProtocol> void proxy(final T params) {
-        this.params.putAll(params.asMap());
+    public <T extends ParamsProtocol> void proxy(final T other) {
+        this.params.putAll(other.asMap());
     }
 }

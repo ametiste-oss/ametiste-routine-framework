@@ -32,7 +32,7 @@ public class BacklogProtocolsConfiguration {
     @Bean
     @Scope(scopeName = "prototype")
     public BacklogParams backlogParamsProtocol(GatewayContext c) {
-        return new DirectBacklogParams(c.lookupMap("params"));
+        return new DirectBacklogParams(c.lookupMap("calls"));
     }
 
     @Bean

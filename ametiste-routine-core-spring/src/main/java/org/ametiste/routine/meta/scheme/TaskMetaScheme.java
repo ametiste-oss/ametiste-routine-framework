@@ -39,7 +39,7 @@ public class TaskMetaScheme<T> {
 
         traceScaner.createTrace().recordTrace(callsProducer);
 
-        return schemeCallListener::schemeCall;
+        return schemeCallListener::provideTracedCallScheme;
 
     }
 

@@ -34,9 +34,7 @@ public class DynamicTaskService {
         final TaskScheme taskScheme = schemeRepository
                 .findTaskScheme(taskSchemeName);
 
-        return taskIssueService.issueTask(taskScheme,
-                p -> p.fromMap(params), creatorIdentifier
-        );
+        return taskIssueService.issueTask(taskScheme, p -> p.fromMap(params), creatorIdentifier);
 
     }
 

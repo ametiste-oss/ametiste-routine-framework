@@ -23,6 +23,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.util.ReflectionUtils;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -102,30 +103,26 @@ public class BacklogDSLConfiguration {
         // TODO: extract to class, DynamicPopulationStrategy or DSLPopulationStrategy
         return gw -> {
 
-            final MetaObject metaObject = MetaObject.from(backlogController);
+            final MetaObject controllerObject = MetaObject.from(backlogController);
 
-            final TaskMetaScheme<?> metaScheme = metaObject
+            final TaskMetaScheme<?> metaScheme = controllerObject
                     .annotationValue(SchemeMapping.class, SchemeMapping::schemeClass)
                     .map(TaskMetaScheme::of)
                     .orElseThrow(() -> new RuntimeException("Can't obtain backlog populator mapping"));
 
-            final MetaMethod metaMethod = metaObject.oneAnnotatedMethod(BacklogPopulator.class)
+            final MetaMethod populator = controllerObject.oneAnnotatedMethod(BacklogPopulator.class)
                     .orElseThrow(processError(backlogController, "Exactly one @BacklogPopulator method are expected."));
 
-            connectProtocols(gw, metaObject);
+            connectProtocols(gw, controllerObject);
 
             // NOTE: invokes @BacklogPopulator method with the traced instance of
             // @SchemeMapping::schemeClass.
-            metaScheme.trace(metaMethod::invoke).let(
-                scheme -> scheme.params().forEach(p ->
-                    dynamicTaskService.issueTask(scheme.name(), p, "mod::backlog")
+            metaScheme.trace(populator::invoke).let(
+                scheme -> scheme.calls(call ->
+                    dynamicTaskService.issueTask(scheme.name(), call.params(), ModBacklog.MOD_ID)
                 )
             );
         };
-    }
-
-    private static Supplier<IllegalStateException> processError(final Class<? extends Object> backlogControllerClass, String message) {
-        return () -> new IllegalStateException("Error during " + backlogControllerClass.getName() + " processing: " + message);
     }
 
     // TODO: copypaste with TaskDSLConfiguration
@@ -140,6 +137,10 @@ public class BacklogDSLConfiguration {
                 ReflectionUtils.setField(f, metaObject.object(), session);
             }
         );
+    }
+
+    private static Supplier<IllegalStateException> processError(final Class<? extends Object> backlogControllerClass, String message) {
+        return () -> new IllegalStateException("Error during " + backlogControllerClass.getName() + " processing: " + message);
     }
 
 }
