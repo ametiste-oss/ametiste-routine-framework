@@ -59,11 +59,12 @@ public class LocalTaskExecutionGateway implements TaskExecutionGateway {
         try {
             future = boundedExecutor.submitTask(() -> {
                     try {
-                        taskExecutionController
-                                .startTaskExecution(taskId)
+                        taskExecutionController.startTaskExecution(taskId)
                                 .executionLines(lineExecutionGateway::executeOperation);
                     } catch (Exception e) {
-                        logger.error("Error during task order execution.", e);
+                        if (logger.isDebugEnabled()) {
+                            logger.error("Error during task order execution : " + taskId, e);
+                        }
                         // TODO: custom exception
                         throw new RuntimeException("Can't execute order.", e);
                     }

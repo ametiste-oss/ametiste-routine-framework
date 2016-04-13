@@ -1,8 +1,6 @@
 package org.ametiste.routine.application;
 
-import org.ametiste.routine.domain.task.ExecutionOrder;
-import org.ametiste.routine.domain.task.OperationTerminatedEvent;
-import org.ametiste.routine.domain.task.TaskTerminatedEvent;
+import org.ametiste.routine.domain.task.*;
 
 import java.util.UUID;
 
@@ -20,5 +18,7 @@ public interface TaskDomainEvenetsGateway {
     void operationTerminated(OperationTerminatedEvent event);
 
     void taskTerminated(TaskTerminatedEvent taskTerminatedEvent);
+
+    void taskDone(TaskDoneEvent taskEvent);
 
 }

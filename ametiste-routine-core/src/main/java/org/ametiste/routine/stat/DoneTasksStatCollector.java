@@ -1,6 +1,6 @@
 package org.ametiste.routine.stat;
 
-import org.ametiste.routine.application.events.TaskDoneEvent;
+import org.ametiste.routine.domain.task.TaskDoneEvent;
 
 /**
  *

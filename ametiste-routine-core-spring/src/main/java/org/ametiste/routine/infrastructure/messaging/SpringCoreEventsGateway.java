@@ -1,11 +1,10 @@
 package org.ametiste.routine.infrastructure.messaging;
 
 import org.ametiste.routine.application.CoreEventsGateway;
-import org.ametiste.routine.application.events.TaskDoneEvent;
 import org.ametiste.routine.application.events.TaskIssuedEvent;
 import org.ametiste.routine.application.events.TasksRemovedEvent;
+import org.ametiste.routine.domain.task.TaskDoneEvent;
 import org.ametiste.routine.domain.task.TaskTerminatedEvent;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationEventPublisher;
 
 /**

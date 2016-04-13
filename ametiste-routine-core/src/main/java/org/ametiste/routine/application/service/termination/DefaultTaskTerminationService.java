@@ -37,8 +37,11 @@ public class DefaultTaskTerminationService implements TaskTerminationService {
     public void terminateTask(UUID taskId, String withMessage) {
         AggregateInstant.create(taskId, repository::findTask, repository::saveTask)
                 .action(t -> { return t.terminate(withMessage); })
-                .consume(evenetsGateway::taskTerminated)
-                .consume(coreEventsGateway::taskTerminated)
+                .consume(e -> e
+                    .taskTerminated(evenetsGateway::taskTerminated)
+                    .taskTerminated(coreEventsGateway::taskTerminated)
+                    .consume()
+                )
                 .done();
     }
 

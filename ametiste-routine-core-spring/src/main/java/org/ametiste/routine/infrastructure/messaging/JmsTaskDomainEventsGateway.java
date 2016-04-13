@@ -2,6 +2,7 @@ package org.ametiste.routine.infrastructure.messaging;
 
 import org.ametiste.routine.application.TaskDomainEvenetsGateway;
 import org.ametiste.routine.domain.task.OperationTerminatedEvent;
+import org.ametiste.routine.domain.task.TaskDoneEvent;
 import org.ametiste.routine.domain.task.TaskTerminatedEvent;
 import org.springframework.jms.core.JmsTemplate;
 
@@ -21,7 +22,7 @@ public class JmsTaskDomainEventsGateway implements TaskDomainEvenetsGateway {
 
     @Override
     public void taskIssued(final UUID taskId) {
-        jmsTemplate.send("task-issued", s -> s.createObjectMessage(taskId));
+        jmsTemplate.convertAndSend("task-issued", taskId);
     }
 
     @Override
@@ -31,8 +32,13 @@ public class JmsTaskDomainEventsGateway implements TaskDomainEvenetsGateway {
     }
 
     @Override
-    public void taskTerminated(TaskTerminatedEvent event) {
-        jmsTemplate.send("task-terminated", s -> s.createObjectMessage(event));
+    public void taskTerminated(final TaskTerminatedEvent event) {
+        jmsTemplate.convertAndSend("task-termnated", event);
+    }
+
+    @Override
+    public void taskDone(final TaskDoneEvent taskEvent) {
+        jmsTemplate.convertAndSend("task-done", taskEvent);
     }
 
 }

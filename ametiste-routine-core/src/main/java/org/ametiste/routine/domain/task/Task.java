@@ -14,6 +14,8 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
+import static org.ametiste.routine.domain.task.TaskEvents.build;
+
 /**
  *
  * @since
@@ -334,17 +336,35 @@ public class Task implements DomainStateReflector<TaskReflection> {
         invokeOnOperation(operationId, o -> o.addNotice(message));
     }
 
-    public void completeOperation(UUID operationId) {
+    public TaskEvents completeOperation(UUID operationId) {
+
+        final TaskEvents result;
+
         inState.canCompleteOperation();
         invokeOnOperation(operationId, Operation::complete);
-        checkIsTaskCompleted();
+
+        if (hasNoRuningOperation()) {
+            completeTask(State.DONE);
+            result = TaskEvents.build(e -> e.done(entityId()));
+        } else {
+            result = TaskEvents.empty();
+        }
+
+        return result;
+
     }
 
-    public OperationTerminatedEvent terminateOperation(UUID operationId) {
+    public TaskEvents terminateOperation(UUID operationId) {
+
         inState.canCompleteOperation();
         invokeOnOperation(operationId, Operation::terminate);
-        checkIsTaskCompleted();
-        return new OperationTerminatedEvent(entityId(), operationId);
+        completeTask(State.TERMINATED);
+
+        return TaskEvents.build(e -> {
+            e.operationTerminated(entityId(), operationId);
+            e.terminated(entityId(), Collections.singletonList(operationId), "Operation terminated");
+        });
+
     }
 
     public void executeOperation(UUID operationId) {
@@ -358,7 +378,7 @@ public class Task implements DomainStateReflector<TaskReflection> {
         }
     }
 
-    public TaskTerminatedEvent terminate(String message) {
+    public TaskEvents terminate(String message) {
 
         completeTask(State.TERMINATED);
 
@@ -376,7 +396,7 @@ public class Task implements DomainStateReflector<TaskReflection> {
         final List<UUID> terminated = toBeterminated.stream()
             .map(Operation::id).collect(Collectors.toList());
 
-        return new TaskTerminatedEvent(entityId(), terminated, message);
+        return TaskEvents.build(e -> e.terminated(entityId(), terminated, message));
     }
 
     @Override
@@ -401,26 +421,14 @@ public class Task implements DomainStateReflector<TaskReflection> {
         }
     }
 
-    /**
-     * Checks if task is complete, if all operations are completed - task is completed.
-     *
-     * Note, if any operation has TERMINATED state, the task would be marked as terminated.
-     *
-     */
-    private void checkIsTaskCompleted() {
+    private boolean hasNoRuningOperation() {
+        return !operations.values().stream()
+                .filter(Operation::isNotDone).findFirst().isPresent();
+    }
 
-        for (Operation op : operations.values()) {
-            if (op.isNotDone()) {
-                return;
-            }
-        }
-
-        if (operations.values().stream().filter(Operation::isTerminated).findFirst().isPresent()) {
-            completeTask(State.TERMINATED);
-        } else {
-            completeTask(State.DONE);
-        }
-
+    private boolean hasTerminatedOperations() {
+        return operations.values().stream()
+                .filter(Operation::isTerminated).findFirst().isPresent();
     }
 
     private void prepareTaskExecution() {
@@ -428,7 +436,6 @@ public class Task implements DomainStateReflector<TaskReflection> {
         inState = State.EXECUTION;
         executionStartTime = Instant.now();
     }
-
 
     /**
      * Completes task with the given state, note the state must be able to be used as final state.

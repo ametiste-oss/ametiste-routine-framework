@@ -76,9 +76,11 @@ public class LocalLineExecutionGateway implements LineExecutionGateway {
             feedback.operationDone(executionLine.operationId());
         } catch (Exception e) {
             if (logger.isDebugEnabled()) {
-                logger.error("Error during task operation termination.", e);
+                // NOTE: this error is not thrown, so the client will continue to execute task operations,
+                // so the next operations will fail cos the task is already done
+                logger.error("Error during task operation execution : " + executionLine.operationName(), e);
             }
-            feedback.operationFailed(executionLine.operationId(), "Operation failed on termination.");
+            feedback.operationFailed(executionLine.operationId(), "Operation failed on execution.");
         } finally {
             protocolGateway.release();
         }

@@ -60,7 +60,12 @@ public class LocalTaskExecutionController implements TaskExecutionController {
     @Override
     public void operationDone(UUID operationId) {
         taskInstantForOperation(operationId)
-                .action(Task::completeOperation, operationId)
+                .action(t -> { return t.completeOperation(operationId); })
+                .consume(e -> e
+                        .taskDone(taskDomainEvenetsGateway::taskDone)
+                        .taskDone(coreEventsGateway::taskDone)
+                        .consume()
+                )
                 .done();
     }
 
@@ -76,7 +81,12 @@ public class LocalTaskExecutionController implements TaskExecutionController {
     public void operationDone(UUID operationId, String withMessage) {
         taskInstantForOperation(operationId)
                 .action(Task::noticeOperation, operationId, withMessage)
-                .action(Task::completeOperation, operationId)
+                .action(t -> { return t.completeOperation(operationId); } )
+                .consume(e -> e
+                    .taskDone(taskDomainEvenetsGateway::taskDone)
+                    .taskDone(coreEventsGateway::taskDone)
+                    .consume()
+                )
                 .done();
     }
 
@@ -92,7 +102,12 @@ public class LocalTaskExecutionController implements TaskExecutionController {
         taskInstantForOperation(operationId)
                 .action(Task::noticeOperation, operationId, withMessage)
                 .action(t -> { return t.terminateOperation(operationId); })
-                .consume(taskDomainEvenetsGateway::operationTerminated)
+                .consume(e -> e
+                    .operationTerminated(taskDomainEvenetsGateway::operationTerminated)
+                    .taskTerminated(taskDomainEvenetsGateway::taskTerminated)
+                    .taskTerminated(coreEventsGateway::taskTerminated)
+                    .consume()
+                )
                 .done();
     }
 
