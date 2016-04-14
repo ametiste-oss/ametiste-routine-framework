@@ -104,13 +104,13 @@ public class ProtocolDSLConfiguration {
         return protocolName;
     }
 
-    private static String resolveProtocolGroup(final Class<? extends Protocol> protocolClass) {
+    private static String resolveProtocolGroup(final Class<? extends Protocol> protocol) {
 
         final String protocolGroup;
 
-        if (protocolClass.isAnnotationPresent(ProtocolMeta.class) &&
-                !protocolClass.getDeclaredAnnotation(ProtocolMeta.class).group().isEmpty()) {
-            protocolGroup = protocolClass.getDeclaredAnnotation(ProtocolMeta.class).group();
+        if (protocol.isAnnotationPresent(ProtocolMeta.class) &&
+                !protocol.getDeclaredAnnotation(ProtocolMeta.class).group().isEmpty()) {
+            protocolGroup = protocol.getDeclaredAnnotation(ProtocolMeta.class).group();
         } else {
             protocolGroup = "mods.protocol";
         }
