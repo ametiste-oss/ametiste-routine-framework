@@ -7,8 +7,15 @@ import java.util.UUID;
 import java.util.function.Consumer;
 
 /**
+ * Object describes set of events that produced during {@link Task} aggregate state transition.
+ * External clients may consume any of produced events.
  *
- * @since
+ * <p>
+ * Note, this object is keep the order in which events are produced, so each event will be consumed in order
+ * of events was producing, order of events consumer registration does not matter.
+ * </p>
+ *
+ * @since 1.1
  */
 public class TaskEvents {
 
@@ -18,32 +25,91 @@ public class TaskEvents {
     private final List<Consumer<TaskTerminatedEvent>> terminatedConsumers;
     private final List<Consumer<OperationTerminatedEvent>> opTerminatedConsumers;
 
+    /**
+     * Construct new {@link TaskEvents} object, that contains consume
+     * operation in the given order.
+     *
+     * <p>
+     *     <b>Note</b>, the consume operations order is must be same with the order in which events was
+     *     produced.
+     * </p>
+     *
+     * @param consumeOrder ordered list of consume operations, can't be null.
+     */
     private TaskEvents(List<Consumer<TaskEvents>> consumeOrder) {
-        this.consumeOrder = consumeOrder;
+        this.consumeOrder = new ArrayList<>(consumeOrder);
         this.doneConsumers = new ArrayList<>();
         this.terminatedConsumers = new ArrayList<>();
         this.opTerminatedConsumers = new ArrayList<>();
     }
 
-    public TaskEvents taskDone(Consumer<TaskDoneEvent> taskDoneEvent) {
-        doneConsumers.add(taskDoneEvent);
+    /**
+     * Registers {@link TaskDoneEvent} consumer.
+     *
+     * @param consumer event consumer, must be not null
+     * @return this {@link TaskEvents} object, can't be null
+     * @throws IllegalArgumentException in case where consumer is null
+     */
+    public TaskEvents taskDone(Consumer<TaskDoneEvent> consumer) {
+        doneConsumers.add(notNullConsumer(consumer));
         return this;
     }
 
-    public TaskEvents taskTerminated(Consumer<TaskTerminatedEvent> taskTerminatedEvent) {
-        terminatedConsumers.add(taskTerminatedEvent);
+    /**
+     * Registers {@link TaskTerminatedEvent} consumer.
+     *
+     * @param consumer event consumer, must be not null
+     * @return this {@link TaskEvents} object, can't be null
+     * @throws IllegalArgumentException in case where consumer is null
+     */
+    public TaskEvents taskTerminated(Consumer<TaskTerminatedEvent> consumer) {
+        terminatedConsumers.add(notNullConsumer(consumer));
         return this;
     }
 
-    public TaskEvents operationTerminated(Consumer<OperationTerminatedEvent> operationTerminatedEvent) {
-        opTerminatedConsumers.add(operationTerminatedEvent);
+    /**
+     * Registers {@link OperationTerminatedEvent} consumer.
+     *
+     * @param consumer event consumer, must be not null
+     * @return this {@link TaskEvents} object, can't be null
+     * @throws IllegalArgumentException in case where consumer is null
+     */
+    public TaskEvents operationTerminated(Consumer<OperationTerminatedEvent> consumer) {
+        opTerminatedConsumers.add(notNullConsumer(consumer));
         return this;
     }
 
+    /**
+     * Consumes events by each registered consumer.
+     *
+     * <p>
+     * Events will be consumed in order of events produced by a {@link Task},
+     * not in order in which consumers was registered.
+     * </p>
+     */
     public void consume() {
         consumeOrder.forEach(c -> c.accept(this));
     }
 
+    private static final <T> Consumer<T> notNullConsumer(Consumer<T> consumer) {
+        if (consumer == null) {
+            throw new IllegalArgumentException("Events consumer can't be null.");
+        }
+        return consumer;
+    }
+
+    /**
+     *  Internal builder object to construct {@link TaskEvents} that keeps order of events.
+     *
+     *  <p>
+     *      During construction this builder creates ordered list of consumers that
+     *      then passed as {@code TaskEvents} argument, this list contains operations to
+     *      provide concrete events to consumers and is iterated by {@link TaskEvents#consume()},
+     *      so that during a consume stage, consummers will receive
+     *      events in the order in which these events was produced by the {@link Task}. But
+     *      a client has ability to subscribe concrete consumer in a free order.
+     *  </p>
+     */
     static final class Builder {
 
         private List<Consumer<TaskEvents>> events = new ArrayList<>();
