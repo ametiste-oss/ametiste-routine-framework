@@ -6,12 +6,25 @@ import java.util.Optional;
 
 /**
  *
- * @since
+ * @since 1.0
  */
 public interface ModDataProtocol extends Protocol {
 
+    /**
+     * @deprecated use {@link #loadData(String, Class)} instead, even for strings, yep. This method
+     * will be removed at 1.2.
+     */
+    @Deprecated
     Optional<String> loadData(String name);
 
-    void storeData(String name, String value);
+    /**
+     * @since 1.1
+     */
+    <T> Optional<T> loadData(String name, Class<T> type);
+
+    /**
+     * @since 1.0
+     */
+    void storeData(String name, Object value);
 
 }

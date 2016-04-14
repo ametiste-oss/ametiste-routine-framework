@@ -23,7 +23,7 @@ public class PrintTaskBacklog {
     @Connect
     private ContainerAppProtocol containerApp;
 
-    // @ModDescriptionData("backlog-print-tasksPool-count")
+    // @ModDescriptionData("backlog-print-tasks-count")
     // private ModDataDescriptor<Integer> tasksCount;
 
     @BacklogPopulator
@@ -32,15 +32,14 @@ public class PrintTaskBacklog {
         final int populationCount = containerApp.envProperty(POPULATION_COUNT_PROPERTY, Integer.class);
         final long delayTime = containerApp.envProperty(DELAY_PROPERTY, Long.class);
 
-        Integer issuedTasksCount = modData.loadData("backlog-print-tasks-count")
-                .map(Integer::parseInt)
+        Integer issuedTasksCount = modData.loadData("backlog-print-tasks-count", Integer.class)
                 .orElse(0);
 
         for (int i = 0; i < populationCount; i++, issuedTasksCount++) {
             taskMetaScheme.printOperationOut("I am task #", issuedTasksCount, delayTime);
         }
 
-        modData.storeData("backlog-print-tasks-count", issuedTasksCount.toString());
+        modData.storeData("backlog-print-tasks-count", issuedTasksCount);
 
     }
 

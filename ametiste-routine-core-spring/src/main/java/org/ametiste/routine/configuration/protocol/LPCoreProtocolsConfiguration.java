@@ -8,6 +8,7 @@ import org.ametiste.routine.application.service.termination.TaskTerminationServi
 import org.ametiste.routine.domain.ModReportRepository;
 import org.ametiste.routine.domain.ModRepository;
 import org.ametiste.routine.domain.task.TaskRepository;
+import org.ametiste.routine.infrastructure.protocol.moddata.DataConverter;
 import org.ametiste.routine.infrastructure.protocol.moddata.DirectModDataConnection;
 import org.ametiste.routine.infrastructure.protocol.modreport.DirectModReportConnection;
 import org.ametiste.routine.infrastructure.protocol.taskcontrol.DirectTaskControlConnection;
@@ -20,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
+import org.springframework.core.convert.ConversionService;
 
 /**
  *
@@ -46,6 +48,9 @@ public class LPCoreProtocolsConfiguration {
     @Autowired
     private TaskRepository taskRepository;
 
+    @Autowired
+    private ConversionService conversionService;
+
     @Bean
     @Scope(scopeName = "prototype")
     public TaskPoolProtocol taskPoolProtocol(GatewayContext c) {
@@ -70,8 +75,19 @@ public class LPCoreProtocolsConfiguration {
     public ModDataProtocol modDataProtocol(GatewayContext c) {
         return new DirectModDataConnection(
                 c.lookupAttribute("clientId"),
-                modRepository
+                modRepository,
+                modDataDataConverter()
         );
+    }
+
+    @Bean
+    public DataConverter modDataDataConverter() {
+        return new DataConverter() {
+            @Override
+            public <T> T convert(final Object value, final Class<T> type) {
+                return conversionService.convert(value, type);
+            }
+        };
     }
 
     @Bean
