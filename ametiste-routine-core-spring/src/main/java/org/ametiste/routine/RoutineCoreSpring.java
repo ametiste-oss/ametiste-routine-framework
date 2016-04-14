@@ -15,4 +15,6 @@ public final class RoutineCoreSpring {
     public static final String MOD_PROPS_PREFIX = PROPS_PREFIX + ".mod";
     public static final String CORE_PROPS_PREFIX = PROPS_PREFIX + ".core";
 
+    public static final String ROUTINE_CORE_PROPERTIES = "classpath:/routine.properties";
+
 }

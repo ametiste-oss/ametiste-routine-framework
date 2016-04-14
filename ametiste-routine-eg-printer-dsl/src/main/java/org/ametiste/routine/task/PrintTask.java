@@ -1,6 +1,7 @@
 package org.ametiste.routine.task;
 
 import org.ametiste.routine.dsl.annotations.*;
+import org.ametiste.routine.protocol.SleepProtocol;
 import org.ametiste.routine.sdk.protocol.containerapp.ContainerAppProtocol;
 
 import java.util.Arrays;
@@ -13,15 +14,14 @@ public class PrintTask {
     @Connect
     private ContainerAppProtocol containerAppProtocol;
 
+    @Connect
+    private SleepProtocol sleepProtocol;
+
     @TaskOperation
     public void printOperationOut(@OperationParameter("operationOut") String prefix,
                                   @OperationParameter("secondParameter") int taskNumber,
                                   @OperationParameter("delay") long delay) {
-        try {
-            Thread.sleep(delay);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        sleepProtocol.sleep(delay);
 //        containerAppProtocol.systemOut(prefix + Integer.toString(taskNumber));
     }
 

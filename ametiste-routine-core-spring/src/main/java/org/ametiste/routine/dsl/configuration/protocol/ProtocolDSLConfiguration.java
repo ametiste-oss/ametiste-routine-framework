@@ -108,10 +108,11 @@ public class ProtocolDSLConfiguration {
 
         final String protocolGroup;
 
-        if (protocolClass.isAnnotationPresent(ProtocolMeta.class)) {
+        if (protocolClass.isAnnotationPresent(ProtocolMeta.class) &&
+                !protocolClass.getDeclaredAnnotation(ProtocolMeta.class).group().isEmpty()) {
             protocolGroup = protocolClass.getDeclaredAnnotation(ProtocolMeta.class).group();
         } else {
-            protocolGroup = "infrastructure.protocol";
+            protocolGroup = "mods.protocol";
         }
 
         return protocolGroup;
