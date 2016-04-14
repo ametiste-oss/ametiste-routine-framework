@@ -112,6 +112,7 @@ public class ProtocolDSLConfiguration {
                 !protocol.getDeclaredAnnotation(ProtocolMeta.class).group().isEmpty()) {
             protocolGroup = protocol.getDeclaredAnnotation(ProtocolMeta.class).group();
         } else {
+            // TODO: extract me as constant
             protocolGroup = "mods.protocol";
         }
 

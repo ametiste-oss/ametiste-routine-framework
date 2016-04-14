@@ -8,7 +8,7 @@ import org.ametiste.laplatform.dsl.ProtocolMeta;
  * @since
  */
 @LambdaProtocol
-@ProtocolMeta(group = "mod.sleep", shortName = "sleep-protocol")
+@ProtocolMeta(shortName = "sleep-protocol")
 public class DirectAppSleepConnection implements SleepProtocol {
 
     @Override
