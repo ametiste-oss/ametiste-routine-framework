@@ -12,14 +12,16 @@ public class TaskMetaScheme<T> {
 
     private final Class<T> schemeType;
     private final String schemeName;
+    private final ParamValueConverter converter;
 
-    public TaskMetaScheme(Class<T> schemeType) {
+    public TaskMetaScheme(Class<T> schemeType, ParamValueConverter converter) {
 
         if(!(schemeType.isAnnotationPresent(SchemeMapping.class)
                 && schemeType.isAnnotationPresent(RoutineTask.class))) {
             throw new IllegalArgumentException("Only classes marked as @RoutineTask and @SchemeMapping are task scheme classes.");
         }
 
+        this.converter = converter;
         this.schemeType = schemeType;
         this.schemeName = schemeType.getDeclaredAnnotation(SchemeMapping.class).schemeName();
     }
@@ -31,7 +33,7 @@ public class TaskMetaScheme<T> {
     public Let<TaskSchemeTrace> trace(Consumer<T> callsProducer) {
 
         final TaskSchemeCallListener schemeCallListener =
-                new TaskSchemeCallListener(schemeName);
+                new TaskSchemeCallListener(schemeName, converter);
 
         final CallsTraceScaner<T> traceScaner = new CallsTraceScaner<>(schemeType,
                 Collections.singletonList(schemeCallListener)
@@ -43,8 +45,8 @@ public class TaskMetaScheme<T> {
 
     }
 
-    public static final <T> TaskMetaScheme<T> of(Class<T> taskScheme) {
-        return new TaskMetaScheme<>(taskScheme);
+    public static final <T> TaskMetaScheme<T> of(Class<T> taskScheme, ParamValueConverter converter) {
+        return new TaskMetaScheme<>(taskScheme, converter);
     }
 
 }

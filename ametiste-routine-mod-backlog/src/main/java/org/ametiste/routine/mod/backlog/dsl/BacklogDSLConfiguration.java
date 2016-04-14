@@ -5,6 +5,7 @@ import org.ametiste.laplatform.sdk.protocol.Protocol;
 import org.ametiste.routine.dsl.annotations.Connect;
 import org.ametiste.routine.dsl.annotations.SchemeMapping;
 import org.ametiste.routine.dsl.application.DynamicTaskService;
+import org.ametiste.routine.meta.scheme.ParamValueConverter;
 import org.ametiste.routine.meta.scheme.TaskMetaScheme;
 import org.ametiste.routine.meta.util.MetaMethod;
 import org.ametiste.routine.meta.util.MetaObject;
@@ -20,10 +21,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.util.ReflectionUtils;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -48,6 +49,19 @@ public class BacklogDSLConfiguration {
 
     @Autowired
     private DynamicTaskService dynamicTaskService;
+
+    @Autowired
+    private ConversionService conversionService;
+
+    @Bean
+    public ParamValueConverter paramValueConverter() {
+        return new ParamValueConverter() {
+            @Override
+            public String convert(final Object value) {
+                return conversionService.convert(value, String.class);
+            }
+        };
+    }
 
     @Bean
     public ModGateway modBacklogDSL() {
@@ -107,7 +121,7 @@ public class BacklogDSLConfiguration {
 
             final TaskMetaScheme<?> metaScheme = controllerObject
                     .annotationValue(SchemeMapping.class, SchemeMapping::schemeClass)
-                    .map(TaskMetaScheme::of)
+                    .map(s -> TaskMetaScheme.of(s, paramValueConverter()))
                     .orElseThrow(() -> new RuntimeException("Can't obtain backlog populator mapping"));
 
             final MetaMethod populator = controllerObject.oneAnnotatedMethod(BacklogPopulator.class)
