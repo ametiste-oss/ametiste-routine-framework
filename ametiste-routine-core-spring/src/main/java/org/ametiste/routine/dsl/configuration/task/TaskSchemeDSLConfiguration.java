@@ -6,9 +6,7 @@ import org.ametiste.routine.domain.scheme.SchemeRepository;
 import org.ametiste.routine.domain.scheme.TaskBuilder;
 import org.ametiste.routine.domain.scheme.TaskScheme;
 import org.ametiste.routine.domain.scheme.TaskSchemeException;
-import org.ametiste.routine.dsl.annotations.RoutineTask;
-import org.ametiste.routine.dsl.annotations.SchemeMapping;
-import org.ametiste.routine.dsl.annotations.TaskOperation;
+import org.ametiste.routine.dsl.annotations.*;
 import org.ametiste.routine.dsl.application.*;
 import org.ametiste.routine.dsl.infrastructure.protocol.DirectDynamicParamsProtocol;
 import org.ametiste.routine.dsl.infrastructure.protocol.DynamicParamsProtocolRuntime;
@@ -16,7 +14,6 @@ import org.ametiste.routine.sdk.mod.ModGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Scope;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.util.ReflectionUtils;
 
@@ -59,7 +56,12 @@ public class TaskSchemeDSLConfiguration {
     private ConversionService conversionService;
 
     @Autowired
-    private List<ParameterProvider> paramProviders;
+    @ParamValueProvider
+    private List<RuntimeElementValueProvider> paramProviders;
+
+    @Autowired
+    @FieldValueProvider
+    private List<RuntimeElementValueProvider> fieldProviders;
 
     @Bean
     public DynamicParamsProtocolRuntime dynamicParamsProtocolRuntimeFactory() {
@@ -145,7 +147,7 @@ public class TaskSchemeDSLConfiguration {
     }
 
     private DynamicOperationFactory dynamicOperationFactory(final Class<?> controllerClass, final Method m) {
-        return new DynamicOperationFactory(controllerClass, m, paramProviders);
+        return new DynamicOperationFactory(controllerClass, m, paramProviders, fieldProviders);
     }
 
     private String resolveOperationName(final Method m) {

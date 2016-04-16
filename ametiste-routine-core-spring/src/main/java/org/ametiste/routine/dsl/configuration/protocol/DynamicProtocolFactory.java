@@ -16,13 +16,13 @@ import org.springframework.context.ApplicationContext;
  * </p>
  *
  * <p>
- *     Note, this factory defines protocol type explicitly overriding the default factory interface
+ *     Note, this factory defines protocol valueType explicitly overriding the default factory interface
  *     behavior of {@link ProtocolFactory#protocolType()}.
  * </p>
  *
  * @see ProtocolDSLConfiguration
  * @see ProtocolFactory
- * @param <T> protocol type
+ * @param <T> protocol valueType
  * @since 1.1
  */
 class DynamicProtocolFactory<T extends Protocol> implements ProtocolFactory<T> {

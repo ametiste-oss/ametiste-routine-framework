@@ -2,8 +2,9 @@ package org.ametiste.routine.dsl.configuration.task.params;
 
 import org.ametiste.laplatform.protocol.ProtocolGateway;
 import org.ametiste.routine.dsl.annotations.OperationName;
-import org.ametiste.routine.dsl.application.AnnotatedParameterProvider;
-import org.ametiste.routine.meta.util.MetaMethodParameter;
+import org.ametiste.routine.dsl.annotations.ParamValueProvider;
+import org.ametiste.routine.dsl.application.AnnotatedElementValueProvider;
+import org.ametiste.routine.dsl.application.RuntimeElement;
 import org.ametiste.routine.sdk.protocol.operation.OperationMetaProtocol;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +18,7 @@ import org.springframework.stereotype.Component;
  * </p>
  *
  * <p>
- *     Identifier can be resolved only as {@link String} type. Other paramter types are unsupported and
+ *     Identifier can be resolved only as {@link String} valueType. Other paramter types are unsupported and
  *     will cause {@link IllegalStateException} at runtime.
  * </p>
  *
@@ -26,20 +27,21 @@ import org.springframework.stereotype.Component;
  * @since 1.1
  */
 @Component
-class OperationNameProvider extends AnnotatedParameterProvider {
+@ParamValueProvider
+class OperationNameProvider extends AnnotatedElementValueProvider {
 
     public OperationNameProvider() {
         super(OperationName.class);
     }
 
     @Override
-    protected Object resolveParameterValue(final MetaMethodParameter parameter,
-                                           final ProtocolGateway protocolGateway) {
+    protected Object resolveValue(final RuntimeElement element,
+                                  final ProtocolGateway protocolGateway) {
 
-        if (String.class.isAssignableFrom(parameter.type())) {
+        if (element.mayHaveValueOf(String.class)) {
             return protocolGateway.session(OperationMetaProtocol.class).operationName();
         } else {
-            throw new IllegalStateException("@TaskName parameter must have type of java.lang.String.");
+            throw new IllegalStateException("@TaskName element must have valueType of java.lang.String.");
         }
 
     }

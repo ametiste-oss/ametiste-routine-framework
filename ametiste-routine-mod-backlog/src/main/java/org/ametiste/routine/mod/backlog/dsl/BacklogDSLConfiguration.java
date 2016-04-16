@@ -148,7 +148,7 @@ public class BacklogDSLConfiguration {
     private void connectProtocols(ProtocolGateway protocolGateway, MetaObject metaObject) {
         metaObject.streamOfAnnotatedFields(Connect.class).forEach(
             f -> {
-                // TODO: add exception, if @Connect does not point on LambdaProtocol field
+                // TODO: add exception, if @Connect does not point on LambdaProtocol element
                 final Protocol session = protocolGateway
                         .session((Class<? extends Protocol>) f.getType());
 

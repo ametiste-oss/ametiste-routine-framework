@@ -88,7 +88,7 @@ public class MetaMethod {
         for (int i = 0; i < expectedTypes.length; i++) {
             if (!actualTypes[i].equals(expectedTypes[i])) {
                 throw new IllegalStateException(metaObject.object.getClass().getName() + "#" + method.getName() +
-                    " is expected to have parameter #" + i + " of type " + expectedTypes[i] + " but " + actualTypes[i] + " given.");
+                    " is expected to have parameter #" + i + " of valueType " + expectedTypes[i] + " but " + actualTypes[i] + " given.");
             }
         }
 

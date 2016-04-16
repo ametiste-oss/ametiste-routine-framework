@@ -2,9 +2,10 @@ package org.ametiste.routine.dsl.configuration.task.params;
 
 import org.ametiste.laplatform.protocol.ProtocolGateway;
 import org.ametiste.routine.dsl.annotations.OperationParameter;
-import org.ametiste.routine.dsl.application.AnnotatedParameterProvider;
+import org.ametiste.routine.dsl.annotations.ParamValueProvider;
+import org.ametiste.routine.dsl.application.AnnotatedElementValueProvider;
 import org.ametiste.routine.dsl.application.DynamicParamsProtocol;
-import org.ametiste.routine.meta.util.MetaMethodParameter;
+import org.ametiste.routine.dsl.application.RuntimeElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
@@ -23,7 +24,8 @@ import org.springframework.stereotype.Component;
  * @since 1.1
  */
 @Component
-class OperationParameterProvider extends AnnotatedParameterProvider {
+@ParamValueProvider
+class OperationParameterProvider extends AnnotatedElementValueProvider {
 
     private final ConversionService conversionService;
 
@@ -34,13 +36,14 @@ class OperationParameterProvider extends AnnotatedParameterProvider {
     }
 
     @Override
-    protected Object resolveParameterValue(final MetaMethodParameter parameter,
-                                           final ProtocolGateway protocolGateway) {
+    protected Object resolveValue(final RuntimeElement element,
+                                  final ProtocolGateway protocolGateway) {
 
+        // NOTE: this internal method invoked only if the given annotation is exists on the element
         Object value = protocolGateway.session(DynamicParamsProtocol.class)
-                .param(parameter.annotationValue(OperationParameter.class, OperationParameter::value));
+                .param(element.annotationValue(OperationParameter.class, OperationParameter::value));
 
-        return conversionService.convert(value, parameter.type());
+        return conversionService.convert(value, element.valueType());
     }
 
 }

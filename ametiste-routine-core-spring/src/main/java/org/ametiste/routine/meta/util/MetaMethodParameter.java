@@ -44,4 +44,10 @@ public class MetaMethodParameter {
     public Class<?> type() {
         return parameter.getType();
     }
+
+    public Parameter self() { return parameter; }
+
+    public String name() {
+        return parameter.getName();
+    }
 }

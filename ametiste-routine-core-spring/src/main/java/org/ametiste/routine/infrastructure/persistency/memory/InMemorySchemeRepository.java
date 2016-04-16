@@ -43,7 +43,7 @@ public class InMemorySchemeRepository implements SchemeRepository {
 
     @Override
     public <T extends ParamsProtocol> Class<TaskScheme<T>> findTaskSchemeClass(final String schemeName, final Class<T> paramsClass) {
-        // TODO: add params type check somehow
+        // TODO: add params valueType check somehow
         return notNull((Class<TaskScheme<T>>) taskSchemasClassesByName.get(schemeName), schemeName);
     }
 
