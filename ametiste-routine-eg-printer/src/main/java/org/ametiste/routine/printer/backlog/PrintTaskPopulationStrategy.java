@@ -24,7 +24,7 @@ public class PrintTaskPopulationStrategy implements BacklogPopulationStrategy {
     @Override
     public void populate(ProtocolGateway gateway) {
 
-        final TaskPoolProtocol tasksPool = gateway.session(TaskPoolProtocol.class);;
+        final TaskPoolProtocol tasksPool = gateway.session(TaskPoolProtocol.class);
         final ModDataProtocol data = gateway.session(ModDataProtocol.class);
 
         Integer issuedTasksCount = data

@@ -9,6 +9,7 @@ import org.ametiste.routine.meta.scheme.ParamValueConverter;
 import org.ametiste.routine.meta.scheme.TaskMetaScheme;
 import org.ametiste.routine.meta.util.MetaMethod;
 import org.ametiste.routine.meta.util.MetaObject;
+import org.ametiste.routine.mod.backlog.application.operation.BacklogRenewOperationScheme;
 import org.ametiste.routine.mod.backlog.domain.Backlog;
 import org.ametiste.routine.mod.backlog.domain.BacklogRepository;
 import org.ametiste.routine.mod.backlog.dsl.annotations.BacklogController;
@@ -39,7 +40,7 @@ public class BacklogDSLConfiguration {
 
     @BacklogController
     @Autowired(required = false)
-    private List<Object> backlogControllers;
+    private List<Object> backlogControllers = Collections.emptyList();
 
     @Autowired
     private BacklogRepository backlogRepository;
@@ -133,7 +134,11 @@ public class BacklogDSLConfiguration {
             // @SchemeMapping::schemeClass.
             metaScheme.trace(populator::invoke).let(
                 scheme -> scheme.calls(call ->
-                    dynamicTaskService.issueTask(scheme.name(), call.params(), ModBacklog.MOD_ID)
+                    // TODO: BacklogRenewOperationScheme.NAME is used as generic mod-backlog name to have
+                    // campatibility accross the non-dsl backlogs
+                    // I want to have some other way to identify creators, but is not there atm, I guess
+                    // it would be done after mods framework introduction
+                    dynamicTaskService.issueTask(scheme.name(), call.params(), BacklogRenewOperationScheme.NAME)
                 )
             );
         };

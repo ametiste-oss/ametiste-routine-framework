@@ -7,6 +7,7 @@ import org.ametiste.routine.mod.backlog.domain.Backlog;
 import org.ametiste.routine.mod.tasklog.domain.TaskLogRepository;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * <p>
@@ -29,7 +30,7 @@ public class ActiveRenewTaskConstraint implements BacklogRenewConstraint {
 
         final long activeCount = taskLogRepository.countByTaskState(
                 Task.State.activeState,
-                Arrays.asList(
+                Collections.singletonList(
                         new TaskProperty(Task.SCHEME_PROPERTY_NAME, BacklogRenewTaskScheme.NAME)
                 )
         );

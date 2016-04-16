@@ -2,8 +2,10 @@ package org.ametiste.routine.mod.backlog.application.service;
 
 import org.ametiste.routine.application.service.issue.TaskIssueService;
 import org.ametiste.routine.mod.backlog.application.operation.BacklogParams;
+import org.ametiste.routine.mod.backlog.application.operation.BacklogRenewOperationScheme;
 import org.ametiste.routine.mod.backlog.application.scheme.BacklogRenewTaskScheme;
 import org.ametiste.routine.mod.backlog.domain.Backlog;
+import org.ametiste.routine.mod.backlog.mod.ModBacklog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,7 +51,7 @@ public class BacklogRenewService {
             p -> {
                 p.schemeName(backlog.boundTaskScheme());
             },
-            "mod-backlog:meta"
+            BacklogRenewOperationScheme.NAME
         );
     }
 

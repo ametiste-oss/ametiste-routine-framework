@@ -67,11 +67,13 @@ public class DefaultTaskIssueService implements TaskIssueService {
 
         final TaskBuilder<T> builder = new TaskBuilder<T>(schemeRepository, creatorIdentifier)
                 .defineScheme(taskSchemeClass, paramsInstaller);
+        // TODO: used to build attributes, can I do it at builder? Where I have resolved scheme
+        final String schemeName = schemeRepository.findTaskScheme(taskSchemeClass).schemeName();
 
         return issueTask(
-                taskSchemeClass.getSimpleName(),
+                schemeName,
                 creatorIdentifier,
-                buildTask(builder, taskSchemeClass.getSimpleName(), creatorIdentifier)
+                buildTask(builder, schemeName, creatorIdentifier)
         );
     }
 

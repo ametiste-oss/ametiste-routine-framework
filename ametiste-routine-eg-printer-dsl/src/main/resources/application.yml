@@ -29,7 +29,7 @@ org:
 ### App Configuration
       eg:
         printer:
-          delayTime: 20
+          delayTime: 2000
           populationCount: 1
 server:
   port: 8081

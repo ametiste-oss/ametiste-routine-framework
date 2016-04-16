@@ -3,7 +3,7 @@ logging:
     org.ametiste: TRACE
     org.ametiste.metrics: ERROR
     # org.ametiste.routine.printer.backlog.PrintTaskPopulationStrategy: DEBUG
-    # org.ametiste.routine.mod.backlog.application.service.BacklogRenewService: DEBUG
+    org.ametiste.routine.mod.backlog.application.service.BacklogRenewService: DEBUG
     org.ametiste.routine.application.action.TaskTimeoutAction: DEBUG
     org.ametiste.routine.application.service.removing.DefaultTaskRemovingService: DEBUG
 
@@ -55,7 +55,7 @@ org:
 
       eg:
         printer:
-          delayTime: 2000
+          delayTime: 200000
           populationCount: 1
 
 server:
