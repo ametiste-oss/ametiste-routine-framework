@@ -2,6 +2,7 @@ package org.ametiste.routine.dsl.application;
 
 import org.ametiste.laplatform.protocol.ProtocolGateway;
 import org.ametiste.laplatform.sdk.protocol.Protocol;
+import org.ametiste.metrics.annotations.Timeable;
 import org.ametiste.routine.dsl.annotations.Connect;
 import org.ametiste.routine.meta.util.*;
 import org.ametiste.routine.sdk.operation.OperationFeedback;
@@ -32,7 +33,8 @@ public class DynamicOperationFactory {
     public DynamicOperation createDynamicOperation(final OperationFeedback operationFeedback,
                                                    final ProtocolGateway protocolGateway) {
 
-        // Вот это можно сделать один раз и сюда передавать уже данные о том, какие инжекты нужны будут
+        // TODO : In case of optimization these calculations of target fields and parameters may be
+        // extracted to the constructor, see dsl-cleanup branch for draft implementation
 
         final Object controllerInstance = createOperationControllerInstance();
         final MetaMethod metaMethod = MetaMethod.of(MetaObject.of(controllerInstance), method);

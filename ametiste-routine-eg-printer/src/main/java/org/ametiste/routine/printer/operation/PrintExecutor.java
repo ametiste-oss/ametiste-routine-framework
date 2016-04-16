@@ -23,19 +23,15 @@ public final class PrintExecutor implements OperationExecutor {
         final String operationOut = protocolGateway
                 .session(PrintOperationParams.class).operationOut();
 
-        final long effectiveDelay = new Random()
-                .longs(50, maxDelayTime).findAny().orElse(0);
-
-        feedback.operationNotice("Delay time is: " + effectiveDelay);
+//        final long effectiveDelay = new Random()
+//                .longs(50, maxDelayTime).findAny().orElse(0);
+//
+//        feedback.operationNotice("Delay time is: " + effectiveDelay);
 
         try {
-            Thread.sleep(effectiveDelay);
+            Thread.sleep(maxDelayTime);
         } catch (InterruptedException e) {
             e.printStackTrace();
-        }
-
-        if (logger.isTraceEnabled()) {
-            logger.trace("Operation out is: " + operationOut);
         }
 
     }

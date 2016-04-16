@@ -37,15 +37,5 @@ public class PrintTaskScheme extends AbstractTaskScheme<PrintTaskSchemeParams> {
                 params.delayTime(schemeParams.delayTime());
             }
         );
-        task.addOperation(PrintOperationScheme.class, params -> {
-                params.printOut(schemeParams.taskMessage()+"::operation-2");
-                params.delayTime(schemeParams.delayTime());
-            }
-        );
-        task.addOperation(PrintOperationScheme.class, params -> {
-                params.printOut(schemeParams.taskMessage()+"::operation-3");
-                params.delayTime(schemeParams.delayTime());
-            }
-        );
     }
 }

@@ -16,6 +16,7 @@ import org.ametiste.routine.sdk.mod.ModGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.util.ReflectionUtils;
 
@@ -27,8 +28,19 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
+ * Configures dsl-based task schemas.
  *
- * @since
+ * <p>
+ *     In general, this configuration module is <i>Task DSL</i> core module, for the moment
+ *     of 1.1.
+ * </p>
+ *
+ * <p>
+ *     All initialization logis is under the {@link #modTaskSchemeDSL()} method,
+ *     so, note, atm there is no special place to hold it.
+ * </p>
+ *
+ * @since 1.1
  */
 @Configuration
 public class TaskSchemeDSLConfiguration {
@@ -105,7 +117,7 @@ public class TaskSchemeDSLConfiguration {
                                 "Please define unique operations order explicitly.");
                     }
                 })
-                .map(m -> Pair.of(resolveOperationName(m), new DynamicOperationFactory(controllerClass, m, paramProviders)))
+                .map(m -> Pair.of(resolveOperationName(m), dynamicOperationFactory(controllerClass, m)))
                 .map(p -> new DynamicOperationScheme(p.first(), p.second()))
                 .collect(Collectors.toList());
 
@@ -130,6 +142,10 @@ public class TaskSchemeDSLConfiguration {
                 );
             }
         };
+    }
+
+    private DynamicOperationFactory dynamicOperationFactory(final Class<?> controllerClass, final Method m) {
+        return new DynamicOperationFactory(controllerClass, m, paramProviders);
     }
 
     private String resolveOperationName(final Method m) {
