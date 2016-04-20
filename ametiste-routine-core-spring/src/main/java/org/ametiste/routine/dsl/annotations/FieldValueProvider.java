@@ -1,13 +1,13 @@
 package org.ametiste.routine.dsl.annotations;
 
-import org.ametiste.routine.dsl.application.RuntimeElementValueProvider;
+import org.ametiste.dynamics.DynamicValueProvider;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.lang.annotation.*;
 
 /**
- * Marks {@link RuntimeElementValueProvider} that used to provide field values.
+ * Marks {@link DynamicValueProvider} that used to provide field values.
  *
  * <p>
  *     This is {@link Qualifier} annotation, it is used to depict concrete provider types

@@ -3,12 +3,14 @@ package org.ametiste.routine.dsl.configuration.task.params;
 import org.ametiste.laplatform.protocol.ProtocolGateway;
 import org.ametiste.routine.dsl.annotations.OperationId;
 import org.ametiste.routine.dsl.annotations.ParamValueProvider;
-import org.ametiste.routine.dsl.application.AnnotatedElementValueProvider;
-import org.ametiste.routine.dsl.application.RuntimeElement;
+import org.ametiste.dynamics.foundation.AnnotatedElementValueProvider;
+import org.ametiste.dynamics.SurfaceElement;
 import org.ametiste.routine.sdk.protocol.operation.OperationMetaProtocol;
 import org.springframework.stereotype.Component;
 
 import java.util.UUID;
+
+import static org.ametiste.dynamics.foundation.structure.FoundationSurfaceStructure.referenceTo;
 
 /**
  * <p>
@@ -31,22 +33,22 @@ import java.util.UUID;
  */
 @Component
 @ParamValueProvider
-class OperationIdProvider extends AnnotatedElementValueProvider {
+class OperationIdProvider extends AnnotatedElementValueProvider<ProtocolGateway> {
 
     public OperationIdProvider() {
         super(OperationId.class);
     }
 
     @Override
-    protected Object resolveValue(final RuntimeElement element,
+    protected Object resolveValue(final SurfaceElement element,
                                   final ProtocolGateway protocolGateway) {
 
         final Object value;
         final UUID operationId = protocolGateway.session(OperationMetaProtocol.class).operationId();
 
-        if (element.mayHaveValueOf(UUID.class)) {
+        if (element.hasStructureOf(referenceTo(UUID.class))) {
             value = operationId;
-        } else if (element.mayHaveValueOf(String.class)) {
+        } else if (element.hasStructureOf(referenceTo(String.class))) {
             value = operationId.toString();
         } else {
             throw new IllegalStateException("@OperationId element must have valueType of java.util.UUID or java.lang.String.");

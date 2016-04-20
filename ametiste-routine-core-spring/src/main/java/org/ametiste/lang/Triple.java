@@ -1,5 +1,8 @@
 package org.ametiste.lang;
 
+import java.util.function.BiFunction;
+import java.util.function.Function;
+
 public class Triple<F, S, T> {
 
     public final F first;
@@ -12,12 +15,32 @@ public class Triple<F, S, T> {
         this.third = third;
     }
 
-    public static final <F, S, T> Let<Triple<F, S, T>> let(F first, S second, T third) {
-        return c -> c.accept(of(first, second, third));
+    public final <R> R map(final Function<Triple<F,S,T>, R> transform) {
+        return transform.apply(this);
     }
 
-    public static final <F, S, T> Triple<F, S, T> of(F first, S second, T third) {
-        return new Triple<>(first, second, third);
+    public final <R> R mapFirstSecond(final BiFunction<F, S, R> transform) {
+        return transform.apply(first, second);
+    }
+
+    public final <R> R mapFirstThird(final BiFunction<F, T, R> transform) {
+        return transform.apply(first, third);
+    }
+
+    public final <R> R mapSecondThird(final BiFunction<S, T, R> transform) {
+        return transform.apply(second, third);
+    }
+
+    public final <R> R mapSecondFirst(final BiFunction<S, F, R> transform) {
+        return transform.apply(second, first);
+    }
+
+    public final <R> R mapThirdFirst(final BiFunction<T, F, R> transform) {
+        return transform.apply(third, first);
+    }
+
+    public final <R> R mapThirdSecond(final BiFunction<T, S, R> transform) {
+        return transform.apply(third, second);
     }
 
     public F first() {
@@ -29,5 +52,13 @@ public class Triple<F, S, T> {
     }
 
     public T third() { return third; }
+
+    public static final <F, S, T> Let<Triple<F, S, T>> let(F first, S second, T third) {
+        return c -> c.accept(of(first, second, third));
+    }
+
+    public static final <F, S, T> Triple<F, S, T> of(F first, S second, T third) {
+        return new Triple<>(first, second, third);
+    }
 
 }

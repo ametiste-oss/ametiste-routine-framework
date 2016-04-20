@@ -3,10 +3,12 @@ package org.ametiste.routine.dsl.configuration.task.params;
 import org.ametiste.laplatform.protocol.ProtocolGateway;
 import org.ametiste.routine.dsl.annotations.OperationName;
 import org.ametiste.routine.dsl.annotations.ParamValueProvider;
-import org.ametiste.routine.dsl.application.AnnotatedElementValueProvider;
-import org.ametiste.routine.dsl.application.RuntimeElement;
+import org.ametiste.dynamics.foundation.AnnotatedElementValueProvider;
+import org.ametiste.dynamics.SurfaceElement;
 import org.ametiste.routine.sdk.protocol.operation.OperationMetaProtocol;
 import org.springframework.stereotype.Component;
+
+import static org.ametiste.dynamics.foundation.structure.FoundationSurfaceStructure.referenceTo;
 
 /**
  * <p>
@@ -28,17 +30,17 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @ParamValueProvider
-class OperationNameProvider extends AnnotatedElementValueProvider {
+class OperationNameProvider extends AnnotatedElementValueProvider<ProtocolGateway> {
 
     public OperationNameProvider() {
         super(OperationName.class);
     }
 
     @Override
-    protected Object resolveValue(final RuntimeElement element,
+    protected Object resolveValue(final SurfaceElement element,
                                   final ProtocolGateway protocolGateway) {
 
-        if (element.mayHaveValueOf(String.class)) {
+        if (element.hasStructureOf(referenceTo(String.class))) {
             return protocolGateway.session(OperationMetaProtocol.class).operationName();
         } else {
             throw new IllegalStateException("@TaskName element must have valueType of java.lang.String.");

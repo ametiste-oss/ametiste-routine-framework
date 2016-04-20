@@ -1,11 +1,12 @@
 package org.ametiste.routine.dsl.configuration.task.fields;
 
+import org.ametiste.dynamics.foundation.feature.ReferenceFeature;
 import org.ametiste.laplatform.protocol.ProtocolGateway;
 import org.ametiste.laplatform.sdk.protocol.Protocol;
 import org.ametiste.routine.dsl.annotations.Connect;
 import org.ametiste.routine.dsl.annotations.FieldValueProvider;
-import org.ametiste.routine.dsl.application.AnnotatedElementValueProvider;
-import org.ametiste.routine.dsl.application.RuntimeElement;
+import org.ametiste.dynamics.foundation.AnnotatedElementValueProvider;
+import org.ametiste.dynamics.SurfaceElement;
 
 /**
  * <p>
@@ -29,18 +30,18 @@ import org.ametiste.routine.dsl.application.RuntimeElement;
  */
 // TODO: I want to extract this provider to the ame-la-platform
 @FieldValueProvider
-class ConnectProtocolProvider extends AnnotatedElementValueProvider {
+class ConnectProtocolProvider extends AnnotatedElementValueProvider<ProtocolGateway> {
 
     public ConnectProtocolProvider() {
         super(Connect.class);
     }
 
     @Override
-    protected Object resolveValue(final RuntimeElement element,
+    protected Object resolveValue(final SurfaceElement element,
                                   final ProtocolGateway protocolGateway) {
         // TODO: add IllegalStateException specified by the class javadoc
         // TODO: add exception to protocol gateway, if @Connect does not point on LambdaProtocol element
-        return protocolGateway.session((Class<? extends Protocol>) element.valueType());
+        return protocolGateway.session(element.mapFeature(ReferenceFeature::type, ReferenceFeature.class));
     }
 
 }

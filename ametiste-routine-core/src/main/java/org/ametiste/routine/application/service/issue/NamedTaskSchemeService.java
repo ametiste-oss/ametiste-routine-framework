@@ -1,4 +1,4 @@
-package org.ametiste.routine.dsl.application;
+package org.ametiste.routine.application.service.issue;
 
 import org.ametiste.routine.application.CoreEventsGateway;
 import org.ametiste.routine.application.TaskDomainEvenetsGateway;
@@ -16,26 +16,24 @@ import java.util.UUID;
 
 /**
  *
- * @since
+ * @since 1.1.
  */
-public class DynamicTaskService {
+// TODO: нужно имя получше, это сервис который работает не
+// с формальными описаниями схем, а с их "свободными" описаниями
+public class NamedTaskSchemeService {
 
     private SchemeRepository schemeRepository;
 
     private TaskIssueService taskIssueService;
 
-    public DynamicTaskService(final SchemeRepository schemeRepository, final TaskIssueService taskIssueService) {
+    public NamedTaskSchemeService(final SchemeRepository schemeRepository, final TaskIssueService taskIssueService) {
         this.schemeRepository = schemeRepository;
         this.taskIssueService = taskIssueService;
     }
 
     public UUID issueTask(final String taskSchemeName, final Map<String, String> params, final String creatorIdentifier) {
-
-        final TaskScheme taskScheme = schemeRepository
-                .findTaskScheme(taskSchemeName);
-
+        final TaskScheme taskScheme = schemeRepository.findTaskScheme(taskSchemeName);
         return taskIssueService.issueTask(taskScheme, p -> p.fromMap(params), creatorIdentifier);
-
     }
 
 }

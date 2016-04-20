@@ -1,11 +1,12 @@
-package org.ametiste.routine.dsl.application;
+package org.ametiste.dynamics.foundation;
 
-import org.ametiste.laplatform.protocol.ProtocolGateway;
+import org.ametiste.dynamics.SurfaceElement;
+import org.ametiste.dynamics.DynamicValueProvider;
 
 import java.lang.annotation.Annotation;
 import java.util.Optional;
 
-public abstract class AnnotatedElementValueProvider implements RuntimeElementValueProvider {
+public abstract class AnnotatedElementValueProvider<C> implements DynamicValueProvider<C> {
 
     private final Class<? extends Annotation> annotation;
 
@@ -14,8 +15,8 @@ public abstract class AnnotatedElementValueProvider implements RuntimeElementVal
     }
 
     @Override
-    public final Optional<Object> provideValue(final RuntimeElement element,
-                                               final ProtocolGateway protocolGateway) {
+    public final Optional<Object> provideValue(final SurfaceElement element,
+                                               final C protocolGateway) {
 
         final Object value;
 
@@ -28,10 +29,10 @@ public abstract class AnnotatedElementValueProvider implements RuntimeElementVal
         return Optional.ofNullable(value);
     }
 
-    private boolean match(final RuntimeElement element) {
+    private boolean match(final SurfaceElement element) {
         return element.isAnnotatedBy(annotation);
     }
 
-    abstract protected Object resolveValue(final RuntimeElement element, final ProtocolGateway protocolGateway);
+    abstract protected Object resolveValue(final SurfaceElement element, final C protocolGateway);
 
 }

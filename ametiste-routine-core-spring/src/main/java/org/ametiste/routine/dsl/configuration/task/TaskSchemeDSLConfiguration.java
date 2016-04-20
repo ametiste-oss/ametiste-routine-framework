@@ -1,28 +1,31 @@
 package org.ametiste.routine.dsl.configuration.task;
 
+import org.ametiste.dynamics.DynamicValueProvider;
+import org.ametiste.dynamics.Surface;
+import org.ametiste.dynamics.foundation.BaseSurface;
 import org.ametiste.lang.Pair;
+import org.ametiste.laplatform.protocol.ProtocolGateway;
+import org.ametiste.routine.application.service.issue.NamedTaskSchemeService;
 import org.ametiste.routine.application.service.issue.TaskIssueService;
 import org.ametiste.routine.domain.scheme.SchemeRepository;
-import org.ametiste.routine.domain.scheme.TaskBuilder;
 import org.ametiste.routine.domain.scheme.TaskScheme;
-import org.ametiste.routine.domain.scheme.TaskSchemeException;
 import org.ametiste.routine.dsl.annotations.*;
 import org.ametiste.routine.dsl.application.*;
-import org.ametiste.routine.dsl.infrastructure.protocol.DirectDynamicParamsProtocol;
 import org.ametiste.routine.dsl.infrastructure.protocol.DynamicParamsProtocolRuntime;
 import org.ametiste.routine.sdk.mod.ModGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+
+import static org.ametiste.routine.dsl.application.RoutineTaskDSLStructures.*;
+import static org.ametiste.routine.dsl.application.RoutineTaskDSLSurface.routineTask;
 
 /**
  * Configures dsl-based task schemas.
@@ -57,11 +60,11 @@ public class TaskSchemeDSLConfiguration {
 
     @Autowired
     @ParamValueProvider
-    private List<RuntimeElementValueProvider> paramProviders;
+    private List<DynamicValueProvider<ProtocolGateway>> paramProviders;
 
     @Autowired
     @FieldValueProvider
-    private List<RuntimeElementValueProvider> fieldProviders;
+    private List<DynamicValueProvider<ProtocolGateway>> fieldProviders;
 
     @Bean
     public DynamicParamsProtocolRuntime dynamicParamsProtocolRuntimeFactory() {
@@ -69,8 +72,8 @@ public class TaskSchemeDSLConfiguration {
     }
 
     @Bean
-    public DynamicTaskService dynamicTaskService() {
-        return new DynamicTaskService(schemeRepository, taskIssueService);
+    public NamedTaskSchemeService dynamicTaskService() {
+        return new NamedTaskSchemeService(schemeRepository, taskIssueService);
     }
 
     @Bean
@@ -94,6 +97,58 @@ public class TaskSchemeDSLConfiguration {
 
     private TaskScheme mapToTaskScheme(Class<?> controllerClass) {
 
+        BaseSurface<Void, RuntimeSurface> runtimeSurface = new BaseSurface(
+                RoutineTaskDSLStructures.RuntimeSurface::new
+        );
+
+//
+// Вариант depicyStructure(Function<S, T>, Consumer<T>), не очень канонично,
+// но решает проблему множества поверхностей, вообще нужно понять, как быть с "расщепленной" поверхностью
+// Возможно класс описывающий поверхность, типа RoutineDSLSurface, наряду с предикатом может еще и возвращать
+// конкретный тип Surface который нужно использовать, тогда можно попробовать изъебнутся и реально ввести
+// расщепление.
+//
+// Но в начале нужно подумать, как с этим быть в теории. В теории, кажется, это просто еще одна поверхность.
+//
+//        runtimeSurface.depictSurface(ClassPoolSurface::new, pool ->
+//            pool.depictSurface(RoutineDSLSurface::new, dsl ->
+//                dsl.depictSurface(RoutineTaskSurface::new, task ->
+//                    task.depictSurface(RoutineOperationSurface::new, opSurface ->
+//                        opSurface.feature(
+//                                op -> createDynamicOperationScheme(op.type(), op.name(), op.method())
+//                        )
+//                    )
+//                )
+//            )
+//        );
+
+        runtimeSurface.depictSurface(ClassPoolSurface::new).ifPresent(pool ->
+            pool.depictSurface(RoutineDSLSurface::new).ifPresent(dsl ->
+                dsl.depictSurface(RoutineTaskSurface::new).ifPresent(task ->
+                    task.depictSurface(RoutineOperationSurface::new).ifPresent(
+                        opSurface -> opSurface.feature(
+                            op -> createDynamicOperationScheme(op.type(), op.name(), op.method())
+                        )
+                    )
+                )
+            )
+        );
+
+        runtimeSurface.depictFeatures(ClassPoolSurface::new).ifPresent(pool ->
+            pool.peekClass(
+                that -> that.hasAnnotations(RoutineTask.class, SchemeMapping.class),
+                RoutineTaskSurface::new,
+                (klass, task) -> {
+                    task.operations(op -> createDynamicOperationScheme(klass.type(), op.name(), op.method()));
+                }
+            )
+        );
+
+        // TODO: думаю в такой метод можно будет упаковать весь трейс от RuntimeSurface
+        RoutineDSLSurface.enclosedBy(runtimeSurface).peekTasks(t ->
+            t.peekOperation(o -> createDynamicOperationScheme(controllerClass, t.name(), o.method()))
+        );
+
         if (!controllerClass.isAnnotationPresent(RoutineTask.class)) {
             throw new IllegalArgumentException("Only @RoutineTask classes are allowed.");
         }
@@ -102,8 +157,7 @@ public class TaskSchemeDSLConfiguration {
                 .getDeclaredAnnotation(SchemeMapping.class)
                 .schemeName();
 
-        final List<DynamicOperationScheme> operations = Stream
-                .of(ReflectionUtils.getAllDeclaredMethods(controllerClass))
+        final List<DynamicOperationScheme> operations = Stream.of(controllerClass.getDeclaredMethods())
                 .filter(m -> m.isAnnotationPresent(TaskOperation.class))
                 // NOTE: operations order support, just sort list of schemas in a defined order
                 .sorted((t, o)  -> {
@@ -119,35 +173,18 @@ public class TaskSchemeDSLConfiguration {
                                 "Please define unique operations order explicitly.");
                     }
                 })
-                .map(m -> Pair.of(resolveOperationName(m), dynamicOperationFactory(controllerClass, m)))
-                .map(p -> new DynamicOperationScheme(p.first(), p.second()))
+                .map(m -> Pair.of(m, resolveOperationName(m)))
+                .map(p -> createDynamicOperationScheme(controllerClass, p.second, p.first))
                 .collect(Collectors.toList());
 
         operations.forEach(schemeRepository::saveScheme);
 
-        return new TaskScheme<DynamicParamsProtocol>() {
-
-            @Override
-            public String schemeName() {
-                return schemeName;
-            }
-
-            @Override
-            public void setupTask(final TaskBuilder<DynamicParamsProtocol> taskBuilder, final Consumer<DynamicParamsProtocol> paramsInstaller, final String creatorIdenifier) throws TaskSchemeException {
-
-                final DynamicParamsProtocol dynamicParamsProtocol = new DirectDynamicParamsProtocol();
-                paramsInstaller.accept(dynamicParamsProtocol);
-
-                // NOTE: operations are sorted in defined order, so just adding em one after one
-                operations.forEach(
-                    op -> taskBuilder.addOperation(op.schemeName(), dynamicParamsProtocol)
-                );
-            }
-        };
+        return new DynamicTaskScheme(schemeName, operations);
     }
 
-    private DynamicOperationFactory dynamicOperationFactory(final Class<?> controllerClass, final Method m) {
-        return new DynamicOperationFactory(controllerClass, m, paramProviders, fieldProviders);
+    private DynamicOperationScheme createDynamicOperationScheme(final Class<?> controllerClass, String schemeName, Method schemeMethod) {
+        return new DynamicOperationScheme(schemeName,
+                controllerClass, schemeMethod, fieldProviders, paramProviders);
     }
 
     private String resolveOperationName(final Method m) {

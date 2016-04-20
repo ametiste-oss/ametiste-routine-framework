@@ -40,7 +40,7 @@ public class MetaMethod {
     public void invoke(Object... args) {
 
         if (metaObject == null) {
-            throw new IllegalStateException("Can't use invoke() method on method with nullable meta-object.");
+            throw new IllegalStateException("Can't use prepareInvoke() method on method with nullable meta-object.");
         }
 
         try {

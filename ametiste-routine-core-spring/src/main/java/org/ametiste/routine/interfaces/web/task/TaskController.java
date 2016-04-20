@@ -1,7 +1,7 @@
 package org.ametiste.routine.interfaces.web.task;
 
 import org.ametiste.routine.domain.scheme.SchemeRepository;
-import org.ametiste.routine.dsl.application.DynamicTaskService;
+import org.ametiste.routine.application.service.issue.NamedTaskSchemeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,7 +16,7 @@ import java.util.List;
 public class TaskController {
 
     @Autowired
-    private DynamicTaskService taskIssueService;
+    private NamedTaskSchemeService taskIssueService;
 
     @Autowired
     private SchemeRepository schemeRepository;

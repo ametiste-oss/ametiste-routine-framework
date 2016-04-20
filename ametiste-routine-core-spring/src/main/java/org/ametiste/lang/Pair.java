@@ -1,6 +1,10 @@
 package org.ametiste.lang;
 
-public class Pair<F, S> {
+import java.util.Map;
+import java.util.function.Consumer;
+import java.util.function.Function;
+
+public class Pair<F, S> implements Let<Pair<F, S>>, Transformable<Pair<F, S>> {
 
     public final F first;
     public final S second;
@@ -21,4 +25,23 @@ public class Pair<F, S> {
     public S second() {
         return second;
     }
+
+    public void asMapEntryFirstKey(final Map<F, S> map) {
+        map.put(first, second);
+    }
+
+    public void asMapEntrySecondKey(final Map<S, F> map) {
+        map.put(second, first);
+    }
+
+    @Override
+    public void let(final Consumer<Pair<F, S>> block) {
+        block.accept(this);
+    }
+
+    @Override
+    public <R> R map(final Function<Pair<F, S>, R> transformation) {
+        return transformation.apply(this);
+    }
+
 }

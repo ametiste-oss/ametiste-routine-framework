@@ -1,11 +1,12 @@
 package org.ametiste.routine.dsl.configuration.task.params;
 
+import org.ametiste.dynamics.foundation.feature.ReferenceFeature;
 import org.ametiste.laplatform.protocol.ProtocolGateway;
 import org.ametiste.routine.dsl.annotations.OperationParameter;
 import org.ametiste.routine.dsl.annotations.ParamValueProvider;
-import org.ametiste.routine.dsl.application.AnnotatedElementValueProvider;
+import org.ametiste.dynamics.foundation.AnnotatedElementValueProvider;
 import org.ametiste.routine.dsl.application.DynamicParamsProtocol;
-import org.ametiste.routine.dsl.application.RuntimeElement;
+import org.ametiste.dynamics.SurfaceElement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
@@ -25,7 +26,7 @@ import org.springframework.stereotype.Component;
  */
 @Component
 @ParamValueProvider
-class OperationParameterProvider extends AnnotatedElementValueProvider {
+class OperationParameterProvider extends AnnotatedElementValueProvider<ProtocolGateway> {
 
     private final ConversionService conversionService;
 
@@ -36,14 +37,16 @@ class OperationParameterProvider extends AnnotatedElementValueProvider {
     }
 
     @Override
-    protected Object resolveValue(final RuntimeElement element,
+    protected Object resolveValue(final SurfaceElement element,
                                   final ProtocolGateway protocolGateway) {
 
         // NOTE: this internal method invoked only if the given annotation is exists on the element
         Object value = protocolGateway.session(DynamicParamsProtocol.class)
                 .param(element.annotationValue(OperationParameter.class, OperationParameter::value));
 
-        return conversionService.convert(value, element.valueType());
+        return conversionService.convert(value,
+                element.mapFeature(ReferenceFeature::type, ReferenceFeature.class)
+        );
     }
 
 }

@@ -4,7 +4,7 @@ import org.ametiste.laplatform.protocol.ProtocolGateway;
 import org.ametiste.laplatform.sdk.protocol.Protocol;
 import org.ametiste.routine.dsl.annotations.Connect;
 import org.ametiste.routine.dsl.annotations.SchemeMapping;
-import org.ametiste.routine.dsl.application.DynamicTaskService;
+import org.ametiste.routine.application.service.issue.NamedTaskSchemeService;
 import org.ametiste.routine.meta.scheme.ParamValueConverter;
 import org.ametiste.routine.meta.scheme.TaskMetaScheme;
 import org.ametiste.routine.meta.util.MetaMethod;
@@ -49,7 +49,7 @@ public class BacklogDSLConfiguration {
     private BacklogPopulationStrategiesRegistry populationStrategiesRegistry;
 
     @Autowired
-    private DynamicTaskService dynamicTaskService;
+    private NamedTaskSchemeService namedTaskSchemeService;
 
     @Autowired
     private ConversionService conversionService;
@@ -138,7 +138,7 @@ public class BacklogDSLConfiguration {
                     // campatibility accross the non-dsl backlogs
                     // I want to have some other way to identify creators, but is not there atm, I guess
                     // it would be done after mods framework introduction
-                    dynamicTaskService.issueTask(scheme.name(), call.params(), BacklogRenewOperationScheme.NAME)
+                    namedTaskSchemeService.issueTask(scheme.name(), call.params(), BacklogRenewOperationScheme.NAME)
                 )
             );
         };

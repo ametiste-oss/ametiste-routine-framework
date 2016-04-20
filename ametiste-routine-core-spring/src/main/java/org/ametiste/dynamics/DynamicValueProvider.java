@@ -1,16 +1,15 @@
-package org.ametiste.routine.dsl.application;
+package org.ametiste.dynamics;
 
-import org.ametiste.laplatform.protocol.ProtocolGateway;
 import org.ametiste.routine.dsl.annotations.OperationParameter;
 
 import java.util.Optional;
 
 /**
  *
- * Provides some value based on a target {@link RuntimeElement} description.
+ * Provides some value based on a target {@link SurfaceElement} description.
  *
  * <p>
- *     {@link RuntimeElement} is an abstraction that used to define "runtime elements" - any part
+ *     {@link SurfaceElement} is an abstraction that used to define "runtime elements" - any part
  *     of operational.
  *
  * <p>
@@ -18,12 +17,13 @@ import java.util.Optional;
  *     example, {@link org.ametiste.routine.dsl.configuration.task.params.OperationParameterProvider} implements
  *     parameters resolving using {@link OperationParameter} parameter annotation.
  *
- * @see RuntimeElement
+ * @param <C> defines type of context that required by the provier implementation
+ * @see SurfaceElement
  * @see org.ametiste.routine.dsl.configuration.task.params.OperationParameterProvider
  * @since 1.1
  */
-public interface RuntimeElementValueProvider {
+public interface DynamicValueProvider<C> {
 
-    Optional<Object> provideValue(RuntimeElement element, ProtocolGateway protocolGateway);
+    Optional<Object> provideValue(SurfaceElement element, C protocolGateway);
     
 }

@@ -2,10 +2,11 @@ logging:
   level:
     org.ametiste: TRACE
     org.ametiste.metrics: ERROR
+    org.ametiste.routine.infrastructure.execution.local.LocalLineExecutionGateway: DEBUG
     # org.ametiste.routine.printer.backlog.PrintTaskPopulationStrategy: DEBUG
-    org.ametiste.routine.mod.backlog.application.service.BacklogRenewService: DEBUG
-    org.ametiste.routine.application.action.TaskTimeoutAction: DEBUG
-    org.ametiste.routine.application.service.removing.DefaultTaskRemovingService: DEBUG
+    #org.ametiste.routine.mod.backlog.application.service.BacklogRenewService: DEBUG
+    #org.ametiste.routine.application.action.TaskTimeoutAction: DEBUG
+    #org.ametiste.routine.application.service.removing.DefaultTaskRemovingService: DEBUG
 org:
   ametiste:
     routine:
