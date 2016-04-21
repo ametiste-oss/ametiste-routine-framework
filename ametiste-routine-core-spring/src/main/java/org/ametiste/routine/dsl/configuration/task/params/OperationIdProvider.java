@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.UUID;
 
-import static org.ametiste.dynamics.foundation.structure.FoundationSurfaceStructure.referenceTo;
+import static org.ametiste.dynamics.foundation.structure.ReflectFoundation.referenceTo;
 
 /**
  * <p>

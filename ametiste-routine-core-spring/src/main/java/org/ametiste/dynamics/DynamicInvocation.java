@@ -25,7 +25,8 @@ public class DynamicInvocation<T, C> {
     }
 
     public Runnable asRunnable(C context) {
-        return prepareInvokePair(context).map(this::runnableInvoke);
+        return prepareInvokePair(context).map(this::runnableInvoke)
+                .orElseThrow(() -> new RuntimeException("Can't prepare invocation in the given context."));
     }
 
     public void invoke(C context) {

@@ -6,11 +6,12 @@ import org.ametiste.dynamics.Surface;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class GeneralDelegate implements Surface {
+public class GeneralDelegate {
 
     private final String name;
     private final Map<Class<?>, Object> features;
@@ -29,20 +30,18 @@ public class GeneralDelegate implements Surface {
         );
     }
 
-    public <T> T mapName(final Function<String, T> transform) {
-        return transform.apply(name);
+    public <T> Optional<T> mapName(final Function<String, T> transform) {
+        return Optional.ofNullable(transform.apply(name));
     }
 
-    public boolean actsLike(final DynamicSurfaceStructure dynamicSurfaceStructure) {
-        return dynamicSurfaceStructure.test(this);
+//    public boolean actsLike(final DynamicSurfaceStructure dynamicSurfaceStructure) {
+//        return dynamicSurfaceStructure.test(this);
+//    }
+
+    public <F, T> Optional<T> map(final Function<F, T> transformFeature, final Class<F> feature) {
+        return Optional.ofNullable(transformFeature.apply(feature.cast(features.get(feature))));
     }
 
-    @Override
-    public <F, T> T map(final Function<F, T> transformFeature, final Class<F> feature) {
-        return transformFeature.apply(feature.cast(features.get(feature)));
-    }
-
-    @Override
     public <F> boolean satisfiedBy(final Predicate<F> predicate, final Class<F> feature) {
         return predicate.test(feature.cast(features.get(feature)));
     }

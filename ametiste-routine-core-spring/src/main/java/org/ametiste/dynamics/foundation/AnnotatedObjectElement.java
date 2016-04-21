@@ -5,6 +5,7 @@ import org.ametiste.dynamics.DynamicSurfaceStructure;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
+import java.util.Optional;
 import java.util.function.Function;
 
 public abstract class AnnotatedObjectElement<T extends AnnotatedElement>
@@ -30,7 +31,7 @@ public abstract class AnnotatedObjectElement<T extends AnnotatedElement>
     }
 
     @Override
-    public <T> T mapName(final Function<String, T> transform) {
+    public <T> Optional<T> mapName(final Function<String, T> transform) {
         return delegate.mapName(transform);
     }
 
@@ -40,7 +41,7 @@ public abstract class AnnotatedObjectElement<T extends AnnotatedElement>
     }
 
     @Override
-    public <F, T> T mapFeature(final Function<F, T> transform, final Class<F> feature) {
+    public <F, T> Optional<T> mapFeature(final Function<F, T> transform, final Class<F> feature) {
         return delegate.map(transform, feature);
     }
 

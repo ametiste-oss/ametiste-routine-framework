@@ -1,6 +1,7 @@
 package org.ametiste.lang;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -40,8 +41,8 @@ public class Pair<F, S> implements Let<Pair<F, S>>, Transformable<Pair<F, S>> {
     }
 
     @Override
-    public <R> R map(final Function<Pair<F, S>, R> transformation) {
-        return transformation.apply(this);
+    public <R> Optional<R> map(final Function<Pair<F, S>, R> transformation) {
+        return Optional.ofNullable(transformation.apply(this));
     }
 
 }

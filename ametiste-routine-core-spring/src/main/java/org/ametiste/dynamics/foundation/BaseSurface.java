@@ -10,7 +10,7 @@ import java.util.function.Supplier;
 
 /**
  *
- * @since
+ * @since 1.0
  */
 public class BaseSurface<E, S> implements Surface<E, S> {
 
@@ -30,18 +30,33 @@ public class BaseSurface<E, S> implements Surface<E, S> {
         this(enclosingSurface, null);
     }
 
-    public <F> boolean satisfiedBy(final Predicate<F> predicate, final Class<F> feature) {
-        return false;
+    public boolean satisfiedBy(final Predicate<S> predicate) {
+        return predicate.test(subSurface);
     }
 
     @Override
-    public <T, D extends Surface<S, T>> Optional<D> depictSurface(final Function<S, T> structure) {
-        return null;
+    public <T> Surface<S, T> depictSurface(final Function<S, T> structure) {
+        return Surface.asStructureOn(structure, subSurface);
+    }
+
+    @Override
+    public <T> void depictSurface(final Function<S, T> structure, final Consumer<Surface<S, T>> depicted) {
+        depicted.accept(depictSurface(structure));
+    }
+
+    @Override
+    public <T> T depictFeatures(final Function<S, T> structure) {
+        return structure.apply(subSurface);
+    }
+
+    @Override
+    public <T> void depictFeatures(final Function<S, T> structure, final Consumer<T> features) {
+        features.accept(depictFeatures(structure));
     }
 
     @Override
     public void feature(final Consumer<S> feature) {
-
+        feature.accept(subSurface);
     }
 
 }

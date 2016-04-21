@@ -19,6 +19,6 @@ public interface Transformable<T> {
      * @param <R> result type of transformation
      * @return result of transformation, can't be null.
      */
-    <R> Optional<R> map(Function<T, R> transformation);
+    <R> R map(Function<T, R> transformation);
 
 }

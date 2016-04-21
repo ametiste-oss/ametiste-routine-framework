@@ -8,7 +8,7 @@ import org.ametiste.dynamics.SurfaceElement;
 import org.ametiste.routine.sdk.protocol.operation.OperationMetaProtocol;
 import org.springframework.stereotype.Component;
 
-import static org.ametiste.dynamics.foundation.structure.FoundationSurfaceStructure.referenceTo;
+import static org.ametiste.dynamics.foundation.structure.ReflectFoundation.referenceTo;
 
 /**
  * <p>
