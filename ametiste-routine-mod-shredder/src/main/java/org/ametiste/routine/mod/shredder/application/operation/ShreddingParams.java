@@ -16,9 +16,13 @@ public interface ShreddingParams extends ParamsProtocol {
 
     List<String> staleStates();
 
+    boolean disableSessionOptions();
+
     void staleStates(List<String> staleStates);
 
     void staleThresholdValue(int staleThresholdValue);
 
     void staleThresholdUnit(ChronoUnit staleThresholdUnit);
+
+    void disableSessionOptions(boolean disableStats);
 }

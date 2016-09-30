@@ -19,11 +19,15 @@ public class DirectShreddingParams implements ShreddingParams {
 
     public static final String PARAM_STALE_STATES = "mod-shredding.op.shredding.staleStates";
 
+    public static final String PARAM_DISABLE_SESSION_OPTIONS = "mod-shredding.op.shredding.disableSessionOptions";
+
     public static final List<String> DEFAULT_STALE_STATES = Collections.singletonList(Task.State.DONE.name());
 
     public static final int DEFAULT_STALE_THRESHOLD_VALUE = 12;
 
     public static final ChronoUnit DEFAULT_STALE_THRESHOLD_UNIT = ChronoUnit.HOURS;
+
+    public static final boolean DEFAULT_DISABLE_SESSION_OPTIONS = false;
 
     private final Map<String, String> properties = new HashMap<>();
 
@@ -43,6 +47,11 @@ public class DirectShreddingParams implements ShreddingParams {
     public List<String> staleStates() {
         return mayBe(PARAM_STALE_STATES, properties,
                 this::splitAsCSList, DEFAULT_STALE_STATES);
+    }
+
+    @Override
+    public boolean disableSessionOptions() {
+        return mayBe(PARAM_DISABLE_SESSION_OPTIONS, properties, Boolean::valueOf, DEFAULT_DISABLE_SESSION_OPTIONS);
     }
 
     @Override
@@ -85,6 +94,11 @@ public class DirectShreddingParams implements ShreddingParams {
     @Override
     public void staleThresholdUnit(final ChronoUnit staleThresholdUnit) {
         properties.put(PARAM_STALE_THRESHOLD_UNIT, staleThresholdUnit.name());
+    }
+
+    @Override
+    public void disableSessionOptions(final boolean disableSessionOptions) {
+        properties.put(PARAM_DISABLE_SESSION_OPTIONS, Boolean.toString(disableSessionOptions));
     }
 
     public static ShreddingParams createFromMap(Map<String, String> params) {

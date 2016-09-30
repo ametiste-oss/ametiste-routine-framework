@@ -33,8 +33,8 @@ public class ModShredderConfiguration {
         return new ShreddingTaskService(protocolGatewayService,
             props.getStaleStates(),
             props.getStaleThreshold().getValue(),
-            props.getStaleThreshold().getUnit()
-        );
+            props.getStaleThreshold().getUnit(),
+            props.isDisableSessionOptions());
     }
 
     @Bean
