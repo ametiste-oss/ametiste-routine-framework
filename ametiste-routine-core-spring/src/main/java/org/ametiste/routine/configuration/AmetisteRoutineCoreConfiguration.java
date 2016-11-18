@@ -3,6 +3,7 @@ package org.ametiste.routine.configuration;
 import org.ametiste.routine.RoutineCoreSpring;
 import org.ametiste.routine.application.TaskDomainEvenetsGateway;
 import org.ametiste.routine.application.service.issue.DefaultTaskIssueService;
+import org.ametiste.routine.application.service.issue.NamedTaskSchemeService;
 import org.ametiste.routine.application.service.issue.TaskIssueService;
 import org.ametiste.routine.application.service.removing.DefaultTaskRemovingService;
 import org.ametiste.routine.application.service.removing.TaskRemovingService;
@@ -90,6 +91,12 @@ public class AmetisteRoutineCoreConfiguration {
     public TaskIssueService taskIssueService() {
         return new DefaultTaskIssueService(taskRepository, taskPropertiesRegistry,
                 schemeRepository, domainEventsGateway(), springCoreEventsGateway(), issueConstraints);
+    }
+
+    @Bean
+    // TODO: I guess it's part of the core
+    public NamedTaskSchemeService dynamicTaskService() {
+        return new NamedTaskSchemeService(schemeRepository, taskIssueService());
     }
 
     @Bean

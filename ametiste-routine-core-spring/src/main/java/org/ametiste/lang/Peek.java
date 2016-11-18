@@ -3,8 +3,6 @@ package org.ametiste.lang;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-import static com.sun.tools.doclets.formats.html.markup.HtmlStyle.block;
-
 /**
  *
  * @since

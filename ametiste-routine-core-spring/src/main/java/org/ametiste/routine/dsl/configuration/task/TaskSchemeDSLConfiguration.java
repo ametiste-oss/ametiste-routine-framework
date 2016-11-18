@@ -1,35 +1,33 @@
 package org.ametiste.routine.dsl.configuration.task;
 
-import org.ametiste.dynamics.DynamicValueProvider;
 import org.ametiste.dynamics.Surface;
-import org.ametiste.lang.Pair;
-import org.ametiste.laplatform.protocol.ProtocolGateway;
-import org.ametiste.routine.application.service.issue.NamedTaskSchemeService;
-import org.ametiste.routine.application.service.issue.TaskIssueService;
+import org.ametiste.dynamics.foundation.elements.AnnotatedRefProcessor;
+import org.ametiste.dynamics.foundation.spring.SpringAppContextDynamicsRuntime;
 import org.ametiste.routine.domain.scheme.SchemeRepository;
-import org.ametiste.routine.domain.scheme.TaskScheme;
-import org.ametiste.routine.dsl.annotations.*;
+import org.ametiste.routine.dsl.annotations.FieldValueProvider;
+import org.ametiste.routine.dsl.annotations.ParamValueProvider;
 import org.ametiste.routine.dsl.application.DynamicOperationScheme;
 import org.ametiste.routine.dsl.application.DynamicTaskScheme;
+import org.ametiste.routine.dsl.domain.surface.RoutineDSLStructure;
 import org.ametiste.routine.dsl.infrastructure.protocol.DynamicParamsProtocolRuntime;
 import org.ametiste.routine.sdk.mod.ModGateway;
+import org.ametiste.routine.sdk.mod.ModInfoProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.convert.ConversionService;
 
-import java.lang.reflect.Method;
+import java.util.HashMap;
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.function.UnaryOperator;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.Map;
 
-import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
-import static org.ametiste.dynamics.foundation.structure.ReflectFoundation.*;
-import static org.ametiste.routine.dsl.application.RoutineTaskDSLStructures.RoutineDSLSurface;
+
+import org.ametiste.dynamics.foundation.reflection.structures.ClassPool;
+
+import static org.ametiste.lang.AmeCollections.entry;
+import static org.ametiste.lang.AmeCollections.readOnlyList;
+import static org.ametiste.lang.AmeCollections.readOnlyMap;
 
 /**
  * Configures dsl-based task schemas.
@@ -49,27 +47,18 @@ import static org.ametiste.routine.dsl.application.RoutineTaskDSLStructures.Rout
 @Configuration
 public class TaskSchemeDSLConfiguration {
 
-    @Autowired(required = false)
-    @RoutineTask
-    private List<Object> taskControllers = emptyList();
-
     @Autowired
     private SchemeRepository schemeRepository;
 
     @Autowired
-    private TaskIssueService taskIssueService;
-
-    @Autowired
-    private ConversionService conversionService;
-
-    @Autowired
     @ParamValueProvider
-    private List<DynamicValueProvider<ProtocolGateway>> paramProviders;
+    private List<AnnotatedRefProcessor> params;
 
     @Autowired
     @FieldValueProvider
-    private List<DynamicValueProvider<ProtocolGateway>> fieldProviders;
+    private List<AnnotatedRefProcessor> fields;
 
+    @Autowired
     private ApplicationContext applicationContext;
 
     @Bean
@@ -78,140 +67,63 @@ public class TaskSchemeDSLConfiguration {
     }
 
     @Bean
-    public NamedTaskSchemeService dynamicTaskService() {
-        return new NamedTaskSchemeService(schemeRepository, taskIssueService);
-    }
-
-    @Bean
     public ModGateway modTaskSchemeDSL() {
 
-        final List<TaskScheme> schemes = taskControllers.stream()
-                .map(Object::getClass)
-                .map(this::mapToTaskScheme)
-                .collect(toList());
+        final Map<String, String> opSchemas = new HashMap<>();
 
-        schemes.forEach(schemeRepository::saveScheme);
+        /*
 
-        return gw -> {
-            // TODO: how can I propagate artifact version?
-            gw.modInfo("dsl-task-scheme", "1.1",
-                schemes.stream().collect(Collectors.toMap(s -> s.schemeName(), s -> s.getClass().getName())),
-                emptyList()
-            );
-        };
-    }
+        Plnanar.surfaceOver(
+            DynamicsRuntime.definedBy(new SpringAppContextDynamicsRuntime(applicationContext))
+        ).forms(fields, params).
+        .depict(ClassPool::new, pool ->
 
-    public static class SpringAppContextPreSurface implements RuntimePreSurface {
+        )
 
-        private final ApplicationContext appContext;
+         */
 
-        public SpringAppContextPreSurface(final ApplicationContext appContext) {
-            this.appContext = appContext;
-        }
-
-        @Override
-        public void findClasses(final UnaryOperator<RuntimePattern> matcher, final Consumer<Class<?>> consumer) {
-            RuntimePattern.over(matcher).let((annotation, annotations) ->
-                appContext.getBeansWithAnnotation(annotation).values().stream()
-                    .filter(o -> Stream.of(annotations).allMatch(o.getClass()::isAnnotationPresent))
-                    .map(Object::getClass)
-                    .forEach(consumer)
-            );
-        }
-
-    }
-
-    private TaskScheme mapToTaskScheme(Class<?> controllerClass) {
-
-        Surface.byPreSurface(
-            RuntimePreSurface.definedBy(new SpringAppContextPreSurface(applicationContext))
-        ).depictSurface(ClassPoolSurface::new, pool ->
-            pool.depictFeatures(RoutineDSLSurface::new, dsl ->
-                dsl.tasks(task -> task.operations(
-                        op -> createDynamicOperationScheme(op.controller(), op.name(), op.method())
+        Surface.ofPreSurface(
+            new SpringAppContextDynamicsRuntime(applicationContext)
+        ).depict(ClassPool::new, pool ->
+            pool.map(e -> new RoutineDSLStructure(e, fields, params), dsl ->
+                dsl.tasks(task ->
+                    schemeRepository.saveScheme(
+                        new DynamicTaskScheme(
+                            task.name(),
+                            task.operations()
+                                .peek(op -> opSchemas.put(op.name(), op.actionName()))
+                                .map(DynamicOperationScheme::new)
+                                .peek(schemeRepository::saveScheme)
+                                .collect(toList())
+                        )
                     )
                 )
             )
         );
 
-/// TODO: могу ли я построить вот такое описание? Какие должны быть поверхности для этого?
-//        runtimeSurface.depictSurface(ClassPoolSurface::new).ifPresent(pool ->
-//            pool.depictSurface(RoutineDSLSurface::new).ifPresent(dsl ->
-//                dsl.depictSurface(RoutineTaskSurface::new).ifPresent(task ->
-//                    task.depictSurface(RoutineOperationSurface::new).ifPresent(
-//                        opSurface -> opSurface.feature(
-//                            op -> createDynamicOperationScheme(op.type(), op.name(), op.method())
-//                        )
-//                    )
-//                )
-//            )
-//        );
-
-//        runtimeSurface.depictFeatures(ClassPoolSurface::new).ifPresent(pool ->
-//            pool.peekClass(
-//                that -> that.hasAnnotations(RoutineTask.class, SchemeMapping.class),
-//                RoutineTaskSurface::new,
-//                (klass, task) -> {
-//                    task.operations(op -> createDynamicOperationScheme(klass.type(), op.name(), op.method()));
-//                }
-//            )
-//        );
-//
-//        // TODO: думаю в такой метод можно будет упаковать весь трейс от RuntimeSurface
-//        RoutineDSLSurface.enclosedBy(runtimeSurface).peekTasks(t ->
-//            t.peekOperation(o -> createDynamicOperationScheme(controllerClass, t.name(), o.method()))
-//        );
-
-        if (!controllerClass.isAnnotationPresent(RoutineTask.class)) {
-            throw new IllegalArgumentException("Only @RoutineTask classes are allowed.");
-        }
-
-        final String schemeName = controllerClass
-                .getDeclaredAnnotation(SchemeMapping.class)
-                .schemeName();
-
-        final List<DynamicOperationScheme> operations = Stream.of(controllerClass.getDeclaredMethods())
-                .filter(m -> m.isAnnotationPresent(TaskOperation.class))
-                // NOTE: operations order support, just sort list of schemas in a defined order
-                .sorted((t, o)  -> {
-                    final int first = t.getDeclaredAnnotation(TaskOperation.class).order();
-                    final int second = o.getDeclaredAnnotation(TaskOperation.class).order();
-                    if (first > second) {
-                        return 1;
-                    } else if (first < second) {
-                        return -1;
-                    } else {
-                        // TODO: add scheme name to exception
-                        throw new IllegalStateException("Operations order is undefined. " +
-                                "Please define unique operations order explicitly.");
-                    }
-                })
-                .map(m -> Pair.of(m, resolveOperationName(m)))
-                .map(p -> createDynamicOperationScheme(controllerClass, p.second, p.first))
-                .collect(toList());
-
-        operations.forEach(schemeRepository::saveScheme);
-
-        return new DynamicTaskScheme(schemeName, operations);
+        return gw -> {
+            // TODO: how can I propagate artifact version?
+            gw.modInfo("dsl-task-scheme", "1.1",
+                readOnlyMap(
+                    entry("repository-used", schemeRepository.getClass().getName())
+                ),
+                readOnlyList(
+                    // TODO: add more info, I want to see task controller classes and operation methods
+                    // Also I want to see task-schemas filled with operation lists
+                    // May be something else
+                    ModInfoProvider.basic("task-schemas", readOnlyMap()),
+                    ModInfoProvider.basic("operation-schemas", readOnlyMap(opSchemas)),
+                    ModInfoProvider.basic("value-providers", readOnlyMap(
+                            entry("field-values", fields.stream().map(this::extractClassName).collect(toList())),
+                            entry("param-values", params.stream().map(this::extractClassName).collect(toList()))
+                    ))
+                )
+            );
+        };
     }
 
-    private DynamicOperationScheme createDynamicOperationScheme(final Class<?> controllerClass, String schemeName, Method schemeMethod) {
-        return new DynamicOperationScheme(schemeName,
-                controllerClass, schemeMethod, fieldProviders, paramProviders);
-    }
-
-    private String resolveOperationName(final Method m) {
-
-        final String resolvedOpName;
-        final String declaredName = m.getDeclaredAnnotation(TaskOperation.class).schemeName();
-
-        if(declaredName.isEmpty()) {
-            resolvedOpName = m.getName();
-        } else {
-            resolvedOpName = declaredName;
-        }
-
-        return resolvedOpName;
+    private String extractClassName(Object object) {
+        return object.getClass().getName();
     }
 
 }

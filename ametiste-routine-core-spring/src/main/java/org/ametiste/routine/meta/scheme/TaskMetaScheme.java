@@ -1,6 +1,6 @@
 package org.ametiste.routine.meta.scheme;
 
-import org.ametiste.lang.Let;
+import org.ametiste.lang.Elective;
 import org.ametiste.routine.dsl.annotations.RoutineTask;
 import org.ametiste.routine.dsl.annotations.SchemeMapping;
 import org.ametiste.lang.object.trace.CallsTraceScaner;
@@ -30,7 +30,7 @@ public class TaskMetaScheme<T> {
         return schemeName;
     }
 
-    public Let<TaskSchemeTrace> trace(Consumer<T> callsProducer) {
+    public Elective<TaskSchemeTrace> trace(Consumer<T> callsProducer) {
 
         final TaskSchemeCallListener schemeCallListener =
                 new TaskSchemeCallListener(schemeName, converter);

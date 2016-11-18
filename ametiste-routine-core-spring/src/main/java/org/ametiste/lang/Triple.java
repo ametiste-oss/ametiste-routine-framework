@@ -53,12 +53,32 @@ public class Triple<F, S, T> {
 
     public T third() { return third; }
 
-    public static final <F, S, T> Let<Triple<F, S, T>> let(F first, S second, T third) {
+    public static final <F, S, T> Elective<Triple<F, S, T>> let(F first, S second, T third) {
         return c -> c.accept(of(first, second, third));
     }
 
     public static final <F, S, T> Triple<F, S, T> of(F first, S second, T third) {
         return new Triple<>(first, second, third);
+    }
+
+    static class Cat {
+        private final String name;
+        private final Integer size;
+
+        public Cat(String name, Integer size) {
+            this.name = name;
+            this.size = size;
+        }
+    }
+
+    static class Dog {
+        private final String name;
+        private final Integer size;
+
+        public Dog(String name, Integer size) {
+            this.name = name;
+            this.size = size;
+        }
     }
 
 }

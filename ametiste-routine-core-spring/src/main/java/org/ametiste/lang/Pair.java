@@ -1,11 +1,12 @@
 package org.ametiste.lang;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class Pair<F, S> implements Let<Pair<F, S>>, Transformable<Pair<F, S>> {
+public class Pair<F, S> implements Elective<Pair<F, S>>, Transformable<Pair<F, S>> {
 
     public final F first;
     public final S second;
@@ -17,6 +18,20 @@ public class Pair<F, S> implements Let<Pair<F, S>>, Transformable<Pair<F, S>> {
 
     public static final <F, S> Pair<F, S> of(F first, S second) {
         return new Pair<>(first, second);
+    }
+
+    public static <T, U> List<Pair<T, U>> of(List<T> firsts, List<U> seconds) {
+
+        if (firsts.size() != seconds.size()) {
+            throw new IllegalArgumentException("Lists to pair must have an equal size!");
+        }
+
+        List<Pair<T, U>> pairs = new ArrayList<Pair<T, U>>();
+        for (int i = 0; i < firsts.size(); i++) {
+            pairs.add(Pair.of(firsts.get(i), seconds.get(i)));
+        }
+
+        return pairs;
     }
 
     public F first() {
@@ -41,8 +56,8 @@ public class Pair<F, S> implements Let<Pair<F, S>>, Transformable<Pair<F, S>> {
     }
 
     @Override
-    public <R> Optional<R> map(final Function<Pair<F, S>, R> transformation) {
-        return Optional.ofNullable(transformation.apply(this));
+    public <R> R map(final Function<Pair<F, S>, R> transformation) {
+        return transformation.apply(this);
     }
 
 }

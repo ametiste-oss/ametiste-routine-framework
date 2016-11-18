@@ -64,16 +64,26 @@ public class InMemorySchemeRepository implements SchemeRepository {
 
     @Override
     public void saveScheme(final OperationScheme<?> operationScheme) {
-        opSchemasByName.put(operationScheme.schemeName(), operationScheme);
+        putUniqueKey(opSchemasByName, operationScheme.schemeName(), operationScheme);
+//        putUniqueKey(opSchemasByClass, operationScheme.getClass(), operationScheme);
         opSchemasByClass.put(operationScheme.getClass(), operationScheme);
-        opSchemasClassesByName.put(operationScheme.schemeName(), operationScheme.getClass());
+        putUniqueKey(opSchemasClassesByName, operationScheme.schemeName(), operationScheme.getClass());
     }
 
     @Override
     public void saveScheme(final TaskScheme<?> taskScheme) {
-        taskSchemasByName.put(taskScheme.schemeName(), taskScheme);
+        putUniqueKey(taskSchemasByName, taskScheme.schemeName(), taskScheme);
+//        putUniqueKey(taskSchemasByClass, taskScheme.getClass(), taskScheme);
         taskSchemasByClass.put(taskScheme.getClass(), taskScheme);
-        taskSchemasClassesByName.put(taskScheme.schemeName(), taskScheme.getClass());
+        putUniqueKey(taskSchemasClassesByName, taskScheme.schemeName(), taskScheme.getClass());
+    }
+
+    private <K, V> void putUniqueKey(final Map<K, V> container, final K key, final V value) {
+        if (container.containsKey(key)) {
+            throw new IllegalStateException("Container already has the given value as key: " + key);
+        } else {
+            container.put(key, value);
+        }
     }
 
     private <T> T notNull(T object, String schemeName) {

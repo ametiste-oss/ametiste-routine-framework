@@ -21,26 +21,25 @@ public class PrintTask {
     public void printOperationOut(@OperationParameter("operationOut") String prefix,
                                   @OperationParameter("secondParameter") int taskNumber,
                                   @OperationParameter("delay") long delay) {
-        sleepProtocol.sleep(delay);
+//        sleepProtocol.sleep(delay);
+        containerAppProtocol.systemOut(containerAppProtocol.toString());
+        containerAppProtocol.systemOut(this.toString());
+        containerAppProtocol.systemOut(prefix + Integer.toString(taskNumber));
     }
-//        containerAppProtocol.systemOut(containerAppProtocol.toString());
-//        containerAppProtocol.systemOut(this.toString());
-//        containerAppProtocol.systemOut(prefix + Integer.toString(taskNumber));
-//    }
-//
-//    @TaskOperation(order = 2)
-//    public void printOperationId(@OperationId String operationId) {
-//        containerAppProtocol.systemOut("Operation id: " + operationId);
-//    }
-//
-//    @TaskOperation(order = 3)
-//    public void printOperationName(@OperationName String operationName) {
-//        containerAppProtocol.systemOut("Operation name: " + operationName);
-//    }
-//
-//    @TaskOperation(order = 4)
-//    public void printTaskId(@TaskId String taskId) {
-//        containerAppProtocol.systemOut("Task id: " + taskId);
-//    }
+
+    @TaskOperation(order = 2)
+    public void printOperationId(@OperationId String operationId) {
+        containerAppProtocol.systemOut("Operation id: " + operationId);
+    }
+
+    @TaskOperation(order = 3)
+    public void printOperationName(@OperationName String operationName) {
+        containerAppProtocol.systemOut("Operation name: " + operationName);
+    }
+
+    @TaskOperation(order = 4)
+    public void printTaskId(@TaskId String taskId) {
+        containerAppProtocol.systemOut("Task id: " + taskId);
+    }
 
 }

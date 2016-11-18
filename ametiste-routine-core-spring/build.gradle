@@ -52,7 +52,7 @@ repositories {
 dependencies {
 
     compile project(":ametiste-routine-core")
-
+    compile ("com.intellij:annotations:+@jar")
     compile ("org.ametiste.lang:lang-o-trace:${ameUtilOTrace}")
     compile ("org.ametiste.gte:ametiste-gte-starter:${ameGTEVersion}")
     compile ("org.ametiste.lambda-platform:lambda-platform-dsl:${ameLaPlatformVersion}")
@@ -61,6 +61,7 @@ dependencies {
 
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
     compile("org.springframework.boot:spring-boot-autoconfigure")
+    compile("org.springframework.boot:spring-boot-starter-test")
     compile("org.springframework:spring-tx")
     compile("org.springframework:spring-jdbc")
     compile("org.springframework:spring-webmvc")

@@ -1,49 +1,43 @@
 package org.ametiste.routine.dsl.configuration.task.params;
 
+import org.ametiste.dynamics.foundation.elements.AnnotatedRefProcessor;
+import org.ametiste.dynamics.foundation.elements.AnnotatedRef;
 import org.ametiste.laplatform.protocol.ProtocolGateway;
 import org.ametiste.routine.dsl.annotations.OperationName;
 import org.ametiste.routine.dsl.annotations.ParamValueProvider;
-import org.ametiste.dynamics.foundation.AnnotatedElementValueProvider;
-import org.ametiste.dynamics.SurfaceElement;
+import org.ametiste.routine.dsl.domain.OperationNameAnnotation;
 import org.ametiste.routine.sdk.protocol.operation.OperationMetaProtocol;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Component;
 
-import static org.ametiste.dynamics.foundation.structure.ReflectFoundation.referenceTo;
-
 /**
- * <p>
- *     Resolves task id for parameter marked as {@link OperationName}.
- * </p>
+ * Provides task name to an element of a task marked by {@link OperationName}.
+ * <p> Identifier can be resolved only as the {@link String} valueType. Other paramter types are unsupported and
+ * will cause {@link IllegalStateException} at runtime.
  *
- * <p>
- *     This provider using {@link OperationMetaProtocol} to resolve operation meta information.
- * </p>
- *
- * <p>
- *     Identifier can be resolved only as {@link String} valueType. Other paramter types are unsupported and
- *     will cause {@link IllegalStateException} at runtime.
- * </p>
- *
+ * @implNote This provider using {@link OperationMetaProtocol} to resolve operation meta information.
  * @see OperationName
+ * @see OperationNameAnnotation
  * @see OperationMetaProtocol
  * @since 1.1
  */
 @Component
 @ParamValueProvider
-class OperationNameProvider extends AnnotatedElementValueProvider<ProtocolGateway> {
+class OperationNameProvider extends AnnotatedRefProcessor<OperationNameAnnotation, String, ProtocolGateway> {
 
     public OperationNameProvider() {
-        super(OperationName.class);
+        super(OperationNameAnnotation::new);
     }
 
     @Override
-    protected Object resolveValue(final SurfaceElement element,
-                                  final ProtocolGateway protocolGateway) {
-
-        if (element.hasStructureOf(referenceTo(String.class))) {
-            return protocolGateway.session(OperationMetaProtocol.class).operationName();
+    protected void resolveValue(@NotNull final AnnotatedRef<String> element,
+                                @NotNull final ProtocolGateway protocolGateway) {
+        if (element.isRefeneceTo(String.class)) {
+            element.feature(ref ->
+                    ref.referencesTo(protocolGateway.session(OperationMetaProtocol.class).operationName())
+            );
         } else {
-            throw new IllegalStateException("@TaskName element must have valueType of java.lang.String.");
+            throw new IllegalStateException("@OperationName element must have valueType of java.lang.String.");
         }
 
     }

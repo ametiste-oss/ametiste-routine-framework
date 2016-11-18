@@ -13,8 +13,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface TaskOperation {
 
-    String schemeName() default "";
-
     int order() default 1;
 
 }

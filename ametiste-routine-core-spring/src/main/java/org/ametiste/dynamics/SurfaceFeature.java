@@ -6,12 +6,14 @@ import org.springframework.stereotype.Component;
 import java.lang.annotation.*;
 
 /**
+ * Marks an element as <i>feature</i>.
  *
- * @since 1.1
+ * <p>This annotation is for the marker purposes only.
+ *
+ * @see Surface
+ * @since 1.0
  */
-@Target({ElementType.METHOD, ElementType.TYPE})
-@Retention(RetentionPolicy.RUNTIME)
-@Inherited
 @Documented
 public @interface SurfaceFeature {
+
 }

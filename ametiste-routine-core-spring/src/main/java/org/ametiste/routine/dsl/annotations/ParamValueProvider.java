@@ -1,13 +1,13 @@
 package org.ametiste.routine.dsl.annotations;
 
-import org.ametiste.dynamics.DynamicValueProvider;
+import org.ametiste.dynamics.Surge;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import java.lang.annotation.*;
 
 /**
- * Marks {@link DynamicValueProvider} that used to provide method parameters values.
+ * Marks {@link Surge} that used to provide method parameters values.
  *
  * <p>
  *     This is {@link Qualifier} annotation, it is used to depict concrete provider types

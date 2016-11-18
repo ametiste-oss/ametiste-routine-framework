@@ -1,52 +1,55 @@
 package org.ametiste.routine.dsl.configuration.task.params;
 
-import org.ametiste.dynamics.foundation.feature.ReferenceFeature;
+import org.ametiste.dynamics.foundation.elements.AnnotatedRefProcessor;
+import org.ametiste.dynamics.foundation.elements.AnnotatedRef;
 import org.ametiste.laplatform.protocol.ProtocolGateway;
 import org.ametiste.routine.dsl.annotations.OperationParameter;
 import org.ametiste.routine.dsl.annotations.ParamValueProvider;
-import org.ametiste.dynamics.foundation.AnnotatedElementValueProvider;
 import org.ametiste.routine.dsl.application.DynamicParamsProtocol;
-import org.ametiste.dynamics.SurfaceElement;
+import org.ametiste.routine.dsl.domain.OperationParameterAnnotation;
+import org.ametiste.routine.sdk.protocol.operation.OperationMetaProtocol;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Component;
 
 /**
- * Resolves operation parameters using information provided by {@link OperationParameter} annotation.
- * <p>
- * This provider using {@link DynamicParamsProtocol} to resolve operation paramters at operation runtime.
+ * Provides operation parameters using information provided by {@link OperationParameter} annotation.
+ *
+ * @implNote This provider using {@link OperationMetaProtocol} to resolve operation meta information.
  * <p>
  * Parameter types are resolved using {@link ConversionService}, so general extension mechanisms
  * provided by <i>Spring Framework Conversion System</i> may be adopted to extend paramter types resolving.
- *
  * @see ConversionService
+ * @see OperationParameterAnnotation
  * @see OperationParameter
- *
  * @since 1.1
  */
 @Component
 @ParamValueProvider
-class OperationParameterProvider extends AnnotatedElementValueProvider<ProtocolGateway> {
+class OperationParameterProvider extends AnnotatedRefProcessor<OperationParameterAnnotation, Object, ProtocolGateway> {
 
     private final ConversionService conversionService;
 
     @Autowired
     public OperationParameterProvider(ConversionService conversionService) {
-        super(OperationParameter.class);
+        super(OperationParameterAnnotation::new);
         this.conversionService = conversionService;
     }
 
     @Override
-    protected Object resolveValue(final SurfaceElement element,
-                                  final ProtocolGateway protocolGateway) {
+    protected void resolveValue(@NotNull final AnnotatedRef<Object> element,
+                                @NotNull final ProtocolGateway protocolGateway) {
 
-        // NOTE: this internal method invoked only if the given annotation is exists on the element
-        Object value = protocolGateway.session(DynamicParamsProtocol.class)
-                .param(element.annotationValue(OperationParameter.class, OperationParameter::value));
+        final String paramName = element.annotation(annotationSpec)
+                // TODO: add method name, AnnotatedRef must provide #name() method
+                .nameOrThrow(() -> new IllegalStateException("Can't resolve paramter name."));
 
-        return conversionService.convert(value,
-                element.mapFeature(ReferenceFeature::type, ReferenceFeature.class)
-        );
+        final Object value = protocolGateway
+                .session(DynamicParamsProtocol.class).param(paramName);
+
+        element.provideValue(conversionService.convert(value, element.type()));
+
     }
 
 }

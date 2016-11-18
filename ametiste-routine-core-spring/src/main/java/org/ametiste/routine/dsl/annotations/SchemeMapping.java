@@ -13,8 +13,10 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface SchemeMapping {
 
-    String schemeName() default "";
+    String EMPTY_NAME = "";
 
-    Class<?> schemeClass() default Class.class;
+    String schemeName() default EMPTY_NAME;
+
+    Class<?> schemeClass() default void.class;
 
 }

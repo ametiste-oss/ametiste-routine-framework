@@ -12,4 +12,8 @@ public interface ModInfoProvider {
 
     Map<String, ? extends Object> content();
 
+    static ModInfoProvider basic(final String section, final Map<String, ? extends Object> content) {
+        return new InternalModInfoProvider(section, content);
+    };
+
 }
