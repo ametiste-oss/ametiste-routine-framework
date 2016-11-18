@@ -2,7 +2,6 @@ package org.ametiste.routine.mod.shredder.application.service;
 
 import org.ametiste.laplatform.protocol.ProtocolGateway;
 import org.ametiste.laplatform.protocol.gateway.ProtocolGatewayService;
-import org.ametiste.routine.mod.shredder.application.operation.ShreddingParams;
 import org.ametiste.routine.mod.shredder.application.schema.ShreddingStaleTaskScheme;
 import org.ametiste.routine.mod.shredder.mod.ModShredder;
 import org.ametiste.routine.infrastructure.protocol.taskpool.TaskPoolProtocol;
@@ -12,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 /**
  *
@@ -24,6 +22,7 @@ public class ShreddingTaskService {
     private final List<String> staleStates;
     private final int staleThresholdValue;
     private final ChronoUnit staleThresholdUnit;
+    private final boolean disableSessionOptions;
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
 
@@ -31,11 +30,13 @@ public class ShreddingTaskService {
             ProtocolGatewayService protocolGatewayService,
             List<String> staleStates,
             int staleThresholdValue,
-            ChronoUnit staleThresholdUnit) {
+            ChronoUnit staleThresholdUnit,
+            boolean disableSessionOptions) {
         this.protocolGatewayService = protocolGatewayService;
         this.staleStates = staleStates;
         this.staleThresholdValue = staleThresholdValue;
         this.staleThresholdUnit = staleThresholdUnit;
+        this.disableSessionOptions = disableSessionOptions;
     }
 
     public void issueShreddingTask() {
@@ -54,6 +55,7 @@ public class ShreddingTaskService {
                         p.staleStates(staleStates);
                         p.staleThresholdValue(staleThresholdValue);
                         p.staleThresholdUnit(staleThresholdUnit);
+                        p.disableSessionOptions(disableSessionOptions);
                     });
         } finally {
             gateway.release();

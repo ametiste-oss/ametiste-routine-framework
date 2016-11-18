@@ -6,10 +6,12 @@ import org.ametiste.routine.sdk.operation.OperationExecutor;
 import org.ametiste.routine.sdk.operation.OperationFeedback;
 import org.ametiste.routine.sdk.protocol.modreport.ModReportProtocol;
 import org.ametiste.routine.infrastructure.protocol.taskpool.TaskPoolProtocol;
+import org.ametiste.routine.sdk.protocol.modreport.ReportForm;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.function.Consumer;
 import java.util.function.Function;
 
 /**
@@ -33,18 +35,27 @@ public class ShreddingStaleTaskExecutor implements OperationExecutor {
         final List<String> staleStates = shreddingParams
                 .staleStates();
 
+        final List<SessionOption> sessionOptions = resolveSessionOptions(shreddingParams);
+
         final long removedTasksCount = protocolGateway
-                    .session(TaskPoolProtocol.class, SessionOption.STATS)
+                    .session(TaskPoolProtocol.class, sessionOptions)
                     .removeTasks(staleStates, Instant.now().minus(threshold, unit));
 
-        final long lastInvocTime = protocolGateway.sessionOption(TaskPoolProtocol.class, SessionOption.STATS)
-                .queryLong("session.last.invocation.time");
 
-        protocolGateway.session(ModReportProtocol.class).submitReport(rb -> {
-                rb.type("SHREDDING_STALE_REPORT");
-                rb.data("remove.time.taken", Long.toString(lastInvocTime));
-                rb.data("remove.tasks.count", Long.toString(removedTasksCount));
-        });
+        Consumer<ReportForm> reportBuilder = rb -> {
+            rb.type("SHREDDING_STALE_REPORT");
+            rb.data("remove.tasks.count", Long.toString(removedTasksCount));
+        };
+
+        if (sessionOptions.contains(SessionOption.STATS)) {
+            final long lastInvocTime = protocolGateway
+                    .sessionOption(TaskPoolProtocol.class, SessionOption.STATS)
+                    .queryLong("session.last.invocation.time");
+
+            reportBuilder = reportBuilder.andThen(rb -> rb.data("remove.time.taken", Long.toString(lastInvocTime)));
+        }
+
+        protocolGateway.session(ModReportProtocol.class).submitReport(reportBuilder);
 
     }
 
@@ -54,6 +65,10 @@ public class ShreddingStaleTaskExecutor implements OperationExecutor {
 
     private static <K, V, T> T mayBe(K key, Map<K, V> in, Function<V, T> as, T else_) {
         return mayBe(key, in).map(as).orElse(else_);
+    }
+
+    private static List<SessionOption> resolveSessionOptions(ShreddingParams params) {
+        return params.disableSessionOptions() ? Collections.emptyList() : Collections.singletonList(SessionOption.STATS);
     }
 
     private List<String> splitAsCSList(String s) {

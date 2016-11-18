@@ -20,6 +20,8 @@ public class ModShredderProperties {
 
     private List<String> staleStates = DirectShreddingParams.DEFAULT_STALE_STATES;
 
+    private boolean disableSessionOptions = DirectShreddingParams.DEFAULT_DISABLE_SESSION_OPTIONS;
+
     public static class StaleThreshold {
 
         private int staleThresholdValue = DirectShreddingParams.DEFAULT_STALE_THRESHOLD_VALUE;
@@ -58,5 +60,13 @@ public class ModShredderProperties {
 
     public void setStaleStates(final List<String> staleStates) {
         this.staleStates = staleStates;
+    }
+
+    public boolean isDisableSessionOptions() {
+        return disableSessionOptions;
+    }
+
+    public void setDisableSessionOptions(boolean disableSessionOptions) {
+        this.disableSessionOptions = disableSessionOptions;
     }
 }
