@@ -1,10 +1,8 @@
 package org.ametiste.routine.printer.scheme;
 
-import org.ametiste.routine.sdk.protocol.operation.AbstractParamProtocol;
-import org.ametiste.routine.sdk.protocol.operation.ParamsProtocol;
+import org.ametiste.routine.sdk.protocol.operation.GuardedParamProtocol;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,7 +10,7 @@ import java.util.Map;
  *
  * @since
  */
-public class PrintTaskSchemeParams extends AbstractParamProtocol {
+public class PrintTaskSchemeParams extends GuardedParamProtocol {
 
     private static final String TASK_NUMBER = "task.number";
     private static final String TASK_MESSAGE = "task.message";
