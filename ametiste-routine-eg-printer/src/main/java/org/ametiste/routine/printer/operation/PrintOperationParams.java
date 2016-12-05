@@ -1,14 +1,16 @@
 package org.ametiste.routine.printer.operation;
 
-import org.ametiste.routine.sdk.protocol.operation.AbstractParamProtocol;
+import org.ametiste.routine.sdk.protocol.operation.GuardedParamProtocol;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
  * @since
  */
-public class PrintOperationParams extends AbstractParamProtocol {
+public class PrintOperationParams extends GuardedParamProtocol {
 
     private static final String OPERATION_OUT = "operation.out";
     private static final String OPERATION_DELAY = "operation.delay";

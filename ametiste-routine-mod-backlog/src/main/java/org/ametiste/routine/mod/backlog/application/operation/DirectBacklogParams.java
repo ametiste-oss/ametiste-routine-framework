@@ -1,14 +1,16 @@
 package org.ametiste.routine.mod.backlog.application.operation;
 
-import org.ametiste.routine.sdk.protocol.operation.AbstractParamProtocol;
+import org.ametiste.routine.sdk.protocol.operation.GuardedParamProtocol;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 /**
  *
  * @since 1.1
  */
-public class DirectBacklogParams extends AbstractParamProtocol implements BacklogParams {
+public class DirectBacklogParams extends GuardedParamProtocol implements BacklogParams {
 
     private static final String BACKLOGED_SCHEME_NAME = "backlog.scheme.name";
 
