@@ -17,8 +17,9 @@ abstract public class GuardedParamProtocol extends AbstractParamProtocol {
     }
 
     protected GuardedParamProtocol(List<String> definedParams, Map<String, String> params) {
-        super(params);
+        super();
         this.definedParams = definedParams;
+        fromMap(params);
     }
 
     @Override
