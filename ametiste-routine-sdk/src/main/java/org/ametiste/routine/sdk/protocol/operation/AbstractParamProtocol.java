@@ -17,10 +17,6 @@ public abstract class AbstractParamProtocol implements ParamsProtocol {
         this.paramsMap = new HashMap<>();
     }
 
-    protected AbstractParamProtocol(Map<String, String> params) {
-        fromMap(params);
-    }
-
     @Override
     public void fromMap(final Map<String, String> params) {
         paramsMap = Collections.unmodifiableMap(params);
