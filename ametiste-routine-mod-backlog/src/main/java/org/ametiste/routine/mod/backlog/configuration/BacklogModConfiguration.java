@@ -99,7 +99,7 @@ public class BacklogModConfiguration {
         @Autowired
         private BacklogRenewAction backlogRenewAction;
 
-        @Scheduled(fixedDelayString = "${org.ametiste.routine.mod.backlog.renewRate:60000}")
+        @Scheduled(fixedRateString = "${org.ametiste.routine.mod.backlog.renewRate:60000}")
         private void renew() {
             backlogRenewAction.renewAll();
         }
