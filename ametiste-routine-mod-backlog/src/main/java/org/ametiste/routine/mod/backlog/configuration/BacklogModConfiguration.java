@@ -9,7 +9,10 @@ import org.ametiste.routine.mod.backlog.application.service.BacklogRenewConstrai
 import org.ametiste.routine.mod.backlog.application.service.BacklogRenewService;
 import org.ametiste.routine.mod.backlog.domain.Backlog;
 import org.ametiste.routine.mod.backlog.domain.BacklogRepository;
-import org.ametiste.routine.mod.backlog.infrastructure.*;
+import org.ametiste.routine.mod.backlog.infrastructure.BacklogPopulationStrategiesRegistry;
+import org.ametiste.routine.mod.backlog.infrastructure.BacklogPopulationStrategy;
+import org.ametiste.routine.mod.backlog.infrastructure.MemoryBacklogPopulationStrategiesRegistry;
+import org.ametiste.routine.mod.backlog.infrastructure.MemoryBacklogRepository;
 import org.ametiste.routine.mod.backlog.mod.ModBacklog;
 import org.ametiste.routine.mod.tasklog.domain.TaskLogRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +21,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import java.util.Collections;
 import java.util.List;
@@ -88,4 +92,29 @@ public class BacklogModConfiguration {
         return new ActiveBacklogTasksConstraint(taskLogRepository);
     }
 
+    @Configuration
+    @ConditionalOnProperty(name = "org.ametiste.routine.mod.backlog.useCron", havingValue = "false", matchIfMissing = true)
+    static class FixedRateRenewConfiguration {
+
+        @Autowired
+        private BacklogRenewAction backlogRenewAction;
+
+        @Scheduled(fixedRateString = "${org.ametiste.routine.mod.backlog.renewRate:60000}")
+        private void renew() {
+            backlogRenewAction.renewAll();
+        }
+    }
+
+    @Configuration
+    @ConditionalOnProperty(name = "org.ametiste.routine.mod.backlog.useCron", havingValue = "true")
+    static class CronRenewConfiguration {
+
+        @Autowired
+        private BacklogRenewAction backlogRenewAction;
+
+        @Scheduled(cron = "${org.ametiste.routine.mod.backlog.renewCron:0 * * * * *}")
+        private void renew() {
+            backlogRenewAction.renewAll();
+        }
+    }
 }
