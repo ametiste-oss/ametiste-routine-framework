@@ -4,7 +4,6 @@ import org.ametiste.routine.mod.backlog.application.service.BacklogRenewService;
 import org.ametiste.routine.mod.backlog.domain.BacklogRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Scheduled;
 
 /**
  *
@@ -24,7 +23,6 @@ public class BacklogRenewAction {
     }
 
     // TODO: I need to externalize scheduling and make it framework agnostic. if possible
-    @Scheduled(fixedRateString = "${org.ametiste.routine.mod.backlog.renewRate:60000}")
     public void renewAll() {
         backlogRepository.loadAll().forEach(backlogRenewService::renewBy);
     }
