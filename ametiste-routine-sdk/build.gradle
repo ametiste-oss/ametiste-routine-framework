@@ -24,6 +24,7 @@ dependencies {
     compile ("org.ametiste.lambda-platform:lambda-platform-pgw:${ameLaPlatformVersion}")
     compile ("org.ametiste.domain:ametiste-domain-core:${ameDomainVersion}")
 
+    compile ("org.jetbrains:annotations:${jbAnnotVersion}")
     compile ("org.slf4j:slf4j-api:${slf4jVersion}")
 
 }
