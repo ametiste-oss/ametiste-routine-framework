@@ -8,4 +8,7 @@ public interface ContainerAppProtocol extends Protocol {
 
     <T> T envProperty(String propertyName, Class<T> type);
 
+    <T> T object(Class<T> requiredType);
+
+    <T> T namedObject(String name, Class<T> requiredType);
 }
