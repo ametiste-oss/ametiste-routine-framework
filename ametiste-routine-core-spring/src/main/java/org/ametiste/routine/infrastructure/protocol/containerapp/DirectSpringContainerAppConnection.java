@@ -24,4 +24,15 @@ public class DirectSpringContainerAppConnection implements ContainerAppProtocol 
         return applicationContext.getEnvironment().getProperty(propertyName, type);
     }
 
+    @Override
+    @ProtocolMeta(shortName = "object")
+    public <T> T object(Class<T> requiredType) {
+        return applicationContext.getBean(requiredType);
+    }
+
+    @Override
+    @ProtocolMeta(shortName = "named-object")
+    public <T> T namedObject(String name, Class<T> requiredType) {
+        return applicationContext.getBean(name, requiredType);
+    }
 }
